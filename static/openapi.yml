@@ -15,7 +15,7 @@ paths:
     get:
       description: |
         Retrieve the file you want to access from the CDN.
-      operationId: yourOperation
+      operationId: Receive Image
       parameters:
         - name: fileName
           in: query
@@ -28,3 +28,29 @@ paths:
           description: You have recieved the requested content from the CDN.
         "304":
           description: Redirect to the requested content.
+  /api/cdn/upload/image/:
+    post:
+      description: |
+        Upload image to CDN
+      operationId: Upload Image
+      requestBody:
+        formData:
+          - name: image
+            description: The file of the image you want to upload
+            required: true
+            schema:
+              type: image/jpeg, image/jpg, image/png, image/gif, image/webp, image/bmp
+      responses:
+        "200":
+          description: You have successfully uploaded the image.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_url:
+                    type: string
+                    description: The URL of the uploaded image.
+        "400":
+          description: Invalid file-type or lack of file in formData.
+          summary: Bad Request
