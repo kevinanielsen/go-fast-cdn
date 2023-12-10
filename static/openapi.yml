@@ -11,11 +11,11 @@ info:
     name: License Name
     url: http://example.com/license-url
 paths:
-  /download/:fileName:
+  /download/{fileName}:
     get:
       description: |
         Retrieve the file you want to access from the CDN.
-      operationId: Receive Image
+      operationId: receiveImage
       parameters:
         - name: fileName
           in: query
@@ -32,14 +32,17 @@ paths:
     post:
       description: |
         Upload image to CDN
-      operationId: Upload Image
+      operationId: uploadImage
       requestBody:
-        formData:
-          - name: image
-            description: The file of the image you want to upload
-            required: true
+        required: true
+        content:
+          multipart/form-data:
             schema:
-              type: image/jpeg, image/jpg, image/png, image/gif, image/webp, image/bmp
+              type: object
+              properties:
+                image:
+                  type: image/jpeg, image/jpg, image/png, image/gif, image/webp, image/bmp
+                  format: binary
       responses:
         "200":
           description: You have successfully uploaded the image.
@@ -53,4 +56,3 @@ paths:
                     description: The URL of the uploaded image.
         "400":
           description: Invalid file-type or lack of file in formData.
-          summary: Bad Request
