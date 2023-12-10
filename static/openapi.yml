@@ -55,10 +55,13 @@ paths:
         content:
           multipart/form-data:
             schema:
+              properties:
+                image:
+                  type: string
+                  format: binary
             encoding:
               image:
                 contentType: image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp
-              type: object
       responses:
         "200":
           description: You have successfully uploaded the image.
