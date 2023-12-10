@@ -36,9 +36,6 @@ Upload an image with the following MIME types:
    `git clone git@github.com:kevinanielsen/go-fast-cdn`
    or `git clone https://github.com:kevinanielsen/go-fast-cdn`
 2. **Add env variables** <br>
-   Create a `.env` file with the following content
-
-```env
-PORT=8080
-DSN=<postgrestUrl>
-```
+   This project uses [dotenv](https://vault.dotenv.org/) and I recommend that you do the same. <br>
+   Read more abou the usage on their page. <br><br>
+   If you do not wish to use this, you can just rename `.example.env` to `.env` and fill in the fields.
