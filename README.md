@@ -1,13 +1,14 @@
-# go-fast-cdn
+# Go-Fast CDN
 
-#### A fast and easy-to-use CDN, built with Go.
+### A fast and easy-to-use CDN, built with Go.
 
 My first large Go project. Utilizing the Gorm-ORM and the Gin web-framework.
 
-## Usage
+## How to use
 
 `/api/cdn/upload/image`<br>
-Upload an image with the following MIME types
+Body: FormData with "image".<br>
+Upload an image with the following MIME types:
 
 - image/jpeg
 - image/jpg
@@ -17,7 +18,8 @@ Upload an image with the following MIME types
 - image/bmp
 
 `/api/cdn/upload/doc`<br>
-Upload an image with the following MIME types
+Body: FormData with "doc".<br>
+Upload an image with the following MIME types:
 
 - text/plain
 - application/msword (.doc)
@@ -27,3 +29,16 @@ Upload an image with the following MIME types
 - application/pdf
 - application/rtf
 - application/x-freearc (.arc)
+
+## Development
+
+1. **Clone the Repository** <br>
+   `git clone git@github.com:kevinanielsen/go-fast-cdn`
+   or `git clone https://github.com:kevinanielsen/go-fast-cdn`
+2. **Add env variables** <br>
+   Create a `.env` file with the following content
+
+```env
+PORT=8080
+DSN=<postgrestUrl>
+```
