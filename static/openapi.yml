@@ -11,15 +11,32 @@ info:
     name: License Name
     url: http://example.com/license-url
 paths:
-  /download/{fileName}:
+  /download/image/{fileName}:
     get:
-      description: |
-        Retrieve the file you want to access from the CDN.
+      summary: Retrieve the image you want to access from the CDN.
+      description: Retrieve the image requested from the CDN.
       operationId: receiveImage
       parameters:
         - name: fileName
           in: query
-          description: The name of the file you want to access.
+          description: The name of the image you want to access.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: You have recieved the requested content from the CDN.
+        "304":
+          description: Redirect to the requested content.
+  /download/doc/{fileName}:
+    get:
+      summary: Retrieve the doc you want to access from the CDN.
+      description: Retrieve the doc requested from the CDN.
+      operationId: receiveDoc
+      parameters:
+        - name: fileName
+          in: query
+          description: The name of the doc you want to access.
           required: true
           schema:
             type: string
@@ -30,8 +47,8 @@ paths:
           description: Redirect to the requested content.
   /api/cdn/upload/image/:
     post:
-      description: |
-        Upload image to CDN
+      description: Upload an image to the CDN. The accepted MIME types are image/jpeg, image/png, image/jpg, image/webp, image/gif, and image/bmp.
+      summary: Upload image to CDN
       operationId: uploadImage
       requestBody:
         required: true
@@ -41,7 +58,7 @@ paths:
               type: object
               properties:
                 image:
-                  type: image/jpeg, image/jpg, image/png, image/gif, image/webp, image/bmp
+                  type: string
                   format: binary
       responses:
         "200":
