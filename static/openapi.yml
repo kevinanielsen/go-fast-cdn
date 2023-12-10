@@ -1,0 +1,30 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: Go-Fast CDN
+  description: A simple and fast CDN written in Go
+  contact:
+    name: Kevin Alex Nielsen
+    email: kevinanielsen@outlook.com
+    url: http://github.com/kevinanielsen/go-fast-cdn
+  license:
+    name: License Name
+    url: http://example.com/license-url
+paths:
+  /download/:fileName:
+    get:
+      description: |
+        Retrieve the file you want to access from the CDN.
+      operationId: yourOperation
+      parameters:
+        - name: fileName
+          in: query
+          description: The name of the file you want to access.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: You have recieved the requested content from the CDN.
+        "304":
+          description: Redirect to the requested content.
