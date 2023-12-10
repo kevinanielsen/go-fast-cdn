@@ -5,3 +5,5 @@ uploads/*
 .flaskenv*
 !.env.project
 !.env.vault
+
+tmp
