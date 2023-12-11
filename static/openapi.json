@@ -25,42 +25,66 @@
         }
       }
     },
-    "/download/image/{fileName}": {
+    "/doc/all": {
       "get": {
-        "summary": "Retrieve image.",
-        "description": "Retrieve the image requested from the CDN.",
-        "operationId": "receiveImage",
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "description": "The name of the image you want to access.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "summary": "Get all documents",
         "responses": {
           "200": {
-            "description": "You have recieved the requested content from the CDN."
-          },
-          "304": {
-            "description": "Redirect to the requested content."
+            "description": "Documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "ID": { "type": "number" },
+                      "CreatedAt": { "type": "string" },
+                      "UpdatedAt": { "type": "string" },
+                      "DeletedAt": { "type": "string" },
+                      "checksum": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/download/doc/{fileName}": {
+    "/image/all": {
       "get": {
-        "summary": "Retrieve doc.",
-        "description": "Retrieve the doc requested from the CDN.",
-        "operationId": "receiveDoc",
+        "summary": "Get all images",
+        "responses": {
+          "200": {
+            "description": "Images",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "ID": { "type": "number" },
+                      "CreatedAt": { "type": "string" },
+                      "UpdatedAt": { "type": "string" },
+                      "DeletedAt": { "type": "string" },
+                      "checksum": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drop/database": {
+      "post": {
+        "summary": "Drop database",
+        "operationId": "dropDatabase",
         "parameters": [
           {
-            "name": "fileName",
-            "in": "path",
-            "description": "The name of the doc you want to access.",
+            "name": "token",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
@@ -69,10 +93,55 @@
         ],
         "responses": {
           "200": {
-            "description": "You have recieved the requested content from the CDN."
+            "description": "Database dropped"
+          }
+        }
+      }
+    },
+    "/api/cdn/upload/doc/": {
+      "post": {
+        "description": "Upload a document to the CDN. The accepted MIME types are: text/plain, application/msword(.doc), application/vnd.openxmlformats-officedocument.wordprocessingml.document(.docx), .application/vnd.openxmlformats-officedocument.spreadsheetml.sheet(.xlsx), application/vnd.openxmlformats-officedocument.presentationml.presentation(.ppx), application/pdf, application/rtf, application/x-freearc(.arc)",
+        "summary": "Upload document",
+        "operationId": "uploadDoc",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "doc": {
+                    "type": "string",
+                    "format": "text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf, application/rtf, application/x-freearc"
+                  }
+                }
+              },
+              "encoding": {
+                "doc": {
+                  "contentType": "text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf, application/rtf, application/x-freearc"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You have successfully uploaded the document.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file_url": {
+                      "type": "string",
+                      "description": "The URL of the uploaded document."
+                    }
+                  }
+                }
+              }
+            }
           },
-          "304": {
-            "description": "Redirect to the requested content."
+          "400": {
+            "description": "Invalid file-type or lack of file in formData."
           }
         }
       }
@@ -121,6 +190,58 @@
           },
           "400": {
             "description": "Invalid file-type or lack of file in formData."
+          }
+        }
+      }
+    },
+    "/download/image/{fileName}": {
+      "get": {
+        "summary": "Retrieve image.",
+        "description": "Retrieve the image requested from the CDN.",
+        "operationId": "receiveImage",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the image you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have recieved the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
+          }
+        }
+      }
+    },
+    "/download/doc/{fileName}": {
+      "get": {
+        "summary": "Retrieve doc.",
+        "description": "Retrieve the doc requested from the CDN.",
+        "operationId": "receiveDoc",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the doc you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have recieved the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
           }
         }
       }
