@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
 	docHandlers "github.com/go-fast-cdn/util/handlers/docs"
 	imageHandlers "github.com/go-fast-cdn/util/handlers/image"
 )
@@ -19,6 +20,7 @@ func Router() {
 	api := r.Group("/api")
 	{
 		api.GET("/image/all", imageHandlers.HandleAllImages)
+		api.POST("/drop/database", dbHandlers.HandleDropDB)
 	}
 
 	cdn := api.Group("/cdn")
