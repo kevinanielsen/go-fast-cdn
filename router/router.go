@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-fast-cdn/ui"
 	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
 	docHandlers "github.com/go-fast-cdn/util/handlers/docs"
 	imageHandlers "github.com/go-fast-cdn/util/handlers/image"
@@ -13,12 +14,13 @@ import (
 func Router() {
 	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, "pong")
-	})
+	ui.AddRoutes(r)
 
 	api := r.Group("/api")
 	{
+		api.GET("/", func(c *gin.Context) {
+			c.JSON(http.StatusOK, "pong")
+		})
 		api.GET("/doc/all", docHandlers.HandleAllDocs)
 		api.GET("/image/all", imageHandlers.HandleAllImages)
 		api.POST("/drop/database", dbHandlers.HandleDropDB)
