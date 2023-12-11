@@ -10,7 +10,7 @@ import (
 
 func HandleAllImages(c *gin.Context) {
 	var entries []models.Image
-	database.DB.Find(&entries)
+	database.DB.Find(&entries, &models.Image{})
 
 	c.JSON(http.StatusOK, entries)
 
