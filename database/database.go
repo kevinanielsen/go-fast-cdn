@@ -20,6 +20,6 @@ func ConnectToDB() {
 		panic("failed to connect to database")
 	}
 
-	database.AutoMigrate(&models.Image{})
+	database.AutoMigrate(&models.Image{}, &models.Doc{})
 	DB = database
 }
