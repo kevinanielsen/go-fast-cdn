@@ -7,3 +7,5 @@ uploads/*
 !.env.vault
 
 tmp
+
+main.db
