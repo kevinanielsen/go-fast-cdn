@@ -1,4 +1,4 @@
-eopenapi: "3.0.0"
+openapi: "3.0.0"
 info:
   version: 0.0.1
   title: Go-Fast CDN
@@ -18,7 +18,7 @@ paths:
       operationId: receiveImage
       parameters:
         - name: fileName
-          in: query
+          in: path
           description: The name of the image you want to access.
           required: true
           schema:
@@ -35,7 +35,7 @@ paths:
       operationId: receiveDoc
       parameters:
         - name: fileName
-          in: query
+          in: path
           description: The name of the doc you want to access.
           required: true
           schema:
@@ -57,11 +57,12 @@ paths:
             schema:
               properties:
                 image:
-                  contentType: image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp
-                  format: binary
+                  type: string
+                  format: image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp
             encoding:
               image:
                 contentType: image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp
+
       responses:
         "200":
           description: You have successfully uploaded the image.
