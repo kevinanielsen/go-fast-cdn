@@ -8,9 +8,9 @@ import (
 	"github.com/go-fast-cdn/models"
 )
 
-func HandleAllImages(c *gin.Context) {
-	var entries []models.Image
-	database.DB.Find(&entries, &models.Image{})
+func HandleAllDocs(c *gin.Context) {
+	var entries []models.Doc
+	database.DB.Find(&entries, &models.Doc{})
 
 	c.JSON(http.StatusOK, entries)
 
