@@ -18,3 +18,5 @@ Visit the API documentation at [go-fast-cdn.redoc.ly](https://go-fast-cdn.redoc.
    This project uses [dotenv](https://vault.dotenv.org/) and I recommend that you do the same. <br>
    Read more abou the usage on their page. <br><br>
    If you do not wish to use this, you can just rename `.example.env` to `.env` and fill in the fields.
+3. **Set the main.db** <br>
+   This project uses an SQLite database. To start, you need to rename `.example.db` to `main.db`.
