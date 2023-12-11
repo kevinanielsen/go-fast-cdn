@@ -1,19 +1,15 @@
 package database
 
 import (
-	"os"
-
 	"github.com/go-fast-cdn/models"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
 func ConnectToDB() {
-	dsn := os.Getenv("DSN")
-
-	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	database, err := gorm.Open(sqlite.Open("main.db"), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
