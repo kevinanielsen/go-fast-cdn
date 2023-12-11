@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Go-Fast CDN",
+    "description": "A simple and fast CDN written in Go",
+    "contact": {
+      "name": "Kevin Alex Nielsen",
+      "email": "kevinanielsen@outlook.com",
+      "url": "http://github.com/kevinanielsen/go-fast-cdn"
+    },
+    "license": {
+      "name": "License Name",
+      "url": "http://example.com/license-url"
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Ping",
+        "responses": {
+          "200": {
+            "description": "Pong"
+          }
+        }
+      }
+    },
+    "/download/image/{fileName}": {
+      "get": {
+        "summary": "Retrieve image.",
+        "description": "Retrieve the image requested from the CDN.",
+        "operationId": "receiveImage",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the image you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have recieved the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
+          }
+        }
+      }
+    },
+    "/download/doc/{fileName}": {
+      "get": {
+        "summary": "Retrieve doc.",
+        "description": "Retrieve the doc requested from the CDN.",
+        "operationId": "receiveDoc",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the doc you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have recieved the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
+          }
+        }
+      }
+    },
+    "/api/cdn/upload/image/": {
+      "post": {
+        "description": "Upload an image to the CDN. The accepted MIME types are image/jpeg, image/png, image/jpg, image/webp, image/gif, and image/bmp.",
+        "summary": "Upload image",
+        "operationId": "uploadImage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp"
+                  }
+                }
+              },
+              "encoding": {
+                "image": {
+                  "contentType": "image/jpeg, image/jpg, image/png, image/webp, image/gif, image/bmp"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You have successfully uploaded the image.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file_url": {
+                      "type": "string",
+                      "description": "The URL of the uploaded image."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file-type or lack of file in formData."
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}
