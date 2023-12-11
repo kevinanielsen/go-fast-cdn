@@ -45,16 +45,16 @@ func HandleDocsUpload(c *gin.Context) {
 	}
 
 	if !allowedMimeTypes[fileType] {
-		c.String(http.StatusBadRequest, "Invalid file type")
+		c.String(http.StatusBadRequest, "Invalid file type: %s", fileType)
 		return
 	}
 
 	fileHashBuffer := md5.Sum(fileBuffer)
 	fileName := uuid.NewString() + filepath.Ext(fileHeader.Filename)
-	savedFileName, alreadyExists := database.AddImage(fileName, fileHashBuffer[:])
+	savedFileName, alreadyExists := database.AddDoc(fileName, fileHashBuffer[:])
 
 	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, "./uploads/images/"+fileName)
+		err = c.SaveUploadedFile(fileHeader, "./uploads/docs/"+fileName)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 			return
@@ -62,7 +62,7 @@ func HandleDocsUpload(c *gin.Context) {
 	}
 
 	body := gin.H{
-		"file_url": "localhost:8080/" + "download/images/" + savedFileName,
+		"file_url": "localhost:8080/" + "download/docs/" + savedFileName,
 	}
 
 	c.JSON(http.StatusOK, body)
