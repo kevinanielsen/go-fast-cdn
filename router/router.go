@@ -19,6 +19,7 @@ func Router() {
 
 	api := r.Group("/api")
 	{
+		api.GET("/doc/all", docHandlers.HandleAllDocs)
 		api.GET("/image/all", imageHandlers.HandleAllImages)
 		api.POST("/drop/database", dbHandlers.HandleDropDB)
 	}
