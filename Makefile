@@ -1,5 +1,11 @@
 BINARY_NAME=go-fast-cdn
 
+prep:
+	go mod tidy
+	go mod install
+	go mod download
+	cd ui && pnpm i
+
 build:
 	cd ui && pnpm build
 	go build -o bin/${BINARY_NAME}
@@ -10,9 +16,6 @@ run: build
 clean: 
 	go clean
 	rm -rf bin/*
-
-dep:
-	go mod download
 
 vet:
 	go vet
