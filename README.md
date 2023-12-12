@@ -1,5 +1,5 @@
 # Go-Fast CDN
-
+*"The PocketBase of CDNs" - Me*
 ### A fast and easy-to-use CDN, built with Go.
 
 Utilizing a SQLite database with GORM and the Gin web-framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
