@@ -2,7 +2,6 @@ BINARY_NAME=go-fast-cdn
 
 prep:
 	go mod tidy
-	go mod install
 	go mod download
 	cd ui && pnpm i
 
