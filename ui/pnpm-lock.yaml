@@ -34,6 +34,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.32)
+  axios:
+    specifier: ^1.6.2
+    version: 1.6.2
   eslint:
     specifier: ^8.53.0
     version: 8.55.0
