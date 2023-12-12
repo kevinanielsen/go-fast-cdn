@@ -1,22 +1,25 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/database"
-	"github.com/go-fast-cdn/initializers"
+	ini "github.com/go-fast-cdn/initializers"
 	"github.com/go-fast-cdn/router"
+	"github.com/go-fast-cdn/util"
 )
 
 func init() {
-	gin.SetMode("debug")
-	initializers.LoadEnvVariables(true)
+	util.LoadExPath()
+	gin.SetMode("release")
+	ini.LoadEnvVariables(true)
+	ini.CreateFolders()
 	database.ConnectToDB()
 }
 
 func main() {
-	fmt.Println("Starting")
-
+	log.Printf("Starting server on port %v", os.Getenv("PORT"))
 	router.Router()
 }
