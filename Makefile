@@ -9,7 +9,7 @@ run: build
 
 clean: 
 	go clean
-	rm bin/${BINARY_NAME}
+	rm -rf bin/*
 
 dep:
 	go mod download
