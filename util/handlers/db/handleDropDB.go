@@ -24,4 +24,5 @@ func HandleDropDB(c *gin.Context) {
 
 	database.DB.Migrator().DropTable(models.Doc{})
 	database.DB.Migrator().DropTable(models.Image{})
+	database.Migrate()
 }
