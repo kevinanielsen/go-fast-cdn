@@ -9,3 +9,4 @@ uploads/*
 tmp
 
 main.db
+ui/build
