@@ -18,10 +18,11 @@ func HandleDropDB(c *gin.Context) {
 		return
 	}
 	if token != validToken {
-		c.String(http.StatusUnauthorized, "Invalid token: %s, needed: %s", token, validToken)
+		c.String(http.StatusUnauthorized, "Invalid token: %s", token)
 		return
 	}
 
 	database.DB.Migrator().DropTable(models.Doc{})
 	database.DB.Migrator().DropTable(models.Image{})
+	database.Migrate()
 }

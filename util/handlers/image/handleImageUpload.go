@@ -61,7 +61,7 @@ func HandleImageUpload(c *gin.Context) {
 	}
 
 	body := gin.H{
-		"file_url": "localhost:8080/" + "download/images/" + savedFileName,
+		"file_url": c.Request.Host + "/download/images/" + savedFileName,
 	}
 
 	c.JSON(http.StatusOK, body)

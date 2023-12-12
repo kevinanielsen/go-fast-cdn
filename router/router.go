@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/middleware"
 	"github.com/go-fast-cdn/ui"
+	"github.com/go-fast-cdn/util"
 	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
 	docHandlers "github.com/go-fast-cdn/util/handlers/docs"
 	imageHandlers "github.com/go-fast-cdn/util/handlers/image"
@@ -40,8 +41,8 @@ func Router() {
 		upload.POST("/doc", docHandlers.HandleDocsUpload)
 	}
 
-	r.Static("/download/images", "./uploads/images")
-	r.Static("/download/docs", "./uploads/docs")
+	r.Static("/download/images", util.ExPath+"/uploads/images")
+	r.Static("/download/docs", util.ExPath+"/uploads/docs")
 
 	r.Run(":" + os.Getenv("PORT"))
 }

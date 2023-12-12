@@ -16,7 +16,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
   // createdAt,
   // updatedAt,
 }) => {
-  const url = `http://localhost:8080/download/${
+  const url = `${window.location.protocol}//${window.location.host}/download/${
     type === "documents" ? "docs" : "images"
   }/${file_name}`;
 
