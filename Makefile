@@ -5,22 +5,22 @@ prep:
 	go mod download
 	cd ui && pnpm i
 
-build:
-	cd ui && pnpm build
-	go build -o bin/${BINARY_NAME}
+build: build_ui build_bin
 
 build_ui:
-	cd ui && pnpm build
+	pnpm --dir ./ui build
 
 build_bin:
-	go build -o bin/${BINARY_NAME}
+	GOARCH=amd64 GOOS=darwin go build -o bin/${BINARY_NAME}-darwin 
+	CC="x86_64-linux-musl-gcc" GOARCH=amd64 GOOS=linux go build -o bin/${BINARY_NAME}-linux
 
 run: build
-	bin/${BINARY_NAME}
+	bin/${BINARY_NAME}-darwin
 
 clean: 
 	go clean
 	rm -rf bin/*
+	rm -rf ui/build/*
 
 vet:
 	go vet
