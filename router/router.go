@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-fast-cdn/middleware"
 	"github.com/go-fast-cdn/ui"
 	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
 	docHandlers "github.com/go-fast-cdn/util/handlers/docs"
@@ -13,6 +14,8 @@ import (
 
 func Router() {
 	r := gin.Default()
+
+	r.Use(middleware.CORSMiddleware())
 
 	ui.AddRoutes(r)
 
