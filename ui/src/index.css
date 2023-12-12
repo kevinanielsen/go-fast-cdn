@@ -1,7 +1,17 @@
-@tailwind base
-@tailwind components
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "300";
+  font-display: fallback;
+  src: url("/fonts/Inter/Inter-VariableFont_slnt,wght.ttf") format("ttf");
+}
+
+* {
+  font-family: "Inter";
+}
+
 body {
-  @apply bg-slate-900;
+  @apply bg-slate-50 text-slate-950;
 }
