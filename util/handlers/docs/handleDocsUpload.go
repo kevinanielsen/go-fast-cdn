@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/database"
+	"github.com/go-fast-cdn/util"
 	"github.com/google/uuid"
 )
 
@@ -54,7 +55,7 @@ func HandleDocsUpload(c *gin.Context) {
 	savedFileName, alreadyExists := database.AddDoc(fileName, fileHashBuffer[:])
 
 	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, "./uploads/docs/"+fileName)
+		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+fileName)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 			return
