@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/database"
+	"github.com/go-fast-cdn/util"
 	"github.com/google/uuid"
 )
 
@@ -52,7 +53,7 @@ func HandleImageUpload(c *gin.Context) {
 	savedFileName, alreadyExists := database.AddImage(fileName, fileHashBuffer[:])
 
 	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, "./uploads/images/"+fileName)
+		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+fileName)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 			return

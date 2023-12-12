@@ -27,6 +27,8 @@ This project uses an SQLite database. To start, you need to rename `.example.db`
 
 ### Building the binary
 
-1. Go to `/ui` and run `pnpm i`.
-2. Run `pnpm build` to build the ui.
-3. Go to the root of the project and run `go build` to build the binary. The ui files should be embedded in the binary automatically. Then you can run the binary with `./go-fast-cdn`
+1. Run `make prep`
+2. Run `make clean`
+3. Run `make build` <br>
+
+Your binary should now be built and you can run it with `bin/go-fast-cdn`
