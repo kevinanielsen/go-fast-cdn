@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import DocsInput from "./docs-input";
 import ImageInput from "./image-input";
 import Seperator from "./seperator";
@@ -6,8 +6,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Upload = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const tab = window.location.search.slice(1).split(";")[0];
 
   if (tab !== "tab=docs" && tab !== "tab=images") {
