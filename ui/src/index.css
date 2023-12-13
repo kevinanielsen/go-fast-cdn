@@ -15,3 +15,31 @@
 body {
   @apply bg-slate-50 text-slate-950;
 }
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  bottom: 15px;
+  visibility: hidden;
+  width: max-content;
+  padding: 5px;
+  background-color: rgba(200, 200, 200, 0.5);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  transition-delay: 400ms;
+  visibility: visible;
+}
