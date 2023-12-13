@@ -25,7 +25,7 @@
         }
       }
     },
-    "/doc/all": {
+    "/api/cdn/doc/all": {
       "get": {
         "summary": "Get all documents",
         "responses": {
@@ -51,7 +51,7 @@
         }
       }
     },
-    "/image/all": {
+    "/api/cdn/image/all": {
       "get": {
         "summary": "Get all images",
         "responses": {
@@ -77,7 +77,7 @@
         }
       }
     },
-    "/drop/database": {
+    "/api/cdn/drop/database": {
       "post": {
         "summary": "Drop database",
         "operationId": "dropDatabase",
@@ -194,7 +194,7 @@
         }
       }
     },
-    "/download/image/{fileName}": {
+    "/api/cdn/download/image/{fileName}": {
       "get": {
         "summary": "Retrieve image.",
         "description": "Retrieve the image requested from the CDN.",
@@ -220,7 +220,7 @@
         }
       }
     },
-    "/download/doc/{fileName}": {
+    "/api/cdn/download/doc/{fileName}": {
       "get": {
         "summary": "Retrieve doc.",
         "description": "Retrieve the doc requested from the CDN.",
