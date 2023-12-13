@@ -1,16 +1,11 @@
 package router
 
 import (
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/middleware"
 	"github.com/go-fast-cdn/ui"
-	"github.com/go-fast-cdn/util"
-	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
-	docHandlers "github.com/go-fast-cdn/util/handlers/docs"
-	imageHandlers "github.com/go-fast-cdn/util/handlers/image"
 )
 
 func Router() {
@@ -18,31 +13,11 @@ func Router() {
 
 	r.Use(middleware.CORSMiddleware())
 
+	// Add all the API routes
+	AddApiRoutes(r)
+
+	// Add the embedded ui routes
 	ui.AddRoutes(r)
-
-	api := r.Group("/api")
-	{
-		api.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, "pong")
-		})
-		api.GET("/doc/all", docHandlers.HandleAllDocs)
-		api.GET("/image/all", imageHandlers.HandleAllImages)
-		api.POST("/drop/database", dbHandlers.HandleDropDB)
-	}
-
-	cdn := api.Group("/cdn")
-	{
-
-	}
-
-	upload := cdn.Group("/upload")
-	{
-		upload.POST("/image", imageHandlers.HandleImageUpload)
-		upload.POST("/doc", docHandlers.HandleDocsUpload)
-	}
-
-	r.Static("/download/images", util.ExPath+"/uploads/images")
-	r.Static("/download/docs", util.ExPath+"/uploads/docs")
 
 	r.Run(":" + os.Getenv("PORT"))
 }

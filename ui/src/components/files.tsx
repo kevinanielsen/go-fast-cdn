@@ -15,7 +15,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`/api/${type === "images" ? "image" : "doc"}/all`)
+      .get(`/api/cdn/${type === "images" ? "image" : "doc"}/all`)
       .then((res) => res.data != null && setFiles(res.data))
       .catch((err: undefined) => {
         console.log(err);
