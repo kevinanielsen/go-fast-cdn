@@ -17,7 +17,9 @@ var staticFS embed.FS
 // AddRoutes serves the static file system for the UI React App.
 func AddRoutes(router gin.IRouter) {
 	embeddedBuildFolder := newStaticFileSystem()
+	fallbackFileSystem := newFallbackFileSystem(embeddedBuildFolder)
 	router.Use(static.Serve("/", embeddedBuildFolder))
+	router.Use(static.Serve("/", fallbackFileSystem))
 }
 
 // ----------------------------------------------------------------------
@@ -56,4 +58,26 @@ func (s *staticFileSystem) Exists(prefix string, path string) bool {
 		_ = f.Close()
 	}
 	return err == nil
+}
+
+// fallbackFileSystem wraps a staticFileSystem and always serves /index.html
+type fallbackFileSystem struct {
+	staticFileSystem *staticFileSystem
+}
+
+var _ static.ServeFileSystem = (*fallbackFileSystem)(nil)
+var _ http.FileSystem = (*fallbackFileSystem)(nil)
+
+func newFallbackFileSystem(staticFileSystem *staticFileSystem) *fallbackFileSystem {
+	return &fallbackFileSystem{
+		staticFileSystem: staticFileSystem,
+	}
+}
+
+func (f *fallbackFileSystem) Open(path string) (http.File, error) {
+	return f.staticFileSystem.Open("/index.html")
+}
+
+func (f *fallbackFileSystem) Exists(prefix string, path string) bool {
+	return true
 }

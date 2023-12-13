@@ -18,7 +18,6 @@ func Router() {
 
 	r.Use(middleware.CORSMiddleware())
 
-	ui.AddRoutes(r)
 
 	api := r.Group("/api")
 	{
@@ -43,6 +42,8 @@ func Router() {
 
 	r.Static("/download/images", util.ExPath+"/uploads/images")
 	r.Static("/download/docs", util.ExPath+"/uploads/docs")
+	// Add the embedded ui routes
+	ui.AddRoutes(r)
 
 	r.Run(":" + os.Getenv("PORT"))
 }
