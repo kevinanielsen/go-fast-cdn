@@ -16,9 +16,9 @@ const ContentCard: React.FC<TContentCardProps> = ({
   // createdAt,
   // updatedAt,
 }) => {
-  const url = `${window.location.protocol}//${window.location.host}/download/${
-    type === "documents" ? "docs" : "images"
-  }/${file_name}`;
+  const url = `${window.location.protocol}//${
+    window.location.host
+  }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
 
   return (
     <div className="border rounded-lg shadow-lg flex flex-col w-64 max-w-[256px] justify-center items-center gap-4 p-4">
