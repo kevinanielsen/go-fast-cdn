@@ -10,7 +10,7 @@ function App() {
     <>
       <Toaster />
       <div className="flex h-screen w-screen">
-        <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg p-4 flex flex-col">
+        <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
           <h1 className="text-xl font-bold">Go-Fast CDN</h1>
           <Seperator />
           <Link to="/upload" className="flex font-bold gap-4 items-center">
@@ -37,7 +37,7 @@ function App() {
             </li>
           </ul>
         </nav>
-        <main className="m-4">
+        <main className="m-4 w-full h-full">
           <Route path="/images">{<Files type="images" />}</Route>
           <Route path="/documents">{<Files type="documents" />}</Route>
           <Route path="/upload">{<Upload />}</Route>
