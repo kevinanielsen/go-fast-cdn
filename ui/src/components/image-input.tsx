@@ -1,0 +1,43 @@
+import { FileImage } from "lucide-react";
+import { useState } from "react";
+import ContentCard from "./content-card";
+
+const ImageInput: React.FC<{
+  fileRef: React.RefObject<HTMLInputElement>;
+}> = ({ fileRef }) => {
+  const [fileName, setFileName] = useState<undefined | string>(undefined);
+
+  const getFileName = () => {
+    if (fileRef.current?.files != null) {
+      setFileName(fileRef.current.files[0].name);
+    }
+  };
+
+  return (
+    <div className="my-8 flex flex-col justify-center items-center aspect-[10/4]">
+      <div className="w-full h-full mb-4 flex justify-center items-center">
+        {fileName ? (
+          <ContentCard disabled file_name={fileName} />
+        ) : (
+          <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex justify-center items-center">
+            <FileImage size="128" />
+          </div>
+        )}
+      </div>
+      <label htmlFor="image" className="flex flex-col">
+        Select Image
+        <input
+          onChange={getFileName}
+          type="file"
+          accept="image/jpeg, image/png, image/jpg, image/webp, image/gif, image/bmp"
+          name="image"
+          id="image"
+          aria-label="Select image"
+          ref={fileRef}
+        />
+      </label>
+    </div>
+  );
+};
+
+export default ImageInput;
