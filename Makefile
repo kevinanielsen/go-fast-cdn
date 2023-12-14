@@ -13,6 +13,7 @@ build_ui:
 build_bin:
 	GOARCH=amd64 GOOS=darwin go build -o bin/${BINARY_NAME}-darwin 
 	CC="x86_64-linux-musl-gcc" GOARCH=amd64 GOOS=linux go build -o bin/${BINARY_NAME}-linux
+	CC="x86_64-w64-mingw32-gcc" GOARCH=amd64 GOOS=windows go build -o bin/${BINARY_NAME}-windows
 
 run: build
 	bin/${BINARY_NAME}-darwin
