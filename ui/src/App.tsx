@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Toaster />
-      <div className="flex h-screen w-screen">
+      <div className="flex max-h-screen w-screen">
         <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
           <h1 className="text-xl font-bold">Go-Fast CDN</h1>
           <Seperator />
@@ -37,7 +37,7 @@ function App() {
             </li>
           </ul>
         </nav>
-        <main className="m-4 w-full h-full">
+        <main className="m-4 h-auto flex flex-col w-full">
           <Route path="/images">{<Files type="images" />}</Route>
           <Route path="/documents">{<Files type="documents" />}</Route>
           <Route path="/upload">{<Upload />}</Route>

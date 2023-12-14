@@ -50,7 +50,7 @@ const Upload = () => {
     <>
       <h2 className="text-2xl capitalize mb-8">Upload Files</h2>
       <Seperator />
-      <div className="border rounded-lg shadow-lg overflow-hidden">
+      <div className="border rounded-lg shadow-lg h-full overflow-hidden flex flex-col">
         <nav className="flex justify-evenly h-10 border-b">
           <button
             onClick={(e) => switchTab(e, "docs")}
@@ -70,7 +70,7 @@ const Upload = () => {
             Images
           </button>
         </nav>
-        <form action="">
+        <form action="" className="flex flex-col h-full">
           {tab === "tab=docs" ? (
             <DocsInput fileRef={file} />
           ) : (
@@ -78,7 +78,7 @@ const Upload = () => {
           )}
           <button
             type="submit"
-            className="w-full h-10 bg-sky-300 border-t font-bold disabled:opacity-50"
+            className="w-full h-10 bg-sky-400 border-t font-bold disabled:opacity-50 py-4 flex justify-center items-center"
             onClick={(e) => {
               e.preventDefault();
               uploadFile();
