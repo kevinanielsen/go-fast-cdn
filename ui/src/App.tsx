@@ -41,6 +41,7 @@ function App() {
           <Route path="/images">{<Files type="images" />}</Route>
           <Route path="/documents">{<Files type="documents" />}</Route>
           <Route path="/upload">{<Upload />}</Route>
+          <Route path="/upload/:tab">{<Upload />}</Route>
         </main>
       </div>
     </>

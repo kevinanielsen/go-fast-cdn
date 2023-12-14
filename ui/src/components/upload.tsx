@@ -4,12 +4,13 @@ import ImageInput from "./image-input";
 import Seperator from "./seperator";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useParams } from "wouter";
 
 const Upload = () => {
-  const tab = window.location.search.slice(1).split(";")[0];
+  const tab = useParams<{ tab: "images" | "docs" }>().tab;
 
-  if (tab !== "tab=docs" && tab !== "tab=images") {
-    window.location.search = "?tab=docs";
+  if (tab === undefined || tab === null) {
+    window.location.pathname = "/upload/docs";
   }
 
   const file = useRef<HTMLInputElement>(null);
@@ -21,7 +22,7 @@ const Upload = () => {
       toast.loading("Uploading...");
       const toUpload = files[0];
       const form = new FormData();
-      const type = tab === "tab=docs" ? "doc" : "image";
+      const type = tab === "docs" ? "doc" : "image";
       form.append(type, toUpload);
       axios
         .post<{ url: string }>(`/api/cdn/upload/${type}`, form)
@@ -38,12 +39,8 @@ const Upload = () => {
     }
   };
 
-  const switchTab = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    tab: "docs" | "images"
-  ) => {
-    e.preventDefault();
-    window.location.search = `?tab=${tab}`;
+  const switchTab = (tab: "docs" | "images") => {
+    window.location.pathname = `upload/${tab}`;
   };
 
   return (
@@ -53,25 +50,25 @@ const Upload = () => {
       <div className="border rounded-lg shadow-lg h-full overflow-hidden flex flex-col">
         <nav className="flex justify-evenly h-10 border-b">
           <button
-            onClick={(e) => switchTab(e, "docs")}
+            onClick={() => switchTab("docs")}
             className={`w-full h-full flex justify-center items-center ${
-              tab === "tab=docs" && "border-b-sky-500 border-b-2"
+              tab === "docs" && "border-b-sky-500 border-b-2"
             }`}
           >
             Documents
           </button>
           <div className="h-10 border-r" />
           <button
-            onClick={(e) => switchTab(e, "images")}
+            onClick={() => switchTab("images")}
             className={`w-full h-full flex justify-center items-center ${
-              tab === "tab=images" && "border-b-sky-500 border-b-2"
+              tab === "images" && "border-b-sky-500 border-b-2"
             }`}
           >
             Images
           </button>
         </nav>
         <form action="" className="flex flex-col h-full">
-          {tab === "tab=docs" ? (
+          {tab === "docs" ? (
             <DocsInput fileRef={file} />
           ) : (
             <ImageInput fileRef={file} />
