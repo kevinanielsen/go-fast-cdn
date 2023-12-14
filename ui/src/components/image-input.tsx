@@ -14,7 +14,7 @@ const ImageInput: React.FC<{
   };
 
   return (
-    <div className="my-8 flex flex-col justify-center items-center aspect-[10/4]">
+    <div className="my-8 flex flex-col justify-center items-center h-full">
       <div className="w-full h-full mb-4 flex justify-center items-center">
         {fileName ? (
           <ContentCard disabled file_name={fileName} />
