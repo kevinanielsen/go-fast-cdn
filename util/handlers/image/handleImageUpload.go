@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/database"
 	"github.com/go-fast-cdn/util"
-	"github.com/google/uuid"
 )
 
 func HandleImageUpload(c *gin.Context) {
 	fileHeader, err := c.FormFile("image")
+	newName := c.PostForm("filename")
 
 	if err != nil {
 		c.String(http.StatusBadRequest, "Failed to read file: %s", err.Error())
@@ -49,7 +49,16 @@ func HandleImageUpload(c *gin.Context) {
 	}
 
 	fileHashBuffer := md5.Sum(fileBuffer)
-	fileName := uuid.NewString() + filepath.Ext(fileHeader.Filename)
+
+	var fileName string
+
+	if newName == "" {
+
+		fileName = fileHeader.Filename
+	} else {
+		fileName = newName + filepath.Ext(fileHeader.Filename)
+	}
+
 	savedFileName, alreadyExists := database.AddImage(fileName, fileHashBuffer[:])
 
 	if !alreadyExists {
