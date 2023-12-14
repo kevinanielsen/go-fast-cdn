@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "0.0.1",
+    "version": "0.1.0",
     "title": "Go-Fast CDN",
     "description": "A simple and fast CDN written in Go",
     "contact": {
