@@ -2,11 +2,11 @@
 *"The PocketBase of CDNs" - Me*
 ### A fast and easy-to-use CDN, built with Go.
 
-Utilizing a SQLite database with GORM and the Gin web-framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
+Utilizing an SQLite database with GORM and the Gin web framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
 
 ## How to use
 
-See the API documentation at [go-fast-cdn.redoc.ly](https://go-fast-cdn.redoc.ly/)
+See our documentation at [kevinanielsen.github.io/go-fast-cdn/](https://kevinanielsen.github.io/go-fast-cdn/)
 
 ## Development
 
@@ -18,12 +18,8 @@ or `git clone https://github.com:kevinanielsen/go-fast-cdn`
 ### Add env variables
 
 This project uses [dotenv](https://vault.dotenv.org/) and I recommend that you do the same. <br>
-Read more abou the usage on their page. <br><br>
+Read more about the usage on their page. <br><br>
 If you do not wish to use this, you can just rename `.example.env` to `.env` and fill in the fields.
-
-### Set the main.db
-
-This project uses an SQLite database. To start, you need to rename `.example.db` to `main.db`.
 
 ### Building the binary
 
@@ -31,4 +27,10 @@ This project uses an SQLite database. To start, you need to rename `.example.db`
 2. Run `make clean`
 3. Run `make build` <br>
 
-Your binary should now be built and you can run it with `bin/go-fast-cdn`
+Your binary should now be built and you can run it with `bin/go-fast-cdn-linux` or `bin/go-fast-cdn-windows` or `bin/go-fast-cdn-darwin`
+
+### Contributing
+
+There are many ways to contribute to this project. Open a new issue if you see a feature missing - open a PR if you have the solution to an issue or a change you want to implement.
+
+If you don't want to change anything, you can also help the development by leaving a star on this repo!
