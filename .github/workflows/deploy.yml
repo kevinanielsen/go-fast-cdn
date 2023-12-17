@@ -5,6 +5,9 @@ on:
   # Using a different branch name? Replace `main` with your branch’s name
   push:
     branches: [main]
+  pull_request:
+    branches:
+      - main
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
@@ -23,7 +26,7 @@ jobs:
       - name: Install, build, and upload your site
         uses: withastro/action@v1
         with:
-          path: /docs
+          path: /docs/
           package-manager: pnpm@latest
         # with:
         # path: . # The root location of your Astro project inside the repository. (optional)
