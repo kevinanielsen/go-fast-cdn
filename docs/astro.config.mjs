@@ -16,8 +16,22 @@ export default defineConfig({
           label: "Guides",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Usage", link: "/go-fast-cdn/guides/usage/" },
-            { label: "Hosting", link: "/go-fast-cdn/guides/hosting/" },
+            { label: "Usage", link: "/guides/usage/" },
+            { label: "Hosting", link: "/guides/hosting/" },
+          ],
+        },
+        {
+          label: "Contribution",
+          items: [
+            // Each item here is one entry in the navigation menu.
+            {
+              label: "Development",
+              link: "/contribution/development/",
+            },
+            {
+              label: "Contributing",
+              link: "/contribution/contributing/",
+            },
           ],
         },
       ],
