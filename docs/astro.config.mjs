@@ -3,7 +3,8 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://kevinanielsen.github.io/go-fast-cdn",
+  site: "https://kevinanielsen.github.io",
+  base: "/go-fast-cdn",
   integrations: [
     starlight({
       title: "Go-fast CDN",
