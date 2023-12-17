@@ -34,7 +34,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v2.0.0
         with:
-          name: docs-pages
           path: docs/dist/
         
   deploy:
