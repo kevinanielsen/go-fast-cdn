@@ -2,11 +2,11 @@
 *"The PocketBase of CDNs" - Me*
 ### A fast and easy-to-use CDN, built with Go.
 
-Utilizing a SQLite database with GORM and the Gin web-framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
+Utilizing an SQLite database with GORM and the Gin web framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
 
 ## How to use
 
-See the API documentation at [go-fast-cdn.redoc.ly](https://go-fast-cdn.redoc.ly/)
+See our documentation at [kevinanielsen.github.io/go-fast-cdn/](https://kevinanielsen.github.io/go-fast-cdn/)
 
 ## Development
 
@@ -18,7 +18,7 @@ or `git clone https://github.com:kevinanielsen/go-fast-cdn`
 ### Add env variables
 
 This project uses [dotenv](https://vault.dotenv.org/) and I recommend that you do the same. <br>
-Read more abou the usage on their page. <br><br>
+Read more about the usage on their page. <br><br>
 If you do not wish to use this, you can just rename `.example.env` to `.env` and fill in the fields.
 
 ### Building the binary
