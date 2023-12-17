@@ -20,6 +20,20 @@ export default defineConfig({
             { label: "Hosting", link: "/go-fast-cdn/guides/hosting/" },
           ],
         },
+        {
+          label: "Contribution",
+          items: [
+            // Each item here is one entry in the navigation menu.
+            {
+              label: "Development",
+              link: "/contribution/development/",
+            },
+            {
+              label: "Contributing",
+              link: "/contribution/contributing/",
+            },
+          ],
+        },
       ],
     }),
   ],
