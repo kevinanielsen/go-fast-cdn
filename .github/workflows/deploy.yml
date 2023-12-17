@@ -23,23 +23,37 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v3
-      - name: Install, build, and upload your site
-        uses: withastro/action@v1
+      - name: Setup pnpm
+        uses: pnpm/actions@v2.4.0
         with:
-          path: /docs/
-          package-manager: pnpm@latest
-        # with:
-        # path: . # The root location of your Astro project inside the repository. (optional)
-        # node-version: 18 # The specific version of Node that should be used to build your site. Defaults to 18. (optional)
-        # package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
-
+          version: 8.x
+      - name: Install dependencies
+        run: cd docs && pnpm install
+      - name: Build
+        run: cd docs && pnpm build
+      - name: Upload artifacts
+        uses: actions/upload-pages-artifact@v2.0.0
+        with:
+          name: docs-pages
+          path: docs/dist/
+        
   deploy:
+    # Add a dependency to the build job
     needs: build
-    runs-on: ubuntu-latest
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v3 # or specific "vX.X.X" version tag for this action
