@@ -63,6 +63,7 @@ func HandleDocsUpload(c *gin.Context) {
 
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
+		return
 	}
 
 	if !alreadyExists {

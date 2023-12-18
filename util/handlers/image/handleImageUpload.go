@@ -50,19 +50,26 @@ func HandleImageUpload(c *gin.Context) {
 
 	fileHashBuffer := md5.Sum(fileBuffer)
 
-	var fileName string
+	var filename string
 
 	if newName == "" {
 
-		fileName = fileHeader.Filename
+		filename = fileHeader.Filename
 	} else {
-		fileName = newName + filepath.Ext(fileHeader.Filename)
+		filename = newName + filepath.Ext(fileHeader.Filename)
 	}
 
-	savedFileName, alreadyExists := database.AddImage(fileName, fileHashBuffer[:])
+	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
+
+	filteredFilename, err := util.FilterFilename(filename)
+
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
 
 	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+fileName)
+		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+filteredFilename)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 			return
@@ -70,7 +77,7 @@ func HandleImageUpload(c *gin.Context) {
 	}
 
 	body := gin.H{
-		"file_url": c.Request.Host + "/download/images/" + savedFileName,
+		"file_url": c.Request.Host + "/download/images/" + savedFilename,
 	}
 
 	c.JSON(http.StatusOK, body)
