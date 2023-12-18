@@ -31,4 +31,10 @@ func AddApiRoutes(r *gin.Engine) {
 		upload.POST("/image", iHandlers.HandleImageUpload)
 		upload.POST("/doc", dHandlers.HandleDocsUpload)
 	}
+
+	rename := cdn.Group("/rename")
+	{
+		rename.PUT("/image", iHandlers.HandleImageRename)
+		rename.PUT("/doc", dHandlers.HandleDocsRename)
+	}
 }
