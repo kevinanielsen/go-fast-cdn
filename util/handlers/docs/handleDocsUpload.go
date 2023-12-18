@@ -51,16 +51,22 @@ func HandleDocsUpload(c *gin.Context) {
 	}
 
 	fileHashBuffer := md5.Sum(fileBuffer)
-	var fileName string
+	var filename string
 	if newName == "" {
-		fileName = fileHeader.Filename
+		filename = fileHeader.Filename
 	} else {
-		fileName = newName + filepath.Ext(fileHeader.Filename)
+		filename = newName + filepath.Ext(fileHeader.Filename)
 	}
-	savedFileName, alreadyExists := database.AddDoc(fileName, fileHashBuffer[:])
+	savedFileName, alreadyExists := database.AddDoc(filename, fileHashBuffer[:])
+
+	filteredFilename, err := util.FilterFilename(filename)
+
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+	}
 
 	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+fileName)
+		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+filteredFilename)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 			return
