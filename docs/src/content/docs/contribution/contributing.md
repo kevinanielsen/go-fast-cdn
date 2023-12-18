@@ -11,7 +11,7 @@ If that is not possible, you can still help by contributing to the [Documentatio
 
 If you want to report a bug or request a feature, you can go ahead and create a new issue on GitHub, where a template is laid out, and encouraged to be used. If you want to fix a bug or implement a new feature, go ahead and open a pull request with your suggestion.
 
-Please read the [Development Guide](/contribution/development) to learn more about how to develop on this project.
+Please read the [Development Guide](/go-fast-cdn/contribution/development) to learn more about how to develop on this project.
 
 ## Documentation
 
