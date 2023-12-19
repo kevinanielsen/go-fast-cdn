@@ -13,7 +13,7 @@ import (
 func GetSizeHandler(c *gin.Context) {
 	var cdnSize int64 = 0
 
-	err := filepath.Walk(util.ExPath,
+	err := filepath.Walk(util.ExPath+"/uploads",
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
