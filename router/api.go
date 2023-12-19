@@ -37,4 +37,10 @@ func AddApiRoutes(r *gin.Engine) {
 		delete.DELETE("/image/:filename", iHandlers.HandleImageDelete)
 		delete.DELETE("/doc/:filename", dHandlers.HandleDocDelete)
 	}
+
+	rename := cdn.Group("/rename")
+	{
+		rename.PUT("/image", iHandlers.HandleImageRename)
+		rename.PUT("/doc", dHandlers.HandleDocsRename)
+	}
 }
