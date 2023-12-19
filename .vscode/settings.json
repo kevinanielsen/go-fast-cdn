@@ -1,5 +1,0 @@
-{
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": "file:///Users/kevinanielsen/Developer/go/src/github.com/kevinanielsen/go-fast-cdn/.github/workflows/deploy.yml"
-  }
-}
