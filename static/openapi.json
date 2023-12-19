@@ -194,7 +194,7 @@
         }
       }
     },
-    "/api/cdn/download/image/{fileName}": {
+    "/api/cdn/download/images/{fileName}": {
       "get": {
         "summary": "Retrieve image.",
         "description": "Retrieve the image requested from the CDN.",
@@ -220,7 +220,7 @@
         }
       }
     },
-    "/api/cdn/download/doc/{fileName}": {
+    "/api/cdn/download/docs/{fileName}": {
       "get": {
         "summary": "Retrieve doc.",
         "description": "Retrieve the doc requested from the CDN.",
