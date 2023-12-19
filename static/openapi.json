@@ -212,7 +212,7 @@
         ],
         "responses": {
           "200": {
-            "description": "You have recieved the requested content from the CDN."
+            "description": "You have received the requested content from the CDN."
           },
           "304": {
             "description": "Redirect to the requested content."
@@ -238,10 +238,130 @@
         ],
         "responses": {
           "200": {
-            "description": "You have recieved the requested content from the CDN."
+            "description": "You have received the requested content from the CDN."
           },
           "304": {
             "description": "Redirect to the requested content."
+          }
+        }
+      }
+    },
+    "/api/cdn/delete/image/{filename}": {
+      "delete": {
+        "summary": "Delete image.",
+        "description": "Delete an image from the CDN.",
+        "operationId": "deleteImage",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "The filename of the image to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have deleted the requested image."
+          },
+          "400": {
+            "description": "Missing or invalid parameters"
+          }
+        }
+      }
+    },
+    "/api/cdn/delete/doc/{filename}": {
+      "delete": {
+        "summary": "Delete document.",
+        "description": "Delete an document from the CDN.",
+        "operationId": "deleteDoc",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "The filename of the document to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have deleted the requested document."
+          },
+          "400": {
+            "description": "Missing or invalid parameters"
+          }
+        }
+      }
+    },
+    "/api/cdn/rename/doc": {
+      "put": {
+        "summary": "Rename document.",
+        "description": "Rename an document from the CDN.",
+        "operationId": "renameDoc",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "filename": {
+                    "type": "string",
+                    "description": "The filename you want to rename"
+                  },
+                  "newname": {
+                    "type": "string",
+                    "description": "The name you want the file to have"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You have renamed the requested document."
+          },
+          "400": {
+            "description": "Missing or invalid body"
+          }
+        }
+      }
+    },
+    "/api/cdn/rename/image": {
+      "put": {
+        "summary": "Rename image.",
+        "description": "Rename an image from the CDN.",
+        "operationId": "renameImage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "filename": {
+                    "type": "string",
+                    "description": "The filename you want to rename"
+                  },
+                  "newname": {
+                    "type": "string",
+                    "description": "The name you want the file to have"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "You have renamed the requested image."
+          },
+          "400": {
+            "description": "Missing or invalid body"
           }
         }
       }
