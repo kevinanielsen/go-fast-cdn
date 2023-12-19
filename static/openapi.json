@@ -17,6 +17,16 @@
   "paths": {
     "/": {
       "get": {
+        "summary": "Dashboard",
+        "responses": {
+          "200": {
+            "description": "Dashboard loaded"
+          }
+        }
+      }
+    },
+    "/api/": {
+      "get": {
         "summary": "Ping",
         "responses": {
           "200": {
@@ -196,7 +206,7 @@
     },
     "/api/cdn/download/images/{fileName}": {
       "get": {
-        "summary": "Retrieve image.",
+        "summary": "Retrieve image",
         "description": "Retrieve the image requested from the CDN.",
         "operationId": "receiveImage",
         "parameters": [
@@ -222,7 +232,7 @@
     },
     "/api/cdn/download/docs/{fileName}": {
       "get": {
-        "summary": "Retrieve doc.",
+        "summary": "Retrieve document",
         "description": "Retrieve the doc requested from the CDN.",
         "operationId": "receiveDoc",
         "parameters": [
@@ -248,7 +258,7 @@
     },
     "/api/cdn/delete/image/{filename}": {
       "delete": {
-        "summary": "Delete image.",
+        "summary": "Delete image",
         "description": "Delete an image from the CDN.",
         "operationId": "deleteImage",
         "parameters": [
@@ -274,7 +284,7 @@
     },
     "/api/cdn/delete/doc/{filename}": {
       "delete": {
-        "summary": "Delete document.",
+        "summary": "Delete document",
         "description": "Delete an document from the CDN.",
         "operationId": "deleteDoc",
         "parameters": [
@@ -300,7 +310,7 @@
     },
     "/api/cdn/rename/doc": {
       "put": {
-        "summary": "Rename document.",
+        "summary": "Rename document",
         "description": "Rename an document from the CDN.",
         "operationId": "renameDoc",
         "requestBody": {
@@ -334,7 +344,7 @@
     },
     "/api/cdn/rename/image": {
       "put": {
-        "summary": "Rename image.",
+        "summary": "Rename image",
         "description": "Rename an image from the CDN.",
         "operationId": "renameImage",
         "requestBody": {
