@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	dbHandlers "github.com/go-fast-cdn/handlers/db"
+	dHandlers "github.com/go-fast-cdn/handlers/docs"
+	iHandlers "github.com/go-fast-cdn/handlers/image"
 	"github.com/go-fast-cdn/util"
-	dbHandlers "github.com/go-fast-cdn/util/handlers/db"
-	dHandlers "github.com/go-fast-cdn/util/handlers/docs"
-	iHandlers "github.com/go-fast-cdn/util/handlers/image"
 )
 
 func AddApiRoutes(r *gin.Engine) {
