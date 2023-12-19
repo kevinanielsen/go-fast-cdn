@@ -10,7 +10,7 @@ import (
 	"github.com/go-fast-cdn/util"
 )
 
-func HandleDocsUpload(c *gin.Context) {
+func HandleDocUpload(c *gin.Context) {
 	fileHeader, err := c.FormFile("doc")
 	newName := c.PostForm("filename")
 

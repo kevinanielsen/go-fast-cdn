@@ -19,3 +19,16 @@ func AddImage(fileName string, fileHashBuffer []byte) (string, bool) {
 		return entries[0].FileName, true
 	}
 }
+
+func DeleteImage(fileName string) (string, bool) {
+	var image models.Image
+
+	result := DB.Where("file_name = ?", fileName).First(&image)
+
+	if result.Error == nil {
+		DB.Delete(&image)
+		return fileName, true
+	} else {
+		return "", false
+	}
+}
