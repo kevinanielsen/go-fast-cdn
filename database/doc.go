@@ -20,7 +20,6 @@ func AddDoc(fileName string, fileHashBuffer []byte) (string, bool) {
 	}
 }
 
-
 func DeleteDoc(fileName string) (string, bool) {
 	var doc models.Doc
 
@@ -32,4 +31,9 @@ func DeleteDoc(fileName string) (string, bool) {
 	} else {
 		return "", false
 	}
+}
+
+func RenameDoc(oldFileName, newFileName string) error {
+	doc := models.Doc{}
+	return DB.Model(&doc).Where("file_name = ?", oldFileName).Update("file_name", newFileName).Error
 }

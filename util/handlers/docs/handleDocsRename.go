@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-fast-cdn/database"
+	"github.com/go-fast-cdn/util"
 )
 
 func HandleDocsRename(c *gin.Context) {
@@ -16,7 +19,18 @@ func HandleDocsRename(c *gin.Context) {
 		return
 	}
 
-	err := database.RenameDoc(oldName, newName)
+	prefix := filepath.Join(util.ExPath, "uploads", "images")
+
+	err := os.Rename(
+		filepath.Join(prefix, oldName),
+		filepath.Join(prefix, newName),
+	)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
+		return
+	}
+
+	err = database.RenameDoc(oldName, newName)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
 		return
