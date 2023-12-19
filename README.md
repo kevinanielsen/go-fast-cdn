@@ -34,9 +34,3 @@ If you do not wish to use this, you can just rename `.example.env` to `.env` and
 3. Run `make build` <br>
 
 Your binary should now be built and you can run it with `bin/go-fast-cdn-linux` or `bin/go-fast-cdn-windows` or `bin/go-fast-cdn-darwin`
-
-### Contributing
-
-There are many ways to contribute to this project. Open a new issue if you see a feature missing - open a PR if you have the solution to an issue or a change you want to implement.
-
-If you don't want to change anything, you can also help the development by leaving a star on this repo!
