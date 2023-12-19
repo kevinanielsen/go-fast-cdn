@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-fast-cdn/handlers"
 	dbHandlers "github.com/go-fast-cdn/handlers/db"
 	dHandlers "github.com/go-fast-cdn/handlers/docs"
 	iHandlers "github.com/go-fast-cdn/handlers/image"
@@ -19,6 +20,7 @@ func AddApiRoutes(r *gin.Engine) {
 	cdn := api.Group("/cdn")
 
 	{
+		cdn.GET("/size", handlers.GetSizeHandler)
 		cdn.GET("/doc/all", dHandlers.HandleAllDocs)
 		cdn.GET("/image/all", iHandlers.HandleAllImages)
 		cdn.POST("/drop/database", dbHandlers.HandleDropDB)
