@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://kevinanielsen.github.io/go-fast-cdn/" target="_blank" rel="noopener">
+    <img src="https://i.imgur.com/aRBCyfv.png" alt="Go-Fast CDN - Fast and simple Open Source CDN" />
+  </a>
+</p>
+
 # Go-Fast CDN
 *"The PocketBase of CDNs" - Me*
 ### A fast and easy-to-use CDN, built with Go.
