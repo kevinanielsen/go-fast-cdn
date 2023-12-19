@@ -383,6 +383,18 @@
         "operationId": "getSize",
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cdn_size_bytes": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
             "description": "The size of the CDN is returned in bytes."
           }
         }
