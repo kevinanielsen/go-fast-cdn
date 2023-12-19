@@ -29,6 +29,12 @@ func AddApiRoutes(r *gin.Engine) {
 	upload := cdn.Group("/upload")
 	{
 		upload.POST("/image", iHandlers.HandleImageUpload)
-		upload.POST("/doc", dHandlers.HandleDocsUpload)
+		upload.POST("/doc", dHandlers.HandleDocUpload)
+	}
+
+	delete := cdn.Group("/delete")
+	{
+		delete.DELETE("/image/:filename", iHandlers.HandleImageDelete)
+		delete.DELETE("/doc/:filename", dHandlers.HandleDocDelete)
 	}
 }
