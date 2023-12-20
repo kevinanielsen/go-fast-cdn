@@ -25,6 +25,7 @@
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
+    "jotai": "^2.6.0",
     "postcss": "^8.4.32",
     "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.3.6",
