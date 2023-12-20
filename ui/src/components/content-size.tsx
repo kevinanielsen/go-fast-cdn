@@ -1,38 +1,15 @@
-import { SetStateAction, useAtom } from "jotai";
-import { sizeAtom } from "../store";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SetAtom<Args extends any[], Result> = (...args: Args) => Result;
-
-const getSize = (
-  setSize: SetAtom<[SetStateAction<number>], void>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-  setLoading(true);
-  axios
-    .get<{ cdn_size_bytes: number }>("/api/cdn/size")
-    .then((res) => {
-      setSize(res.data.cdn_size_bytes);
-    })
-    .catch((err) => {
-      toast.error("Error getting content size");
-      console.log(err);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-};
+import { useAtom } from "jotai";
+import { sizeAtom, sizeLoadingAtom } from "../store";
+import { useEffect } from "react";
+import { getSize } from "../actions/getSize";
 
 const ContentSize = () => {
   const [size, setSize] = useAtom(sizeAtom);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useAtom(sizeLoadingAtom);
 
   useEffect(() => {
     getSize(setSize, setLoading);
-  }, [setSize]);
+  }, [setSize, setLoading]);
 
   if (loading)
     return (
