@@ -5,8 +5,16 @@ import Seperator from "./seperator";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams } from "wouter";
+import { sizeAtom, sizeLoadingAtom } from "../store";
+import { useAtom } from "jotai";
+import { getSize } from "../actions/getSize";
 
 const Upload = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setLoading] = useAtom(sizeLoadingAtom);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [__, setSize] = useAtom(sizeAtom);
+
   const tab = useParams<{ tab: "images" | "docs" }>().tab;
 
   if (tab === undefined || tab === null) {
@@ -30,6 +38,7 @@ const Upload = () => {
           if (res.status === 200) {
             toast.dismiss();
             toast.success("Successfully uploaded file!");
+            getSize(setSize, setLoading);
           }
         })
         .catch((err: Error) => {

@@ -4,6 +4,7 @@ import Files from "./components/files";
 import { Image, Upload as UploadIcon, Files as FilesIcon } from "lucide-react";
 import Seperator from "./components/seperator";
 import Upload from "./components/upload";
+import ContentSize from "./components/content-size";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               </Link>
             </li>
           </ul>
+          <ContentSize />
         </nav>
         <main className="m-4 h-auto flex flex-col w-full">
           <Route path="/images">{<Files type="images" />}</Route>
