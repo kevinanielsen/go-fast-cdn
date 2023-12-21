@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/database"
-	"github.com/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/database"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 )
 
 func HandleImageUpload(c *gin.Context) {

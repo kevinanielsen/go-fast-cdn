@@ -1,6 +1,6 @@
 package database
 
-import "github.com/go-fast-cdn/models"
+import "github.com/kevinanielsen/go-fast-cdn/models"
 
 func Migrate() {
 	DB.AutoMigrate(&models.Image{}, &models.Doc{})

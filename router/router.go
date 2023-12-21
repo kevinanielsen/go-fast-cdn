@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/middleware"
-	"github.com/go-fast-cdn/ui"
+	"github.com/kevinanielsen/go-fast-cdn/middleware"
+	"github.com/kevinanielsen/go-fast-cdn/ui"
 )
 
 func Router() {

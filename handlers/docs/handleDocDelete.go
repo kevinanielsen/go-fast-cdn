@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/database"
-	"github.com/go-fast-cdn/util"
 	"os"
+
+	"github.com/gin-gonic/gin"
+	"github.com/kevinanielsen/go-fast-cdn/database"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 )
 
 func HandleDocDelete(c *gin.Context) {

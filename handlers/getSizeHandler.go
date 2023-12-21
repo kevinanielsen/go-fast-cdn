@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 )
 
 func GetSizeHandler(c *gin.Context) {

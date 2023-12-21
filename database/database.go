@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/go-fast-cdn/models"
-	"github.com/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/models"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )

@@ -1,4 +1,4 @@
-module github.com/go-fast-cdn
+module github.com/kevinanielsen/go-fast-cdn
 
 go 1.21.2
 

@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/database"
-	"github.com/go-fast-cdn/util"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
+	"github.com/kevinanielsen/go-fast-cdn/database"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 )
 
 func HandleImageDelete(c *gin.Context) {
@@ -22,7 +23,7 @@ func HandleImageDelete(c *gin.Context) {
 	err := os.Remove(filePath)
 	if success && err == nil {
 		c.JSON(http.StatusOK, gin.H{
-			"message":  "Image deleted successfuly",
+			"message":  "Image deleted successfully",
 			"fileName": deletedFileName,
 		})
 	} else {

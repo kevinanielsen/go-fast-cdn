@@ -5,10 +5,10 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-fast-cdn/database"
-	ini "github.com/go-fast-cdn/initializers"
-	"github.com/go-fast-cdn/router"
-	"github.com/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/database"
+	ini "github.com/kevinanielsen/go-fast-cdn/initializers"
+	"github.com/kevinanielsen/go-fast-cdn/router"
+	"github.com/kevinanielsen/go-fast-cdn/util"
 )
 
 func init() {
