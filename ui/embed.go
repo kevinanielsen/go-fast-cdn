@@ -14,7 +14,10 @@ import (
 //go:embed build
 var staticFS embed.FS
 
-// AddRoutes serves the static file system for the UI React App.
+// AddRoutes configures the router with middleware to serve the embedded
+// React frontend. It serves the frontend as static files from the
+// embedded build folder. It also configures a fallback filesystem to
+// always serve index.html for unknown routes.
 func AddRoutes(router gin.IRouter) {
 	embeddedBuildFolder := newStaticFileSystem()
 	fallbackFileSystem := newFallbackFileSystem(embeddedBuildFolder)
