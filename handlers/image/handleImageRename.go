@@ -19,18 +19,25 @@ func HandleImageRename(c *gin.Context) {
 		return
 	}
 
+	filteredNewName, err := util.FilterFilename(newName)
+
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
 	prefix := filepath.Join(util.ExPath, "uploads", "images")
 
-	err := os.Rename(
+	err = os.Rename(
 		filepath.Join(prefix, oldName),
-		filepath.Join(prefix, newName),
+		filepath.Join(prefix, filteredNewName),
 	)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
 		return
 	}
 
-	err = database.RenameImage(oldName, newName)
+	err = database.RenameImage(oldName, filteredNewName)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
 		return
