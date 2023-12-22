@@ -1,0 +1,5 @@
+.github
+.gitignore
+**/build
+**/node_modules
+bin
