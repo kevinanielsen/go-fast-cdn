@@ -1,0 +1,19 @@
+# Add 'Documentation' label to any file changes within 'docs' or 'guides' folders
+docs:
+- changed-files:
+  - any-glob-to-any-file:
+    - docs/**
+    - guides/**
+
+# Add 'Documentation' label to any change to .md files within the entire repository 
+docs:
+- changed-files:
+  - any-glob-to-any-file: '**/*.md'
+
+api:
+- changed-files:
+  - any-glob-to-any-file: '**/*.go'
+  
+go:
+- changed-files:
+  - any-glob-to-any-file: '**/*.go'
