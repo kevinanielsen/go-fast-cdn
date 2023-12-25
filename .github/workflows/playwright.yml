@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: pnpm/action-setup@v2.4.0
       with:
         node-version: 18
     - name: Install dependencies
-      run: cd ui && npm ci
+      run: pnpm install --dir ./ui
     - name: Install Playwright Browsers
-      run: cd ui && npx playwright install --with-deps
+      run: cd ui && pnpx playwright install --with-deps
     - name: Run Playwright tests
-      run: cd ui && npx playwright test
+      run: cd ui && pnpx playwright test
     - uses: actions/upload-artifact@v3
       if: always()
       with:
