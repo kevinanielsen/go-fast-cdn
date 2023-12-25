@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-const baseUrl = "http://localhost:5173/";
+import { baseUrl } from "./config";
 
 /**
  * E2E test that navigates to the base URL
