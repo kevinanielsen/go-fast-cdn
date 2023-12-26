@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
-	gorm.io/gorm v1.25.5
+	gorm.io/gorm v1.24.6
 )
 
 require (
