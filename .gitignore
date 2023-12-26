@@ -16,3 +16,6 @@ bin
 .vscode
 
 .DS_Store
+
+.dist/
+dist/
