@@ -23,9 +23,7 @@ func ConnectToDB() {
 		os.Create(fmt.Sprintf("%v/main.db", dbPath))
 	}
 
-	db := sqlite.Open(fmt.Sprintf("%v/main.db", dbPath))
-
-	database, err := gorm.Open(db, &gorm.Config{
+	database, err := gorm.Open(sqlite.Open(fmt.Sprintf("%v/main.db", dbPath)), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
