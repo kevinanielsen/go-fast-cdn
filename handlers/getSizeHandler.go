@@ -24,6 +24,7 @@ func GetSizeHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		log.Println(err)
+		return
 	}
 
 	c.JSON(200, gin.H{"cdn_size_bytes": cdnSize})
