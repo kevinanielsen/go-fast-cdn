@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { baseUrl } from "./config";
 
 /**
  * E2E test that navigates to the base URL
@@ -7,7 +6,7 @@ import { baseUrl } from "./config";
  * the expected title regex.
  */
 test("has title", async ({ page }) => {
-  await page.goto(baseUrl);
+  await page.goto("/");
 
   await expect(page).toHaveTitle(/Go-Fast CDN/);
 });
@@ -18,7 +17,7 @@ test("has title", async ({ page }) => {
  * verifies the upload heading is visible.
  */
 test("upload link", async ({ page }) => {
-  await page.goto(baseUrl);
+  await page.goto("/");
 
   await page.getByRole("link", { name: "Upload Content" }).click();
 
@@ -26,7 +25,7 @@ test("upload link", async ({ page }) => {
     page.getByRole("heading", { name: "Upload Files" })
   ).toBeVisible();
 
-  expect(page.url()).toBe(baseUrl + "upload/docs");
+  expect(page.url()).toBe("/upload/docs");
 });
 
 /**
@@ -35,7 +34,7 @@ test("upload link", async ({ page }) => {
  * updates correctly.
  */
 test("upload tabs", async ({ page }) => {
-  await page.goto(baseUrl + "upload/docs");
+  await page.goto("/upload/docs");
 
   /**
    * Clicks the "Images" upload tab button,
@@ -43,7 +42,7 @@ test("upload tabs", async ({ page }) => {
    */
   await page.getByRole("button", { name: "Images" }).click();
 
-  expect(page.url()).toBe(baseUrl + "upload/images");
+  expect(page.url()).toBe("/upload/images");
 
   /**
    * Clicks the "Documents" upload tab button,
@@ -51,5 +50,5 @@ test("upload tabs", async ({ page }) => {
    */
   await page.getByRole("button", { name: "Documents" }).click();
 
-  expect(page.url()).toBe(baseUrl + "upload/docs");
+  expect(page.url()).toBe("/upload/docs");
 });
