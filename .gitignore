@@ -12,10 +12,9 @@ main.db
 ui/build
 
 bin
+.dist/
+dist/
 
 .vscode
 
 .DS_Store
-
-.dist/
-dist/
