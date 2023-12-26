@@ -1,0 +1,32 @@
+project_name: go-fast-cdn
+
+dist: .dist
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=1
+    binary: go-fast-cdn
+    goos:
+      - linux
+      - windows
+      - darwin
+
+release:
+  draft: true
+
+archives:
+  - format: zip
+    files:
+      - LICENSE*
+      - CHANGELOG*
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
