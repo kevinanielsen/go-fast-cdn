@@ -53,7 +53,7 @@ CMD ["/cdn/go-fast-cdn-linux"]
 Now, when you have saved the file, you can test if it works as expected by building the container. For this step make sure that you have Docker running on your machine.
 
 ```bash
-docker build -t cdn
+docker build . -t cdn
 ```
 
 If it builds successfully, you can run it with the following command
