@@ -37,6 +37,9 @@ jobs:
       - name: Build UI Dashboard
         run: pnpm --dir=./ui install && pnpm --dir=./ui build
 
+      - name: Tidy modules
+        run: go mod tidy
+        
       - name: Run tests
         run: go test ./...
 
