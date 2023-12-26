@@ -13,7 +13,7 @@ import (
 func setup() {
 	util.LoadExPath()
 	gin.SetMode(gin.TestMode)
-	ini.LoadEnvVariables(false)
+	ini.LoadEnvVariables(true)
 	ini.CreateFolders()
 	database.ConnectToDB()
 }
