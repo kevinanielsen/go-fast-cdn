@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+          cache-dependency-path: ui/pnpm-lock.yaml
+
 
       - name: Set up Go
         uses: actions/setup-go@v3
