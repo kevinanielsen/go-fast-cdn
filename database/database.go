@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cloudquery/sqlite"
+	"github.com/glebarez/sqlite"
 	"github.com/kevinanielsen/go-fast-cdn/models"
 	"github.com/kevinanielsen/go-fast-cdn/util"
 	"gorm.io/gorm"
