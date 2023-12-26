@@ -12,6 +12,8 @@ main.db
 ui/build
 
 bin
+.dist/
+dist/
 
 .vscode
 
