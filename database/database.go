@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/cloudquery/sqlite"
 	"github.com/kevinanielsen/go-fast-cdn/models"
 	"github.com/kevinanielsen/go-fast-cdn/util"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +23,9 @@ func ConnectToDB() {
 		os.Create(fmt.Sprintf("%v/main.db", dbPath))
 	}
 
-	database, err := gorm.Open(sqlite.Open(fmt.Sprintf("%v/main.db", dbPath)), &gorm.Config{
+	db := sqlite.Open(fmt.Sprintf("%v/main.db", dbPath))
+
+	database, err := gorm.Open(db, &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
