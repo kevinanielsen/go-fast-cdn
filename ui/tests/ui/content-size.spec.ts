@@ -1,8 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { baseUrl } from "./config";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(baseUrl);
+  await page.goto("/");
 });
 
 test("sidebar content-size label", async ({ page }) => {
