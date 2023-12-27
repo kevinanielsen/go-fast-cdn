@@ -45,4 +45,9 @@ func AddApiRoutes(r *gin.Engine) {
 		rename.PUT("/image", iHandlers.HandleImageRename)
 		rename.PUT("/doc", dHandlers.HandleDocsRename)
 	}
+
+	resize := cdn.Group("/resize")
+	{
+		resize.PUT("/image", iHandlers.HandleImageResize)
+	}
 }
