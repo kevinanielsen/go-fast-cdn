@@ -2,6 +2,9 @@
   <a href="https://kevinanielsen.github.io/go-fast-cdn/" target="_blank" rel="noopener">
     <img src="https://i.imgur.com/aRBCyfv.png" alt="Go-Fast CDN - Fast and simple Open Source CDN" />
   </a>
+  <a href="https://github.com/kevinanielsen/go-fast-cdn/actions/workflows/release.yml/" target="_blank" rel="noopener">
+    <img src="https://github.com/kevinanielsen/go-fast-cdn/actions/workflows/release.yml/badge.svg?branch=main" />
+  </a>
 </p>
 
 # Go-Fast CDN
