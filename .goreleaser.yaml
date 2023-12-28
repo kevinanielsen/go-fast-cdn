@@ -28,6 +28,9 @@ builds:
 
 release:
   draft: true
+  github:
+    owner: kevinanielsen
+    name: go-fast-cdn
 
 archives:
   - format: zip
