@@ -21,8 +21,8 @@ const ContentSize = () => {
 
   return (
     <div className="bottom-0 absolute mb-4">
-      <span>Total content size:</span>
-      <p className="font-bold">
+      <span data-testid="content-size-label">Total content size:</span>
+      <p className="font-bold" data-testid="content-size">
         {size < 1000 && `${size} b`}
         {999999 > size && size >= 1000 && `${Math.round(size / 100) / 10} KB`}
         {1000000000 > size &&

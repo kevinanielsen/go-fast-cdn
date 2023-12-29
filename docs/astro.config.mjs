@@ -8,6 +8,16 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Go-fast CDN",
+      defaultLocale: "root",
+      locales: {
+        root: {
+          label: "English",
+          lang: "en",
+        },
+        da: {
+          label: "Dansk",
+        },
+      },
       social: {
         github: "https://github.com/kevinanielsen/go-fast-cdn",
       },

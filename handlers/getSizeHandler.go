@@ -11,7 +11,7 @@ import (
 )
 
 func GetSizeHandler(c *gin.Context) {
-	var cdnSize int64 = 0
+	var cdnSize int64
 
 	err := filepath.Walk(util.ExPath+"/uploads",
 		func(path string, info os.FileInfo, err error) error {
@@ -24,6 +24,7 @@ func GetSizeHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		log.Println(err)
+		return
 	}
 
 	c.JSON(200, gin.H{"cdn_size_bytes": cdnSize})
