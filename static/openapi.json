@@ -35,6 +35,27 @@
         }
       }
     },
+    "/api/cdn/size": {
+      "get": {
+        "summary": "Get content size",
+        "responses": {
+          "200": {
+            "description": "Size in bytes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cdn_size_bytes": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/cdn/doc/all": {
       "get": {
         "summary": "Get all documents",
