@@ -2,9 +2,10 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/kevinanielsen/go-fast-cdn/util"
 
@@ -20,7 +21,7 @@ func HandleDocMetadata(c *gin.Context) {
 		return
 	}
 
-	filePath := fmt.Sprintf("%v/uploads/docs/%v", util.ExPath, fileName)
+	filePath := filepath.Join(util.ExPath, "uploads", "docs", fileName)
 	stat, err := os.Stat(filePath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -28,6 +29,7 @@ func HandleDocMetadata(c *gin.Context) {
 				"error": "Doc does not exist",
 			})
 		} else {
+			log.Printf("Failed to get document %s: %s\n", fileName, err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "Internal error",
 			})
