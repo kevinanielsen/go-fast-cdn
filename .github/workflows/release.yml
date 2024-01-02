@@ -1,12 +1,11 @@
 name: release
 
 on:
-  pull_request:
-    branches:
-    - main
-  push:
-    branches:
-    - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New tag name'
+        required: true
 
 jobs:
   goreleaser:
@@ -19,6 +18,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - run: git tag ${{ github.event.inputs.tag }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
