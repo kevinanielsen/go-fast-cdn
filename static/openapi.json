@@ -61,6 +61,67 @@
         }
       }
     },
+    "/api/cdn/doc/{fileName}": {
+      "get": {
+        "description": "Retrieves metadata about the document",
+        "responses": {
+          "400": {
+            "description": "Document filename was not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Document was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown error while trying to retrieve the document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Metadata about the document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "properties": {
+                      "filename": { "type": "string" },
+                      "download_url":{ "type": "string" },
+                      "file_size": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/cdn/image/all": {
       "get": {
         "summary": "Get all images",
