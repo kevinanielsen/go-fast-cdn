@@ -1,14 +1,12 @@
-# Add 'Documentation' label to any file changes within 'docs' or 'guides' folders
+# Add 'docs' label to any file changes within 'docs' folder or any file with '.md' extension
 docs:
-- changed-files:
-  - any-glob-to-any-file:
-    - docs/**
-    - '**/*.md'
-    
+- 'docs/**'
+- '**/*.md'
+
+# Add 'api' label to any file changes in any file with '.go' extension
 api:
-- changed-files:
-  - any-glob-to-any-file: '**/*.go'
-  
+- '**/*.go'
+
+# Add 'go' label to any file changes in any file with '.go' extension
 go:
-- changed-files:
-  - any-glob-to-any-file: '**/*.go'
+- '**/*.go'
