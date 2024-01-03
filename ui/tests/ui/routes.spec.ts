@@ -25,7 +25,7 @@ test("upload link", async ({ page }) => {
     page.getByRole("heading", { name: "Upload Files" })
   ).toBeVisible();
 
-  expect(page.url()).toBe("/upload/docs");
+  expect(page.url()).toContain("/upload/docs");
 });
 
 /**
@@ -42,7 +42,7 @@ test("upload tabs", async ({ page }) => {
    */
   await page.getByRole("button", { name: "Images" }).click();
 
-  expect(page.url()).toBe("/upload/images");
+  expect(page.url()).toContain("/upload/images");
 
   /**
    * Clicks the "Documents" upload tab button,
@@ -50,5 +50,5 @@ test("upload tabs", async ({ page }) => {
    */
   await page.getByRole("button", { name: "Documents" }).click();
 
-  expect(page.url()).toBe("/upload/docs");
+  expect(page.url()).toContain("/upload/docs");
 });
