@@ -25,3 +25,6 @@ clean:
 
 vet:
 	go vet
+
+test:
+	go test ./...

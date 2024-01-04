@@ -34,6 +34,7 @@ If you do not wish to use this, you can just rename `.example.env` to `.env` and
 
 1. Run `make prep`
 2. Run `make clean`
-3. Run `make build` <br>
+3. Run `make test`
+4. Run `make build`
 
-Your binary should now be built and you can run it with `bin/go-fast-cdn-linux` or `bin/go-fast-cdn-windows` or `bin/go-fast-cdn-darwin`
+Your binary should now be tested, built, and you can run it with `bin/go-fast-cdn-linux` or `bin/go-fast-cdn-windows` or `bin/go-fast-cdn-darwin`

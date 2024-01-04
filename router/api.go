@@ -22,6 +22,7 @@ func AddApiRoutes(r *gin.Engine) {
 	{
 		cdn.GET("/size", handlers.GetSizeHandler)
 		cdn.GET("/doc/all", dHandlers.HandleAllDocs)
+		cdn.GET("/doc/:filename", dHandlers.HandleDocMetadata)
 		cdn.GET("/image/all", iHandlers.HandleAllImages)
 		cdn.POST("/drop/database", dbHandlers.HandleDropDB)
 		cdn.Static("/download/images", util.ExPath+"/uploads/images")

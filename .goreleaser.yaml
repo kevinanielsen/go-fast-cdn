@@ -27,6 +27,7 @@ builds:
         goarch: arm
 
 release:
+  target_commitish: '{{ .Commit }}'
   draft: true
   github:
     owner: kevinanielsen
