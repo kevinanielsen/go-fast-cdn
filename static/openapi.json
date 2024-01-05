@@ -122,6 +122,69 @@
         }
       }
     },
+    "/api/cdn/image/{filename}": {
+      "get": {
+        "summary": "Retrieves metadata about the image",
+        "responses": {
+          "200": {
+            "description": "Metadata about the image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "filename": { "type": "string" },
+                    "download_url":{ "type": "string" },
+                    "file_size": { "type": "number" },
+                    "width": { "type":  "number" },
+                    "height": { "type":  "number" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unknown error while trying to retrieve the image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Image was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Image filename was not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/cdn/image/all": {
       "get": {
         "summary": "Get all images",
