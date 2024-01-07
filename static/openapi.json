@@ -466,6 +466,67 @@
         }
       }
     },
+    "/api/cdn/resize/image": {
+      "put": {
+        "summary": "Resize image",
+        "description": "Resize an image from the CDN",
+        "operationId": "resizeImage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "filename": {
+                    "type": "string",
+                    "description": "The filename you want to resize",
+                    "required": true
+                  },
+                  "width": {
+                    "type": "integer",
+                    "description": "The width you want the file to have",
+                    "required": true
+                  },
+                  "height": {
+                    "type": "integer",
+                    "description": "The height you want the file to have",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Server successfully resized image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/cdn/rename/image": {
       "put": {
         "summary": "Rename image",
