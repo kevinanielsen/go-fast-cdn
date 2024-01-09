@@ -1,31 +1,20 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import File from "../types/file";
+import { useEffect } from "react";
 import ContentCard from "./content-card";
 import Seperator from "./seperator";
+import { useAtom } from "jotai";
+import { filesAtom } from "../store";
+import { getFiles } from "../actions/getFiles";
 
 type TFilesProps = {
   type: "images" | "documents";
 };
 
 const Files: React.FC<TFilesProps> = ({ type }) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useAtom(filesAtom);
 
   useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`/api/cdn/${type === "images" ? "image" : "doc"}/all`)
-      .then((res) => res.data != null && setFiles(res.data))
-      .catch((err: undefined) => {
-        console.log(err);
-      })
-      .finally(() => setIsLoading(false));
+    getFiles(type, setFiles)
   }, [type]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="w-full">

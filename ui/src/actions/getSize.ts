@@ -7,9 +7,9 @@ type SetAtom<Args extends any[], Result> = (...args: Args) => Result;
 
 export const getSize = (
   setSize: SetAtom<[SetStateAction<number>], void>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-  setLoading(true);
+  setLoading && setLoading(true);
   axios
     .get<{ cdn_size_bytes: number }>("/api/cdn/size")
     .then((res) => {
@@ -20,6 +20,6 @@ export const getSize = (
       console.log(err);
     })
     .finally(() => {
-      setLoading(false);
+      setLoading && setLoading(false);
     });
 };
