@@ -10,8 +10,8 @@
       "url": "http://github.com/kevinanielsen/go-fast-cdn"
     },
     "license": {
-      "name": "License Name",
-      "url": "http://example.com/license-url"
+      "name": "MIT License",
+      "url": "https://github.com/kevinanielsen/go-fast-cdn/blob/main/LICENSE"
     }
   },
   "paths": {
@@ -31,6 +31,30 @@
         "responses": {
           "200": {
             "description": "Pong"
+          }
+        }
+      }
+    },
+    "/api/cdn/size": {
+      "get": {
+        "description": "Get the total size of the CDN in bytes.",
+        "summary": "Get CDN size",
+        "operationId": "getSize",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cdn_size_bytes": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The size of the CDN is returned in bytes."
           }
         }
       }
@@ -63,7 +87,19 @@
     },
     "/api/cdn/doc/{fileName}": {
       "get": {
+        "summary": "Retrieve metadata about the document",
         "description": "Retrieves metadata about the document",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the image you want to get metadata about.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "400": {
             "description": "Document filename was not provided",
@@ -122,9 +158,20 @@
         }
       }
     },
-    "/api/cdn/image/{filename}": {
+    "/api/cdn/image/{fileName}": {
       "get": {
         "summary": "Retrieves metadata about the image",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the image you want to get metadata about.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Metadata about the image",
@@ -207,6 +254,58 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/cdn/download/images/{fileName}": {
+      "get": {
+        "summary": "Retrieve image",
+        "description": "Retrieve the image requested from the CDN.",
+        "operationId": "receiveImage",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the image you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have received the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
+          }
+        }
+      }
+    },
+    "/api/cdn/download/docs/{fileName}": {
+      "get": {
+        "summary": "Retrieve document",
+        "description": "Retrieve the doc requested from the CDN.",
+        "operationId": "receiveDoc",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the doc you want to access.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "You have received the requested content from the CDN."
+          },
+          "304": {
+            "description": "Redirect to the requested content."
           }
         }
       }
@@ -328,58 +427,6 @@
         }
       }
     },
-    "/api/cdn/download/images/{fileName}": {
-      "get": {
-        "summary": "Retrieve image",
-        "description": "Retrieve the image requested from the CDN.",
-        "operationId": "receiveImage",
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "description": "The name of the image you want to access.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "You have received the requested content from the CDN."
-          },
-          "304": {
-            "description": "Redirect to the requested content."
-          }
-        }
-      }
-    },
-    "/api/cdn/download/docs/{fileName}": {
-      "get": {
-        "summary": "Retrieve document",
-        "description": "Retrieve the doc requested from the CDN.",
-        "operationId": "receiveDoc",
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "description": "The name of the doc you want to access.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "You have received the requested content from the CDN."
-          },
-          "304": {
-            "description": "Redirect to the requested content."
-          }
-        }
-      }
-    },
     "/api/cdn/delete/image/{filename}": {
       "delete": {
         "summary": "Delete image",
@@ -479,20 +526,18 @@
                 "properties": {
                   "filename": {
                     "type": "string",
-                    "description": "The filename you want to resize",
-                    "required": true
+                    "description": "The filename you want to resize"
                   },
                   "width": {
                     "type": "integer",
-                    "description": "The width you want the file to have",
-                    "required": true
+                    "description": "The width you want the file to have"
                   },
                   "height": {
                     "type": "integer",
-                    "description": "The height you want the file to have",
-                    "required": true
+                    "description": "The height you want the file to have"
                   }
-                }
+                },
+                "required": ["filename", "width", "height"]
               }
             }
           }
@@ -557,30 +602,6 @@
           },
           "400": {
             "description": "Missing or invalid body"
-          }
-        }
-      }
-    },
-    "/api/cdn/size": {
-      "get": {
-        "description": "Get the total size of the CDN in bytes.",
-        "summary": "Get CDN size",
-        "operationId": "getSize",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "cdn_size_bytes": {
-                      "type": "integer"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "The size of the CDN is returned in bytes."
           }
         }
       }
