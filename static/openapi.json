@@ -10,8 +10,8 @@
       "url": "http://github.com/kevinanielsen/go-fast-cdn"
     },
     "license": {
-      "name": "License Name",
-      "url": "http://example.com/license-url"
+      "name": "MIT License",
+      "url": "https://github.com/kevinanielsen/go-fast-cdn/blob/main/LICENSE"
     }
   },
   "paths": {
