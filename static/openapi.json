@@ -61,7 +61,7 @@
         }
       }
     },
-    "/api/cdn/doc/{fileName}": {
+    "/api/cdn/doc/:fileName": {
       "get": {
         "description": "Retrieves metadata about the document",
         "responses": {
@@ -122,7 +122,7 @@
         }
       }
     },
-    "/api/cdn/image/{filename}": {
+    "/api/cdn/image/:fileName": {
       "get": {
         "summary": "Retrieves metadata about the image",
         "responses": {
