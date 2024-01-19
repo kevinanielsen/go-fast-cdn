@@ -39,6 +39,7 @@ const Upload = () => {
             toast.dismiss();
             toast.success("Successfully uploaded file!");
             getSize(setSize, setLoading);
+            location.reload();
           }
         })
         .catch((err: Error) => {
@@ -76,7 +77,10 @@ const Upload = () => {
             Images
           </button>
         </nav>
-        <form action="" className="flex flex-col h-full">
+        <form action="" className="flex flex-col h-full" onSubmit={(e) => {
+              e.preventDefault();
+              uploadFile();
+            }}>
           {tab === "docs" ? (
             <DocsInput fileRef={file} />
           ) : (
@@ -85,10 +89,6 @@ const Upload = () => {
           <button
             type="submit"
             className="w-full h-10 bg-sky-400 border-t font-bold disabled:opacity-50 py-4 flex justify-center items-center"
-            onClick={(e) => {
-              e.preventDefault();
-              uploadFile();
-            }}
           >
             Upload File
           </button>
