@@ -5,6 +5,7 @@ import { getFiles } from "../actions/getFiles";
 import { useAtom } from "jotai";
 import { filesAtom, sizeAtom } from "../store";
 import { getSize } from "../actions/getSize";
+import RenameModal from "./rename-modal";
 
 type TContentCardProps = {
   file_name?: string;
@@ -95,6 +96,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
             <span className="tooltiptext">Delete file</span>
             <Trash2 className="inline" size="24" />
           </button>
+            <RenameModal />
         </div>
       </div>
     </div>
