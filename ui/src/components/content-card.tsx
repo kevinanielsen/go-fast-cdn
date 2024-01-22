@@ -28,7 +28,10 @@ const ContentCard: React.FC<TContentCardProps> = ({
   const url = `${window.location.protocol}//${
     window.location.host
   }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setFiles] = useAtom(filesAtom);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [__, setSize] = useAtom(sizeAtom);
 
   const deleteFile = () => {
