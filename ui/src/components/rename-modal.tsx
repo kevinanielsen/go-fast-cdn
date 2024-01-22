@@ -12,9 +12,15 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
+import handleRenameFile from "../actions/handleRenameFile";
 
-const RenameModal = () => {
-  const [filename, setFilename] = useState<string>("");
+type RenameModalProps = {
+  filename?: string;
+  type: "images" | "documents";
+};
+
+const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
+  const [newFilename, setNewFilename] = useState<string>("");
 
   return (
     <Dialog>
@@ -24,28 +30,32 @@ const RenameModal = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Rename file</DialogTitle>
-          <DialogDescription>
-            Change the name of the file. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="filename" className="text-right">
-              Filename
-            </Label>
-            <Input
-              id="filename"
-              value={filename}
-              onChange={(e) => setFilename(e.target.value)}
-              className="col-span-3"
-            />
+        <form
+          onSubmit={(e) => handleRenameFile(e, newFilename, filename, type)}
+        >
+          <DialogHeader>
+            <DialogTitle>Rename file</DialogTitle>
+            <DialogDescription>
+              Change the name of the file. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="filename" className="text-right">
+                Filename
+              </Label>
+              <Input
+                id="filename"
+                value={newFilename}
+                onChange={(e) => setNewFilename(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
