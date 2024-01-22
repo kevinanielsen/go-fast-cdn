@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/middleware"
+	"github.com/kevinanielsen/go-fast-cdn/src/middleware"
 	"github.com/kevinanielsen/go-fast-cdn/ui"
 )
 

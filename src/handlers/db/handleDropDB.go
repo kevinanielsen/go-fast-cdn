@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/database"
-	"github.com/kevinanielsen/go-fast-cdn/models"
+	"github.com/kevinanielsen/go-fast-cdn/src/database"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
 func HandleDropDB(c *gin.Context) {

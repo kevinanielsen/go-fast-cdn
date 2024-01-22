@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/database"
-	"github.com/kevinanielsen/go-fast-cdn/models"
+	"github.com/kevinanielsen/go-fast-cdn/src/database"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
 func HandleAllDocs(c *gin.Context) {

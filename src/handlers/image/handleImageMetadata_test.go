@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/src/util"
 	"github.com/stretchr/testify/require"
 )
 

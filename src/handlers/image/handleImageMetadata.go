@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/util"
 	"image"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/gin-gonic/gin"
+	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
 func HandleImageMetadata(c *gin.Context) {
