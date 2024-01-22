@@ -94,7 +94,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
             >
               <DownloadCloud className="inline" size="24" />
             </a>
-            <RenameModal />
+            <RenameModal type={type} filename={file_name} />
           </div>
           {/* Destructive buttons */}
           <div className="flex gap-2">
