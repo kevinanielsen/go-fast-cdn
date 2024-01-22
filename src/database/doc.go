@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/kevinanielsen/go-fast-cdn/models"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
 func AddDoc(fileName string, fileHashBuffer []byte) (string, bool) {

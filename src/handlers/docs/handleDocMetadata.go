@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/kevinanielsen/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/src/util"
 
 	"github.com/gin-gonic/gin"
 )

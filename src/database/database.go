@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/glebarez/sqlite"
-	"github.com/kevinanielsen/go-fast-cdn/models"
-	"github.com/kevinanielsen/go-fast-cdn/util"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
+	"github.com/kevinanielsen/go-fast-cdn/src/util"
 	"gorm.io/gorm"
 )
 
