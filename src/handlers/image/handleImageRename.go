@@ -8,19 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
+	"github.com/kevinanielsen/go-fast-cdn/src/validations"
 )
 
 func HandleImageRename(c *gin.Context) {
 	oldName := c.PostForm("filename")
 	newName := c.PostForm("newname")
 
-	if oldName == "" || newName == "" {
-		c.String(http.StatusBadRequest, "Invalid request")
-		return
-	}
-
-	if oldName == newName {
-		c.String(http.StatusBadRequest, "New name must be different from the old name")
+	err := validations.ValidateRenameInput(oldName, newName)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
