@@ -4,6 +4,7 @@
   </a>
   <a href="https://github.com/kevinanielsen/go-fast-cdn/actions/workflows/release.yml/" target="_blank" rel="noopener">
     <img src="https://github.com/kevinanielsen/go-fast-cdn/actions/workflows/release.yml/badge.svg?branch=main" />
+    <img src="https://goreportcard.com/badge/github.com/kevinanielsen/go-fast-cdn">
   </a>
 </p>
 
