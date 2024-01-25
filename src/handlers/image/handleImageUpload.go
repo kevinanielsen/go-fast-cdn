@@ -24,14 +24,17 @@ func HandleImageUpload(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Failed to open file: %s", err.Error())
 		return
 	}
+
 	defer file.Close()
 
 	fileBuffer := make([]byte, 512)
+
 	_, err = file.Read(fileBuffer)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to read file: %s", err.Error())
 		return
 	}
+
 	fileType := http.DetectContentType(fileBuffer)
 
 	allowedMimeTypes := map[string]bool{
@@ -58,14 +61,13 @@ func HandleImageUpload(c *gin.Context) {
 		filename = newName + filepath.Ext(fileHeader.Filename)
 	}
 
-	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
-
 	filteredFilename, err := util.FilterFilename(filename)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
+	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
 	if !alreadyExists {
 		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+filteredFilename)
 		if err != nil {
