@@ -11,12 +11,14 @@ export const getFiles = (
   toast.loading("Loading files...");
   axios
     .get(`/api/cdn/${type === "images" ? "image" : "doc"}/all`)
-    .then((res) => res.data != null && setFiles(res.data))
+    .then((res) => {
+      res.data != null && setFiles(res.data)
+      toast.dismiss();
+    })
     .catch((err: Error) => {
       toast.dismiss();
       toast.error(err.message);
       console.log(err);
     })
-    .finally(() => toast.dismiss());
 }
 
