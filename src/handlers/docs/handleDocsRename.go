@@ -19,7 +19,7 @@ func HandleDocsRename(c *gin.Context) {
 		return
 	}
 
-	prefix := filepath.Join(util.ExPath, "uploads", "images")
+	prefix := filepath.Join(util.ExPath, "uploads", "docs")
 
 	err := os.Rename(
 		filepath.Join(prefix, oldName),
