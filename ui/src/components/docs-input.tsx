@@ -32,6 +32,7 @@ const DocsInput: React.FC<{
           onChange={getFileName}
           type="file"
           accept="text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf, application/rtf, application/x-freearc"
+          multiple
           name="document"
           id="document"
           aria-label="Select document"

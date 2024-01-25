@@ -32,6 +32,7 @@ const ImageInput: React.FC<{
           onChange={getFileName}
           type="file"
           accept="image/jpeg, image/png, image/jpg, image/webp, image/gif, image/bmp"
+          multiple
           name="image"
           id="image"
           aria-label="Select image"
