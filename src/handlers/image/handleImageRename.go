@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"os"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
@@ -27,12 +25,7 @@ func HandleImageRename(c *gin.Context) {
 		return
 	}
 
-	prefix := filepath.Join(util.ExPath, "uploads", "images")
-
-	err = os.Rename(
-		filepath.Join(prefix, oldName),
-		filepath.Join(prefix, filteredNewName),
-	)
+	err = util.RenameFile(oldName, filteredNewName, "images")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
 		return
