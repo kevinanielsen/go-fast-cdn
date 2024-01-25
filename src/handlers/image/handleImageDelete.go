@@ -18,17 +18,26 @@ func HandleImageDelete(c *gin.Context) {
 		})
 		return
 	}
+
 	deletedFileName, success := database.DeleteImage(fileName)
-	filePath := fmt.Sprintf("%v/uploads/images/%v", util.ExPath, deletedFileName)
-	err := os.Remove(filePath)
-	if success && err == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"message":  "Image deleted successfully",
-			"fileName": deletedFileName,
-		})
-	} else {
+	if !success {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Image not found",
 		})
+		return
 	}
+
+	filePath := fmt.Sprintf("%v/uploads/images/%v", util.ExPath, deletedFileName)
+	err := os.Remove(filePath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to delete image",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "Image deleted successfully",
+		"fileName": deletedFileName,
+	})
 }
