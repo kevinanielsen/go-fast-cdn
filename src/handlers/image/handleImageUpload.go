@@ -11,9 +11,9 @@ import (
 )
 
 func HandleImageUpload(c *gin.Context) {
-	fileHeader, err := c.FormFile("image")
 	newName := c.PostForm("filename")
 
+	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		c.String(http.StatusBadRequest, "Failed to read file: %s", err.Error())
 		return
@@ -53,7 +53,6 @@ func HandleImageUpload(c *gin.Context) {
 	var filename string
 
 	if newName == "" {
-
 		filename = fileHeader.Filename
 	} else {
 		filename = newName + filepath.Ext(fileHeader.Filename)
@@ -62,7 +61,6 @@ func HandleImageUpload(c *gin.Context) {
 	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
 
 	filteredFilename, err := util.FilterFilename(filename)
-
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
