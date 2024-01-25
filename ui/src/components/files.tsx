@@ -14,7 +14,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
 
   useEffect(() => {
     getFiles(type, setFiles)
-  }, [type]);
+  }, [type, setFiles]);
 
   return (
     <div className="w-full">

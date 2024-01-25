@@ -7,6 +7,8 @@ import { filesAtom, sizeAtom } from "../store";
 import { getSize } from "../actions/getSize";
 import RenameModal from "./rename-modal";
 import { Button } from "./ui/button";
+import { Dialog, DialogTrigger } from "./ui/dialog";
+import FileDataModal from "./file-data-modal";
 
 type TContentCardProps = {
   file_name?: string;
@@ -56,17 +58,22 @@ const ContentCard: React.FC<TContentCardProps> = ({
 
   return (
     <div className="border rounded-lg shadow-lg flex flex-col min-h-[264px] w-64 max-w-[256px] justify-between items-center gap-4 p-4">
-      {type === "images" ? (
-        <img
-          src={url}
-          alt={file_name}
-          width={224}
-          height={150}
-          className="object-cover max-h-[150px] max-w-[224px]"
-        />
-      ) : (
-        <FileText size="128" />
-      )}
+      <Dialog>
+        <DialogTrigger>
+          {type === "images" ? (
+            <img
+              src={url}
+              alt={file_name}
+              width={224}
+              height={150}
+              className="object-cover max-h-[150px] max-w-[224px]"
+            />
+          ) : (
+            <FileText size="128" />
+          )}
+        </DialogTrigger>
+        <FileDataModal filename={file_name} type={type} />
+      </Dialog>
       <div className="w-full flex flex-col">
         <p className="truncate w-64 pr-7">{file_name}</p>
         {/* Non-destructive buttons */}
@@ -81,14 +88,12 @@ const ContentCard: React.FC<TContentCardProps> = ({
                 toast.success("clipboard saved");
               }}
               aria-label="Copy Link"
-              aria-labelledby="Copy Link"
             >
               <Files className="inline" size="24" />
             </Button>
             <a
               className="hover:bg-accent hover:text-accent-foreground h-10 w-10 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-sky-600"
               aria-label="Download file"
-              aria-labelledby="Download file"
               href={url}
               download
             >
@@ -101,10 +106,8 @@ const ContentCard: React.FC<TContentCardProps> = ({
             <Button
               variant="destructive"
               size="icon"
-              className=""
               onClick={() => file_name && deleteFile()}
               aria-label="Delete file"
-              aria-labelledby="Delete file"
             >
               <Trash2 className="inline" size="24" />
             </Button>
