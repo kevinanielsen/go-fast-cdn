@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ContentCard from "./content-card";
 import { FileText } from "lucide-react";
 
 const DocsInput: React.FC<{
@@ -17,7 +16,10 @@ const DocsInput: React.FC<{
     <div className="my-8 flex flex-col justify-center items-center h-full">
       <div className="w-full h-full mb-4 flex justify-center items-center">
         {fileName ? (
-          <ContentCard disabled file_name={fileName} />
+          <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex flex-col overflow-hidden justify-center items-center">
+            <FileText size="128" />
+            {fileName}
+          </div>
         ) : (
           <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex justify-center items-center">
             <FileText size="128" />
