@@ -19,8 +19,12 @@ func HandleImageRename(c *gin.Context) {
 		return
 	}
 
-	filteredNewName, err := util.FilterFilename(newName)
+	if oldName == newName {
+		c.String(http.StatusBadRequest, "New name must be different from the old name")
+		return
+	}
 
+	filteredNewName, err := util.FilterFilename(newName)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
