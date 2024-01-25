@@ -17,6 +17,10 @@ export default defineConfig({
         da: {
           label: "Dansk",
         },
+        es: {
+          label: "Español",
+          lang: "es",
+        },
       },
       social: {
         github: "https://github.com/kevinanielsen/go-fast-cdn",
