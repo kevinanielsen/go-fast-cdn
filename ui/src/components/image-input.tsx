@@ -1,6 +1,5 @@
 import { FileImage } from "lucide-react";
 import { useState } from "react";
-import ContentCard from "./content-card";
 
 const ImageInput: React.FC<{
   fileRef: React.RefObject<HTMLInputElement>;
@@ -17,7 +16,10 @@ const ImageInput: React.FC<{
     <div className="my-8 flex flex-col justify-center items-center h-full">
       <div className="w-full h-full mb-4 flex justify-center items-center">
         {fileName ? (
-          <ContentCard disabled file_name={fileName} />
+          <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex flex-col justify-center overflow-hidden items-center">
+            <FileImage size="128" />
+            {fileName}
+          </div>
         ) : (
           <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex justify-center items-center">
             <FileImage size="128" />
