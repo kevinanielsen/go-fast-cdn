@@ -18,7 +18,7 @@ func ConnectToDB() {
 
 	_, err := os.Stat(fmt.Sprintf("%v/main.db", dbPath))
 	if err != nil {
-		os.Mkdir(dbPath, 0755)
+		os.Mkdir(dbPath, 0o755)
 		log.Printf("DB not found, creating at %v/main.db...", dbPath)
 		os.Create(fmt.Sprintf("%v/main.db", dbPath))
 	}
