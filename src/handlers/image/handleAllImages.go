@@ -13,5 +13,4 @@ func HandleAllImages(c *gin.Context) {
 	database.DB.Find(&entries, &models.Image{})
 
 	c.JSON(http.StatusOK, entries)
-
 }

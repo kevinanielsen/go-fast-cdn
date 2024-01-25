@@ -60,7 +60,6 @@ func HandleDocUpload(c *gin.Context) {
 	savedFileName, alreadyExists := database.AddDoc(filename, fileHashBuffer[:])
 
 	filteredFilename, err := util.FilterFilename(filename)
-
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
