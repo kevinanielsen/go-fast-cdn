@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
