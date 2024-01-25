@@ -57,13 +57,14 @@ func HandleDocUpload(c *gin.Context) {
 	} else {
 		filename = newName + filepath.Ext(fileHeader.Filename)
 	}
-	savedFileName, alreadyExists := database.AddDoc(filename, fileHashBuffer[:])
 
 	filteredFilename, err := util.FilterFilename(filename)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
+
+	savedFileName, alreadyExists := database.AddDoc(filename, fileHashBuffer[:])
 
 	if !alreadyExists {
 		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+filteredFilename)
