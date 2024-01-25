@@ -35,7 +35,7 @@ A partir de ahí, debes pegar las siguientes líneas en el Dockerfile, que copia
 ```dockerfile
 FROM alpine:latest
 
-ARG GO_FAST_VERSION=0.1.0
+ARG GO_FAST_VERSION=0.1.6
 
 RUN apk add --no-cache unzip openssh
 
