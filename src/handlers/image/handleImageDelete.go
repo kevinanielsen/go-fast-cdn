@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
@@ -27,8 +25,7 @@ func HandleImageDelete(c *gin.Context) {
 		return
 	}
 
-	filePath := fmt.Sprintf("%v/uploads/images/%v", util.ExPath, deletedFileName)
-	err := os.Remove(filePath)
+	err := util.DeleteFile(deletedFileName, "images")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to delete image",
