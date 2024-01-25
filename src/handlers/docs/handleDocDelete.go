@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"net/http"
-
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"

@@ -22,7 +22,7 @@ func TestHandleImageMetadata_NoError(t *testing.T) {
 	testFileName := "test_image.jpg"
 	testFileDir := filepath.Join(util.ExPath, "uploads", "images")
 	defer os.RemoveAll(filepath.Join(util.ExPath, "uploads"))
-	err := os.MkdirAll(testFileDir, 0766)
+	err := os.MkdirAll(testFileDir, 0o766)
 	require.NoError(t, err)
 	testFilePath := filepath.Join(testFileDir, testFileName)
 	_, err = createTempImageFile(testFilePath, 512, 512)

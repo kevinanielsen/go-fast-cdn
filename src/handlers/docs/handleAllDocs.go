@@ -13,5 +13,4 @@ func HandleAllDocs(c *gin.Context) {
 	database.DB.Find(&entries, &models.Doc{})
 
 	c.JSON(http.StatusOK, entries)
-
 }

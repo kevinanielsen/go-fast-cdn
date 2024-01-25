@@ -20,7 +20,6 @@ func HandleImageRename(c *gin.Context) {
 	}
 
 	filteredNewName, err := util.FilterFilename(newName)
-
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return

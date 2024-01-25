@@ -36,7 +36,6 @@ var _ static.ServeFileSystem = (*staticFileSystem)(nil)
 
 func newStaticFileSystem() *staticFileSystem {
 	sub, err := fs.Sub(staticFS, "build")
-
 	if err != nil {
 		panic(err)
 	}
@@ -68,8 +67,10 @@ type fallbackFileSystem struct {
 	staticFileSystem *staticFileSystem
 }
 
-var _ static.ServeFileSystem = (*fallbackFileSystem)(nil)
-var _ http.FileSystem = (*fallbackFileSystem)(nil)
+var (
+	_ static.ServeFileSystem = (*fallbackFileSystem)(nil)
+	_ http.FileSystem        = (*fallbackFileSystem)(nil)
+)
 
 func newFallbackFileSystem(staticFileSystem *staticFileSystem) *fallbackFileSystem {
 	return &fallbackFileSystem{
