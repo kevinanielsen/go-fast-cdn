@@ -11,9 +11,9 @@ import (
 )
 
 func HandleImageUpload(c *gin.Context) {
-	fileHeader, err := c.FormFile("image")
 	newName := c.PostForm("filename")
 
+	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		c.String(http.StatusBadRequest, "Failed to read file: %s", err.Error())
 		return
