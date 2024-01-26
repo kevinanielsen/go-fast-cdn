@@ -1,4 +1,4 @@
-module github.com/Caixetadev/go-fast-cdn/frontend
+module github.com/kevinanielsen/go-fast-cdn/frontend
 
 go 1.21.6
 
