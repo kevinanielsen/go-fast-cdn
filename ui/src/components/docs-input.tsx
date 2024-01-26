@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileText } from "lucide-react";
+import UploadPreview from "./upload-preview";
 
 const DocsInput: React.FC<{
   fileRef: React.RefObject<HTMLInputElement>;
@@ -19,22 +19,9 @@ const DocsInput: React.FC<{
   };
 
   return (
-    <div className="my-8 flex flex-col justify-center items-center h-full">
-      <div className="w-full h-full mb-4 flex justify-center items-center">
-        {fileNames.length > 0 ? (
-          <section className="flex flex-row overflow-hidden">
-            {fileNames.map(fileName => (
-              <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex flex-col overflow-hidden justify-center items-center">
-                <FileText size="128" />
-                {fileName}
-              </div>
-            ))}
-          </section>
-        ) : (
-          <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex justify-center items-center">
-            <FileText size="128" />
-          </div>
-        )}
+    <div className="my-8 flex max-h-[691px] flex-col justify-center items-center h-full">
+      <div className="w-full h-full mb-4 flex justify-center items-center overflow-hidden">
+        <UploadPreview fileNames={fileNames} type="docs"/>
       </div>
       <label htmlFor="document" className="flex flex-col">
         Select Document

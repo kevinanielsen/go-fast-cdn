@@ -100,3 +100,7 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.list-columns {
+  columns: 4;
+}
