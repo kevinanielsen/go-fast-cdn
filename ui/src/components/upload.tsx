@@ -23,7 +23,7 @@ const Upload = () => {
 
   const file = useRef<HTMLInputElement>(null);
 
-  const uploadFile = () => {
+  const uploadFile = async () => {
     const files = file.current?.files;
 
     if (files !== null && files !== undefined) {
@@ -33,7 +33,8 @@ const Upload = () => {
       for (let file of files) {
         const form = new FormData();
         form.append(type, file);
-        axios
+
+        await axios
           .post<{ url: string }>(`/api/cdn/upload/${type}`, form)
           .then((res) => {
             if (res.status === 200) {
@@ -47,6 +48,8 @@ const Upload = () => {
             toast.error(err.message);
           });
       }
+
+      location.reload();
     }
   };
 
