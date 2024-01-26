@@ -8,13 +8,13 @@ const ImageInput: React.FC<{
 
   const getFileNames = () => {
     if (fileRef.current?.files != null) {
-      let names = []
+      let names = [];
 
       for (let file of fileRef.current.files) {
-        names.push(file.name)
+        names.push(file.name);
       }
 
-      setFileNames(names)
+      setFileNames(names);
     }
   };
 
