@@ -3,19 +3,27 @@ package handlers
 import (
 	"crypto/md5"
 	"net/http"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
+	"github.com/kevinanielsen/go-fast-cdn/src/validations"
 )
 
 func HandleImageUpload(c *gin.Context) {
-	newName := c.PostForm("filename")
+	filename := c.PostForm("filename")
 
 	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		c.String(http.StatusBadRequest, "Failed to read file: %s", err.Error())
+		return
+	}
+
+	validations.DetermineFilename(fileHeader, &filename)
+
+	filteredFilename, err := util.FilterFilename(filename)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -52,20 +60,6 @@ func HandleImageUpload(c *gin.Context) {
 	}
 
 	fileHashBuffer := md5.Sum(fileBuffer)
-
-	var filename string
-
-	if newName == "" {
-		filename = fileHeader.Filename
-	} else {
-		filename = newName + filepath.Ext(fileHeader.Filename)
-	}
-
-	filteredFilename, err := util.FilterFilename(filename)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
 
 	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
 	if !alreadyExists {
