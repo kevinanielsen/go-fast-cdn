@@ -23,29 +23,33 @@ const Upload = () => {
 
   const file = useRef<HTMLInputElement>(null);
 
-  const uploadFile = () => {
+  const uploadFile = async () => {
     const files = file.current?.files;
 
     if (files !== null && files !== undefined) {
       toast.loading("Uploading...");
-      const toUpload = files[0];
-      const form = new FormData();
       const type = tab === "docs" ? "doc" : "image";
-      form.append(type, toUpload);
-      axios
-        .post<{ url: string }>(`/api/cdn/upload/${type}`, form)
-        .then((res) => {
-          if (res.status === 200) {
+
+      for (let file of files) {
+        const form = new FormData();
+        form.append(type, file);
+
+        await axios
+          .post<{ url: string }>(`/api/cdn/upload/${type}`, form)
+          .then((res) => {
+            if (res.status === 200) {
+              toast.dismiss();
+              toast.success("Successfully uploaded file!");
+              getSize(setSize, setLoading);
+            }
+          })
+          .catch((err: Error) => {
             toast.dismiss();
-            toast.success("Successfully uploaded file!");
-            getSize(setSize, setLoading);
-            location.reload();
-          }
-        })
-        .catch((err: Error) => {
-          toast.dismiss();
-          toast.error(err.message);
-        });
+            toast.error(err.message);
+          });
+      }
+
+      location.reload();
     }
   };
 
