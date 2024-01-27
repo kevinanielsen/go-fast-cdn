@@ -1,6 +1,10 @@
 package validations
 
-import "errors"
+import (
+	"errors"
+	"mime/multipart"
+	"path/filepath"
+)
 
 func ValidateRenameInput(oldName, newName string) error {
 	if oldName == "" || newName == "" {
@@ -12,4 +16,12 @@ func ValidateRenameInput(oldName, newName string) error {
 	}
 
 	return nil
+}
+
+func DetermineFilename(fileHeader *multipart.FileHeader, newName *string) {
+	if *newName == "" {
+		*newName = fileHeader.Filename
+	} else {
+		*newName = *newName + filepath.Ext(fileHeader.Filename)
+	}
 }
