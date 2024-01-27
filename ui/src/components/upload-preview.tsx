@@ -16,7 +16,7 @@ const UploadPreview = ({fileNames, type}: {fileNames: string[], type: string}) =
         {fileNames.map(fileName => (
           <div className="border rounded-lg w-64 min-h-[264px] max-w-[256px] flex flex-col overflow-hidden justify-center items-center">
             {type == "docs" ? <FileText size="128" /> : <FileImage size="128" />}
-            {fileName}
+    <p className="w-full px-2 truncate text-center">{fileName}</p>
           </div>
         ))}
       </section>
