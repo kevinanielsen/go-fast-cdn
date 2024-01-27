@@ -48,8 +48,6 @@ const Upload = () => {
             toast.error(err.message);
           });
       }
-
-      location.reload();
     }
   };
 
@@ -81,10 +79,14 @@ const Upload = () => {
             Images
           </button>
         </nav>
-        <form action="" className="flex flex-col h-full" onSubmit={(e) => {
-              e.preventDefault();
-              uploadFile();
-            }}>
+        <form
+          action=""
+          className="flex flex-col h-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            uploadFile();
+          }}
+        >
           {tab === "docs" ? (
             <DocsInput fileRef={file} />
           ) : (
