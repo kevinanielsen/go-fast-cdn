@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/database"
-	ini "github.com/kevinanielsen/go-fast-cdn/backend/internal/initializers"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/util"
+	"github.com/kevinanielsen/go-fast-cdn/internal/database"
+	ini "github.com/kevinanielsen/go-fast-cdn/internal/initializers"
+	"github.com/kevinanielsen/go-fast-cdn/internal/util"
 )
 
 func setup() {

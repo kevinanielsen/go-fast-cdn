@@ -9,7 +9,7 @@ import (
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/util"
+	"github.com/kevinanielsen/go-fast-cdn/internal/util"
 )
 
 // TODO: add logging package

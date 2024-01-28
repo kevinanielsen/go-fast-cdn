@@ -4,8 +4,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/middleware"
-	"github.com/kevinanielsen/go-fast-cdn/frontend/ui"
+	"github.com/kevinanielsen/go-fast-cdn/internal/middleware"
+
+	"github.com/kevinanielsen/go-fast-cdn/ui"
 )
 
 // Router initializes the router and sets up middleware, routes, etc.

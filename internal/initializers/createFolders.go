@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/util"
+	"github.com/kevinanielsen/go-fast-cdn/internal/util"
 )
 
 func CreateFolders() {

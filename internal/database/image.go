@@ -1,6 +1,6 @@
 package database
 
-import "github.com/kevinanielsen/go-fast-cdn/backend/internal/models"
+import "github.com/kevinanielsen/go-fast-cdn/internal/models"
 
 func AddImage(fileName string, fileHashBuffer []byte) (string, bool) {
 	var image models.Image

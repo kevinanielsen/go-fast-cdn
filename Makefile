@@ -4,17 +4,17 @@ OS_NAME := $(shell uname -s | tr A-Z a-z)
 prep:
 	go mod tidy
 	go mod download
-	cd frontend && pnpm i
+	cd ui && pnpm i
 
 build: build_ui build_bin
 
 build_ui:
-	pnpm --dir ./frontend build
+	pnpm --dir ./ui build
 
 build_bin:
-	GOARCH=amd64 GOOS=darwin CGO_ENABLED=0 go build ./backend/cmd/ -o bin/${BINARY_NAME}-darwin 
-	CC="x86_64-linux-musl-gcc" GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build ./backend/cmd/ -o bin/${BINARY_NAME}-linux
-	CC="x86_64-w64-mingw32-gcc" GOARCH=amd64 GOOS=windows CGO_ENABLED=0 go build ./backend/cmd/ -o bin/${BINARY_NAME}-windows
+	GOARCH=amd64 GOOS=darwin CGO_ENABLED=0 go build -o ./bin/${BINARY_NAME}-darwin ./cmd/
+	CC="x86_64-linux-musl-gcc" GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -o ./bin/${BINARY_NAME}-linux ./cmd/
+	CC="x86_64-w64-mingw32-gcc" GOARCH=amd64 GOOS=windows CGO_ENABLED=0 go build -o ./bin/${BINARY_NAME}-windows ./cmd/
 
 run: build
 ifeq ($(OS_NAME),)

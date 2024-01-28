@@ -79,7 +79,7 @@ func newFallbackFileSystem(staticFileSystem *staticFileSystem) *fallbackFileSyst
 }
 
 func (f *fallbackFileSystem) Open(path string) (http.File, error) {
-	return f.staticFileSystem.Open("../../frontend/index.html")
+	return f.staticFileSystem.Open("/index.html")
 }
 
 func (f *fallbackFileSystem) Exists(prefix string, path string) bool {

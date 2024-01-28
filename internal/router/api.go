@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/handlers"
-	dbHandlers "github.com/kevinanielsen/go-fast-cdn/backend/internal/handlers/db"
-	dHandlers "github.com/kevinanielsen/go-fast-cdn/backend/internal/handlers/docs"
-	iHandlers "github.com/kevinanielsen/go-fast-cdn/backend/internal/handlers/image"
-	"github.com/kevinanielsen/go-fast-cdn/backend/internal/util"
+	"github.com/kevinanielsen/go-fast-cdn/internal/handlers"
+	dbHandlers "github.com/kevinanielsen/go-fast-cdn/internal/handlers/db"
+	dHandlers "github.com/kevinanielsen/go-fast-cdn/internal/handlers/docs"
+	iHandlers "github.com/kevinanielsen/go-fast-cdn/internal/handlers/image"
+	"github.com/kevinanielsen/go-fast-cdn/internal/util"
 )
 
 func AddApiRoutes(r *gin.Engine) {

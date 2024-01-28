@@ -1,6 +1,6 @@
 package database
 
-import "github.com/kevinanielsen/go-fast-cdn/backend/internal/models"
+import "github.com/kevinanielsen/go-fast-cdn/internal/models"
 
 func AddDoc(fileName string, fileHashBuffer []byte) (string, bool) {
 	var doc models.Doc
