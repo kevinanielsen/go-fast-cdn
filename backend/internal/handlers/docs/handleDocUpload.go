@@ -35,8 +35,9 @@ func HandleDocUpload(c *gin.Context) {
 	fileType := http.DetectContentType(fileBuffer)
 
 	allowedMimeTypes := map[string]bool{
-		"text/plain":         true,
-		"application/msword": true,
+		"text/plain":                true,
+		"text/plain; charset=utf-8": true,
+		"application/msword":        true,
 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document":   true,
 		"application/vnd.openxmlformats-officedocument.presentationml.presentation": true,
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":         true,
