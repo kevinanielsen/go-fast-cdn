@@ -33,7 +33,7 @@ func HandleDocDelete(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":  "Document deleted successfuly",
+		"message":  "Document deleted successfully",
 		"fileName": deletedFileName,
 	})
 }
