@@ -20,7 +20,7 @@ func HandleImageResize(c *gin.Context) {
 		Height   int    `json:"height" binding:"required"`
 	}{}
 	if e := c.BindJSON(&body); e != nil {
-		// TODO: add shared error handling accross handler package
+		// TODO: add shared error handling across handler package
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": e.Error(),
 		})
