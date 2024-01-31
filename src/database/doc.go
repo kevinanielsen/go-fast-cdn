@@ -4,20 +4,18 @@ import (
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
-func AddDoc(fileName string, fileHashBuffer []byte) (string, bool) {
-	var doc models.Doc
-	doc.FileName = fileName
-	doc.Checksum = fileHashBuffer
+func GetDocByCheckSum(checksum []byte) models.Doc {
+	var entries models.Doc
 
-	var entries []models.Doc
+	DB.Where("checksum = ?", checksum).First(&entries)
 
-	DB.First(&entries, "checksum = $1", string(fileHashBuffer))
-	if len(entries) == 0 {
-		DB.Create(&doc)
-		return fileName, false
-	} else {
-		return entries[0].FileName, true
-	}
+	return entries
+}
+
+func AddDoc(doc models.Doc) string {
+	DB.Create(&doc)
+
+	return doc.FileName
 }
 
 func DeleteDoc(fileName string) (string, bool) {
