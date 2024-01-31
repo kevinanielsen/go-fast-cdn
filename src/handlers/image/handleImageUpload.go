@@ -85,7 +85,7 @@ func HandleImageUpload(c *gin.Context) {
 		return
 	}
 
-	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+filteredFilename)
+	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+savedFilename)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 		return

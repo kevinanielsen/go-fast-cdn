@@ -77,9 +77,13 @@ func HandleDocUpload(c *gin.Context) {
 		return
 	}
 
-	savedFileName := database.AddDoc(doc)
+	savedFileName, err := database.AddDoc(doc)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
-	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+filteredFilename)
+	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+savedFileName)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
 		return
