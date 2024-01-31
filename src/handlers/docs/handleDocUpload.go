@@ -67,7 +67,7 @@ func HandleDocUpload(c *gin.Context) {
 	}
 
 	doc := models.Doc{
-		FileName: filename,
+		FileName: filteredFilename,
 		Checksum: fileHashBuffer[:],
 	}
 

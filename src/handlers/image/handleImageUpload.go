@@ -69,7 +69,7 @@ func HandleImageUpload(c *gin.Context) {
 	}
 
 	image := models.Image{
-		FileName: filename,
+		FileName: filteredFilename,
 		Checksum: fileHashBuffer[:],
 	}
 
