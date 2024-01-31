@@ -12,10 +12,13 @@ func GetDocByCheckSum(checksum []byte) models.Doc {
 	return entries
 }
 
-func AddDoc(doc models.Doc) string {
-	DB.Create(&doc)
+func AddDoc(doc models.Doc) (string, error) {
+	result := DB.Create(&doc)
+	if result.Error != nil {
+		return "", result.Error
+	}
 
-	return doc.FileName
+	return doc.FileName, result.Error
 }
 
 func DeleteDoc(fileName string) (string, bool) {
