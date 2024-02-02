@@ -4,20 +4,21 @@ import (
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
-func AddImage(fileName string, fileHashBuffer []byte) (string, bool) {
-	var image models.Image
-	image.FileName = fileName
-	image.Checksum = fileHashBuffer
+func GetImageByCheckSum(checksum []byte) models.Image {
+	var entries models.Image
 
-	var entries []models.Image
+	DB.Where("checksum = ?", checksum).First(&entries)
 
-	DB.First(&entries, "checksum = $1", string(fileHashBuffer))
-	if len(entries) == 0 {
-		DB.Create(&image)
-		return fileName, false
-	} else {
-		return entries[0].FileName, true
+	return entries
+}
+
+func AddImage(image models.Image) (string, error) {
+	result := DB.Create(&image)
+	if result.Error != nil {
+		return "", result.Error
 	}
+
+	return image.FileName, nil
 }
 
 func DeleteImage(fileName string) (string, bool) {

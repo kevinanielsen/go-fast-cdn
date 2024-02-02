@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
@@ -67,13 +68,27 @@ func HandleImageUpload(c *gin.Context) {
 		return
 	}
 
-	savedFilename, alreadyExists := database.AddImage(filename, fileHashBuffer[:])
-	if !alreadyExists {
-		err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+filteredFilename)
-		if err != nil {
-			c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
-			return
-		}
+	image := models.Image{
+		FileName: filteredFilename,
+		Checksum: fileHashBuffer[:],
+	}
+
+	imageInDatabase := database.GetImageByCheckSum(fileHashBuffer[:])
+	if len(imageInDatabase.Checksum) > 0 {
+		c.JSON(http.StatusConflict, "File already exists")
+		return
+	}
+
+	savedFilename, err := database.AddImage(image)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+savedFilename)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Failed to save file: %s", err.Error())
+		return
 	}
 
 	body := gin.H{
