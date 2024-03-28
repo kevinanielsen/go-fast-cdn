@@ -46,7 +46,7 @@ RUN unzip /tmp/cdn.zip -d /cdn/
 EXPOSE 8080
 
 # start go-fast-cdn
-CMD ['/cdn/go-fast-cdn']
+CMD ["/cdn/go-fast-cdn"]
 
 ```
 
