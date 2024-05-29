@@ -11,12 +11,17 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	DbFolder = "db_data"
+	DbName   = "main.db"
+)
+
 var DB *gorm.DB
 
 func ConnectToDB() {
-	dbPath := fmt.Sprintf("%v/db_data", util.ExPath)
+	dbPath := fmt.Sprintf("%v/%s", util.ExPath, DbFolder)
 
-	_, err := os.Stat(fmt.Sprintf("%v/main.db", dbPath))
+	_, err := os.Stat(fmt.Sprintf("%v/%s", dbPath, DbName))
 	if err != nil {
 		os.Mkdir(dbPath, 0o755)
 		log.Printf("DB not found, creating at %v/main.db...", dbPath)
