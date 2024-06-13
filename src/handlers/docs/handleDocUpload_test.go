@@ -25,15 +25,6 @@ func TestHandleDocUpload_NoError(t *testing.T) {
 		defer writer.Close()
 		part, _ := writer.CreateFormFile("doc", "filename.txt")
 		part.Write(testDataFile)
-
-		//h := make(textproto.MIMEHeader)
-		//h.Set("Content-Disposition", fmt.Sprintf(
-		//	`form-data; name="%s"; filename="%s"`,
-		//	EscapeQuotes("doc"),
-		//	EscapeQuotes("file.txt"),
-		//))
-		//h.Set("Content-Type", "text/plain; charset=utf-8")
-		//part, _ := writer.CreatePart(h)
 	}()
 
 	// init request
@@ -129,7 +120,6 @@ func TestHandleDocUpload_ReadFailed_EOF(t *testing.T) {
 	HandleDocUpload(c)
 
 	// assert
-	fmt.Println(w.Body.String())
 	require.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
 	require.Equal(t, w.Body.String(), "Failed to read file: EOF")
 }
@@ -254,7 +244,7 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 	// second handling
 	HandleDocUpload(cc)
 
-	//// first statement
+	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)
 	require.Equal(t, ww.Body.String(), "\"File already exists\"")
 }

@@ -120,7 +120,6 @@ func TestHandleImageUpload_ReadFailed_EOF(t *testing.T) {
 	HandleImageUpload(c)
 
 	// assert
-	fmt.Println(w.Body.String())
 	require.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
 	require.Equal(t, w.Body.String(), "Failed to read file: EOF")
 }
@@ -248,7 +247,7 @@ func TestHandleImageUpload_FileExist(t *testing.T) {
 	// second handling
 	HandleImageUpload(cc)
 
-	//// first statement
+	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)
 	require.Equal(t, ww.Body.String(), "\"File already exists\"")
 }
