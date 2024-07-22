@@ -11,7 +11,9 @@
 </p>
 
 # Go-Fast CDN
-*"The PocketBase of CDNs" - Me*
+
+_"The PocketBase of CDNs" - Me_
+
 ### A fast and easy-to-use CDN, built with Go.
 
 Utilizing an SQLite database with GORM and the Gin web framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
@@ -41,3 +43,18 @@ If you do not wish to use this, you can just rename `.example.env` to `.env` and
 4. Run `make build`
 
 Your binary should now be tested, built, and you can run it with `bin/go-fast-cdn-linux` or `bin/go-fast-cdn-windows` or `bin/go-fast-cdn-darwin`
+
+## Quick Start with Docker
+
+### Clone the Repository
+
+```
+git clone https://github.com:kevinanielsen/go-fast-cdn
+cd go-fast-cdn
+```
+
+### Docker Compose
+
+```
+docker-compose up -d
+```
