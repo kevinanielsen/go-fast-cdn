@@ -13,6 +13,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
+COPY --from=nodework /app/build ui/build
 RUN go build -o /app/main .
 
 
