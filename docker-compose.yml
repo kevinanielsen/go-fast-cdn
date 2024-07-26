@@ -1,0 +1,13 @@
+services:
+  server:
+    image: go-fast-cdn
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+      - db_data:/app/db_data
+    container_name: go-fast-cdn
+volumes:
+  db_data:
+  uploads:
