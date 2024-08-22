@@ -13,7 +13,7 @@ const DocsInput: React.FC<{
       for (let file of fileRef.current.files) {
         names.push(file.name);
       }
-
+      
       setFileNames(names);
     }
   };
@@ -28,7 +28,7 @@ const DocsInput: React.FC<{
         <input
           onChange={getFileNames}
           type="file"
-          accept="text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf, application/rtf, application/x-freearc"
+          accept="text/plain,application/zip, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/pdf, application/rtf, application/x-freearc"
           multiple
           name="document"
           id="document"
