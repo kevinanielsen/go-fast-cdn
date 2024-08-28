@@ -4,12 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 	"github.com/kevinanielsen/go-fast-cdn/src/validations"
 )
 
-func HandleDocsRename(c *gin.Context) {
+func (h *DocHandler) HandleDocsRename(c *gin.Context) {
 	oldName := c.PostForm("filename")
 	newName := c.PostForm("newname")
 
@@ -31,7 +30,7 @@ func HandleDocsRename(c *gin.Context) {
 		return
 	}
 
-	err = database.RenameDoc(oldName, newName)
+	err = h.repo.RenameDoc(oldName, newName)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Failed to rename file: %s", err.Error())
 		return

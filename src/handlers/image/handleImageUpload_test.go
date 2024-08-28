@@ -45,7 +45,8 @@ func TestHandleImageUpload_NoError(t *testing.T) {
 	}()
 
 	// handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusOK, w.Result().StatusCode)
@@ -81,7 +82,8 @@ func TestHandleImageUpload_ReadFailed_NoFile(t *testing.T) {
 	}()
 
 	// handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -117,7 +119,8 @@ func TestHandleImageUpload_ReadFailed_EOF(t *testing.T) {
 	}()
 
 	// handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
@@ -153,7 +156,8 @@ func TestHandleImageUpload_InvalidType(t *testing.T) {
 	}()
 
 	// handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -190,7 +194,8 @@ func TestHandleImageUpload_InvalidFilename(t *testing.T) {
 	}()
 
 	// handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -227,7 +232,8 @@ func TestHandleImageUpload_FileExist(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// first handling
-	HandleImageUpload(c)
+	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
+	imageHandler.HandleImageUpload(c)
 
 	// first statement
 	require.Equal(t, http.StatusOK, w.Result().StatusCode)
@@ -245,7 +251,7 @@ func TestHandleImageUpload_FileExist(t *testing.T) {
 	cc.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// second handling
-	HandleImageUpload(cc)
+	imageHandler.HandleImageUpload(c)
 
 	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)

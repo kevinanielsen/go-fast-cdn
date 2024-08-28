@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
-func HandleImageDelete(c *gin.Context) {
+func (h *ImageHandler) HandleImageDelete(c *gin.Context) {
 	fileName := c.Param("filename")
 	if fileName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -17,7 +16,7 @@ func HandleImageDelete(c *gin.Context) {
 		return
 	}
 
-	deletedFileName, success := database.DeleteImage(fileName)
+	deletedFileName, success := h.repo.DeleteImage(fileName)
 	if !success {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Image not found",

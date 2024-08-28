@@ -6,12 +6,11 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
-func HandleImageUpload(c *gin.Context) {
+func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 	newName := c.PostForm("filename")
 
 	fileHeader, err := c.FormFile("image")
@@ -73,13 +72,13 @@ func HandleImageUpload(c *gin.Context) {
 		Checksum: fileHashBuffer[:],
 	}
 
-	imageInDatabase := database.GetImageByCheckSum(fileHashBuffer[:])
+	imageInDatabase := h.repo.GetImageByCheckSum(fileHashBuffer[:])
 	if len(imageInDatabase.Checksum) > 0 {
 		c.JSON(http.StatusConflict, "File already exists")
 		return
 	}
 
-	savedFilename, err := database.AddImage(image)
+	savedFilename, err := h.repo.AddImage(image)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
