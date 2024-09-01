@@ -19,19 +19,17 @@ const handleResizeImage = (e: FormEvent, newDimensions: ImageDimensions, filenam
     height: Math.abs(Math.floor(height))
   };
 
-  toast.loading("Renaming file...");
+  const toastId = toast.loading("Renaming file...");
   axios.put(`/api/cdn/resize/image`, JSON.stringify(data)).then((res) => {
     if (res.status === 200) {
-      toast.dismiss();
-      toast.success("File resized!");
+      toast.success("File resized!", { id: toastId, duration: 1500 });
 
       setTimeout(() => {
         location.reload();
       }, 1500)
     }
   }).catch((err) => {
-    toast.dismiss();
-    toast.error("Error: " + err.response.data);
+    toast.error("Error: " + err.response.data, { id: toastId, duration: 4000 });
   })
 }
 
