@@ -248,7 +248,7 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 	cc.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// second handling
-	docHandler.HandleDocUpload(c)
+	docHandler.HandleDocUpload(cc)
 
 	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)

@@ -251,7 +251,7 @@ func TestHandleImageUpload_FileExist(t *testing.T) {
 	cc.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// second handling
-	imageHandler.HandleImageUpload(c)
+	imageHandler.HandleImageUpload(cc)
 
 	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)
