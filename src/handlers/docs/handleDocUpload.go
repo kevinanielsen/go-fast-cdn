@@ -44,6 +44,7 @@ func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 		"application/pdf":       true,
 		"application/rtf":       true,
 		"application/x-freearc": true,
+		"application/zip":       true,
 	}
 
 	if !allowedMimeTypes[fileType] {
