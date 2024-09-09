@@ -1,14 +1,15 @@
 import axios from "axios";
+import { useAtom } from "jotai";
 import { DownloadCloud, FileText, Files, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getFiles } from "../actions/getFiles";
-import { useAtom } from "jotai";
-import { filesAtom, sizeAtom } from "../store";
 import { getSize } from "../actions/getSize";
+import { filesAtom, sizeAtom } from "../store";
+import FileDataModal from "./file-data-modal";
 import RenameModal from "./rename-modal";
+import ResizeModal from "./resize-modal";
 import { Button } from "./ui/button";
 import { Dialog, DialogTrigger } from "./ui/dialog";
-import FileDataModal from "./file-data-modal";
 
 type TContentCardProps = {
   file_name?: string;
@@ -100,6 +101,9 @@ const ContentCard: React.FC<TContentCardProps> = ({
               <DownloadCloud className="inline" size="24" />
             </a>
             <RenameModal type={type} filename={file_name} />
+            {type === 'images' && (
+                <ResizeModal filename={file_name ?? ''} />
+            )}
           </div>
           {/* Destructive buttons */}
           <div className="flex gap-2">
