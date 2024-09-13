@@ -11,8 +11,8 @@ import (
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
-func AddApiRoutes(r *gin.Engine) {
-	api := r.Group("/api")
+func (s *Server) AddApiRoutes() {
+	api := s.Engine.Group("/api")
 	api.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "pong")
 	})
