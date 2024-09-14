@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
-func HandleDocDelete(c *gin.Context) {
+func (h *DocHandler) HandleDocDelete(c *gin.Context) {
 	fileName := c.Param("filename")
 	if fileName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -17,7 +16,7 @@ func HandleDocDelete(c *gin.Context) {
 		return
 	}
 
-	deletedFileName, success := database.DeleteDoc(fileName)
+	deletedFileName, success := h.repo.DeleteDoc(fileName)
 	if !success {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Document not found",

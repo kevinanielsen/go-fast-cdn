@@ -4,14 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
-	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
-func HandleAllImages(c *gin.Context) {
-	var entries []models.Image
+func (h *ImageHandler) HandleAllImages(c *gin.Context) {
 
-	database.DB.Find(&entries, &models.Image{})
+	entries := h.repo.GetAllImages()
 
 	c.JSON(http.StatusOK, entries)
 }

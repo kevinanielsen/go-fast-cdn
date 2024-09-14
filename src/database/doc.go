@@ -2,18 +2,35 @@ package database
 
 import (
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
+	"gorm.io/gorm"
 )
 
-func GetDocByCheckSum(checksum []byte) models.Doc {
-	var entries models.Doc
+type DocRepo struct {
+	DB *gorm.DB
+}
 
-	DB.Where("checksum = ?", checksum).First(&entries)
+func NewDocRepo(db *gorm.DB) models.DocRepository {
+	return &DocRepo{DB: db}
+}
+
+func (repo *DocRepo) GetAllDocs() []models.Doc {
+	var entries []models.Doc
+
+	repo.DB.Find(&entries, &models.Doc{})
 
 	return entries
 }
 
-func AddDoc(doc models.Doc) (string, error) {
-	result := DB.Create(&doc)
+func (repo *DocRepo) GetDocByCheckSum(checksum []byte) models.Doc {
+	var entries models.Doc
+
+	repo.DB.Where("checksum = ?", checksum).First(&entries)
+
+	return entries
+}
+
+func (repo *DocRepo) AddDoc(doc models.Doc) (string, error) {
+	result := repo.DB.Create(&doc)
 	if result.Error != nil {
 		return "", result.Error
 	}
@@ -21,20 +38,20 @@ func AddDoc(doc models.Doc) (string, error) {
 	return doc.FileName, result.Error
 }
 
-func DeleteDoc(fileName string) (string, bool) {
+func (repo *DocRepo) DeleteDoc(fileName string) (string, bool) {
 	var doc models.Doc
 
-	result := DB.Where("file_name = ?", fileName).First(&doc)
+	result := repo.DB.Where("file_name = ?", fileName).First(&doc)
 
 	if result.Error == nil {
-		DB.Delete(&doc)
+		repo.DB.Delete(&doc)
 		return fileName, true
 	} else {
 		return "", false
 	}
 }
 
-func RenameDoc(oldFileName, newFileName string) error {
+func (repo *DocRepo) RenameDoc(oldFileName, newFileName string) error {
 	doc := models.Doc{}
-	return DB.Model(&doc).Where("file_name = ?", oldFileName).Update("file_name", newFileName).Error
+	return repo.DB.Model(&doc).Where("file_name = ?", oldFileName).Update("file_name", newFileName).Error
 }

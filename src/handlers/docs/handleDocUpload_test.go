@@ -46,7 +46,8 @@ func TestHandleDocUpload_NoError(t *testing.T) {
 	}()
 
 	// handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusOK, w.Result().StatusCode)
@@ -81,7 +82,8 @@ func TestHandleDocUpload_ReadFailed_NoFile(t *testing.T) {
 	}()
 
 	// handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -117,7 +119,8 @@ func TestHandleDocUpload_ReadFailed_EOF(t *testing.T) {
 	}()
 
 	// handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusInternalServerError, w.Result().StatusCode)
@@ -153,7 +156,8 @@ func TestHandleDocUpload_InvalidType(t *testing.T) {
 	}()
 
 	// handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -189,7 +193,8 @@ func TestHandleDocUpload_InvalidFilename(t *testing.T) {
 	}()
 
 	// handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// assert
 	require.Equal(t, http.StatusBadRequest, w.Result().StatusCode)
@@ -225,7 +230,8 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// first handling
-	HandleDocUpload(c)
+	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
+	docHandler.HandleDocUpload(c)
 
 	// first statement
 	require.Equal(t, http.StatusOK, w.Result().StatusCode)
@@ -242,7 +248,7 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 	cc.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// second handling
-	HandleDocUpload(cc)
+	docHandler.HandleDocUpload(cc)
 
 	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)
