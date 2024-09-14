@@ -6,12 +6,11 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
-func HandleDocUpload(c *gin.Context) {
+func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 	fileHeader, err := c.FormFile("doc")
 	newName := c.PostForm("filename")
 
@@ -72,13 +71,13 @@ func HandleDocUpload(c *gin.Context) {
 		Checksum: fileHashBuffer[:],
 	}
 
-	docInDatabase := database.GetDocByCheckSum(fileHashBuffer[:])
+	docInDatabase := h.repo.GetDocByCheckSum(fileHashBuffer[:])
 	if len(docInDatabase.Checksum) > 0 {
 		c.JSON(http.StatusConflict, "File already exists")
 		return
 	}
 
-	savedFileName, err := database.AddDoc(doc)
+	savedFileName, err := h.repo.AddDoc(doc)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
