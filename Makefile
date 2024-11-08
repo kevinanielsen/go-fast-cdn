@@ -1,6 +1,6 @@
 BINARY_NAME=go-fast-cdn
 OS_NAME := $(shell uname -s | tr A-Z a-z)
-ARCH := $(shell arch | tr A-Z a-z | sed 's/^aarch/arm/')
+ARCH := $(shell uname -m | tr A-Z a-z | sed 's/^aarch/arm/')
 
 prep:
 	go mod tidy
