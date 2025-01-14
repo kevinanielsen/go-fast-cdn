@@ -1,16 +1,17 @@
+// @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import image from '@astrojs/image';
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://kevinanielsen.github.io",
   base: "/go-fast-cdn",
   integrations: [
-    image(),
     starlight({
-      title: "Go-fast CDN",
-      defaultLocale: "root",
+      title: "Go-Fast CDN",
+      social: {
+        github: "https://github.com/kevinanielsen/go-fast-cdn",
+      },
       locales: {
         root: {
           label: "English",
@@ -18,20 +19,17 @@ export default defineConfig({
         },
         da: {
           label: "Dansk",
+          lang: "da",
         },
         es: {
           label: "Español",
           lang: "es",
         },
       },
-      social: {
-        github: "https://github.com/kevinanielsen/go-fast-cdn",
-      },
       sidebar: [
         {
           label: "Guides",
           items: [
-            // Each item here is one entry in the navigation menu.
             { label: "Usage", link: "/guides/usage/" },
             { label: "Hosting", link: "/guides/hosting/" },
           ],
@@ -39,7 +37,6 @@ export default defineConfig({
         {
           label: "Contribution",
           items: [
-            // Each item here is one entry in the navigation menu.
             {
               label: "Development",
               link: "/contribution/development/",
