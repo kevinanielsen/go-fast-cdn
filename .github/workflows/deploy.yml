@@ -17,18 +17,11 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
         with:
-          version: 10
-      - name: Install dependencies
-        run: cd docs && pnpm install
-      - name: Build
-        run: cd docs && pnpm build
-      - name: Upload artifacts
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/dist/
+          path: ./docs
+          package-manager: pnpm@latest
 
   deploy:
     needs: build
