@@ -9,6 +9,16 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Go-Fast CDN",
+      head: [
+        {
+          tag: "script",
+          attrs: {
+            defer: true,
+            "data-domain": "kevinanielsen.github.io/go-fast-cdn",
+            src: "https://plausible.kevinan.xyz/js/script.js",
+          },
+        },
+      ],
       social: {
         github: "https://github.com/kevinanielsen/go-fast-cdn",
       },
