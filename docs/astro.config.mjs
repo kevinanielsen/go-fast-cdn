@@ -1,11 +1,13 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import image from '@astrojs/image';
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://kevinanielsen.github.io",
   base: "/go-fast-cdn",
   integrations: [
+    image(),
     starlight({
       title: "Go-fast CDN",
       defaultLocale: "root",
