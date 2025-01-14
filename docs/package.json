@@ -7,21 +7,11 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "format": "prettier --write .",
-    "lint": "eslint"
+    "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/image": "^0.18.0",
-    "@astrojs/starlight": "^0.15.4",
-    "astro": "^4.16.18",
-    "execa": "^8.0.1",
-    "sharp": "^0.32.6"
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^8.57.1",
-    "prettier": "^3.4.2"
+    "@astrojs/starlight": "^0.31.0",
+    "astro": "^5.1.5",
+    "sharp": "^0.32.5"
   }
 }
