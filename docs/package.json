@@ -12,15 +12,15 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.15.0",
-    "astro": "^4.0.1",
+    "@astrojs/starlight": "^0.15.4",
+    "astro": "^4.16.18",
     "execa": "^8.0.1",
-    "sharp": "^0.32.5"
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "eslint": "^8.56.0",
-    "prettier": "^3.1.1"
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "prettier": "^3.4.2"
   }
 }
