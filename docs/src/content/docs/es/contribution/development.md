@@ -40,6 +40,8 @@ go build .
 
 ### Ejecución
 
+#### Ejecutando el binario
+
 Tu binario debería estar construido ahora y puedes ejecutarlo con uno de los siguientes comandos, dependiendo de tu sistema:
 
 ```sh title="Windows"
@@ -53,3 +55,14 @@ Tu binario debería estar construido ahora y puedes ejecutarlo con uno de los si
 ```bash title="Linux"
 /bin/go-fast-cdn-linux
 ```
+
+#### Ejecutando con recarga en vivo
+
+Para ciclos de desarrollo más rápidos, también puedes ejecutar el proyecto con [air](https://github.com/air-verse/air).
+
+```bash
+make prep  # si aún no lo has hecho
+make dev   # ejecuta con recarga en vivo
+```
+
+Ahora intenta hacer cambios en el código y verlos reflejados inmediatamente en el navegador.
