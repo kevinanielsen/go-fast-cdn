@@ -6,6 +6,7 @@ prep:
 	go mod tidy
 	go mod download
 	cd ui && pnpm i
+	go install github.com/air-verse/air@latest
 
 build: build_ui build_bin
 
@@ -23,6 +24,9 @@ ifeq ($(OS_NAME),)
 else
 	bin/${BINARY_NAME}-${OS_NAME}
 endif
+
+dev:
+	air
 
 clean: 
 	go clean
