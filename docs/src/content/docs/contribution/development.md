@@ -39,6 +39,8 @@ go build .
 
 ### Running
 
+#### Running the binary
+
 Your binary should now be built and you can run it with one of the following commands, depending on your system:
 
 ```sh title="Windows"
@@ -52,3 +54,14 @@ Your binary should now be built and you can run it with one of the following com
 ```bash title="Linux"
 /bin/go-fast-cdn-linux
 ```
+
+#### Running with live reload
+
+For faster development cycles, you can also run the project with [air](https://github.com/air-verse/air).
+
+```bash
+make prep  # if you haven't already
+make dev   # runs with live reload
+```
+
+Now try and make changes to the code, and immediately see it reflected in the browser.
