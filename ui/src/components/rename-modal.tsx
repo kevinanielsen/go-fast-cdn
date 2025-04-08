@@ -12,7 +12,9 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import handleRenameFile from "../actions/handleRenameFile";
+import { queryKeys, useRenameFile } from "@/queries";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 type RenameModalProps = {
   filename?: string;
@@ -21,9 +23,49 @@ type RenameModalProps = {
 
 const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
   const [newFilename, setNewFilename] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const renameFileMutation = useRenameFile(
+    type === "documents" ? "doc" : "image",
+    {
+      onSuccess: () => {
+        toast.success("Renamed file!", {
+          duration: 200000,
+        });
+        setIsOpen(false);
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.images(
+            type === "images" ? "images" : "documents"
+          ),
+        });
+      },
+      onError: (err) => {
+        toast.dismiss();
+        toast.error("Error: " + err.message);
+      },
+    }
+  );
+
+  const handleRenameFile = () => {
+    const fileExt = filename?.split(".").pop();
+
+    if (newFilename.length === 0) {
+      toast.error("New filename empty!");
+      return;
+    }
+
+    if (typeof filename === "undefined") return;
+
+    const form = new FormData();
+    form.append("filename", filename);
+    form.append("newname", newFilename + "." + fileExt);
+
+    renameFileMutation.mutate(form);
+  };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild className="text-sky-600">
         <Button size="icon" variant="ghost">
           <SquarePen className="inline" size="24" />
@@ -31,7 +73,10 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form
-          onSubmit={(e) => handleRenameFile(e, newFilename, filename, type)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleRenameFile();
+          }}
         >
           <DialogHeader>
             <DialogTitle>Rename file</DialogTitle>
@@ -53,7 +98,9 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button disabled={renameFileMutation.isPending} type="submit">
+              {renameFileMutation.isPending ? "Saving..." : "Save changes"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

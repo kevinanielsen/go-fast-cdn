@@ -1,37 +1,16 @@
-import { useEffect, useState } from "react";
-import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { FileMetadata } from "@/types/fileMetadata";
+import { useGetFileData } from "@/queries";
 import Seperator from "./seperator";
+import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
 type TFileDataModalProps = {
-  filename?: string;
-  type?: "images" | "documents";
+  filename: string;
+  type: "images" | "documents";
 };
 
 const FileDataModal: React.FC<TFileDataModalProps> = ({ filename, type }) => {
-  const [data, setData] = useState<FileMetadata>();
-  useEffect(() => {
-    if (filename && type) {
-      axios
-        .get<FileMetadata>(
-          `/api/cdn/${type === "documents" ? "doc" : "image"}/${filename}`
-        )
-        .then((res) => {
-          toast.dismiss();
-          if (res.status === 200) {
-            setData(res.data);
-          }
-        })
-        .catch((err) => {
-          toast.dismiss();
-          toast.error(err.message);
-        });
-    }
-    axios;
-  }, [filename, type]);
-  if (!data)
+  const fileData = useGetFileData({ filename, type });
+
+  if (!fileData.data)
     return (
       <DialogContent className="overflow-hidden">
         <DialogHeader>
@@ -49,30 +28,31 @@ const FileDataModal: React.FC<TFileDataModalProps> = ({ filename, type }) => {
 
       <div className="">
         <strong>Filename</strong>
-        <p id="filename">{data.filename}</p>
+        <p id="filename">{fileData.data.filename}</p>
       </div>
       <div className="">
         <strong>File Size</strong>
         <p id="filename">
-          {data.file_size < 1000 && `${data.file_size} b`}
-          {999999 > data.file_size && data.file_size >= 1000 && `${Math.round(data.file_size / 100) / 10} KB`}
-          {1000000000 > data.file_size &&
-            data.file_size >= 1000000 &&
-            `${Math.round(data.file_size / 100000) / 10} MB`}
-          {1000000000000 > data.file_size &&
-            data.file_size >= 1000000000 &&
-            `${Math.round(data.file_size / 100000000) / 10} GB`}
-          {data.file_size >= 1000000000000 &&
-            `${Math.round(data.file_size / 100000000000) / 10} TB`}
+          {fileData.data.file_size < 1000 && `${fileData.data.file_size} b`}
+          {999999 > fileData.data.file_size &&
+            fileData.data.file_size >= 1000 &&
+            `${Math.round(fileData.data.file_size / 100) / 10} KB`}
+          {1000000000 > fileData.data.file_size &&
+            fileData.data.file_size >= 1000000 &&
+            `${Math.round(fileData.data.file_size / 100000) / 10} MB`}
+          {1000000000000 > fileData.data.file_size &&
+            fileData.data.file_size >= 1000000000 &&
+            `${Math.round(fileData.data.file_size / 100000000) / 10} GB`}
+          {fileData.data.file_size >= 1000000000000 &&
+            `${Math.round(fileData.data.file_size / 100000000000) / 10} TB`}
         </p>
       </div>
       {type === "images" && (
         <div className="">
           <strong>Dimensions</strong>
-          <p id="filename">Height: {data.height}px</p>
-          <p id="filename">Width: {data.width}px</p>
+          <p id="filename">Height: {fileData.data.height}px</p>
+          <p id="filename">Width: {fileData.data.width}px</p>
         </div>
-
       )}
     </DialogContent>
   );

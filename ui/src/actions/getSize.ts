@@ -18,8 +18,5 @@ export const getSize = (
     .catch((err) => {
       toast.error("Error getting content size");
       console.log(err);
-    })
-    .finally(() => {
-      setLoading && setLoading(false);
     });
 };
