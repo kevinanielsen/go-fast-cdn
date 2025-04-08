@@ -159,3 +159,34 @@ export function useResizeImage(
     ...options,
   });
 }
+
+export function useDeleteFile(type: "doc" | "image") {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (filename: string) => {
+      console.log("ttt", type);
+      const res = await fetch(`/api/cdn/delete/${type}/${filename}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Network response was not ok");
+      console.log("res", res);
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success("Successfully deleted file!");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.size(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.images(type === "image" ? "images" : "documents"),
+      });
+    },
+    onError: (err: Error) => {
+      toast.dismiss();
+      toast.error(err.message);
+      console.error(err.message);
+    },
+  });
+}

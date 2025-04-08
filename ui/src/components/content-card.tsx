@@ -1,16 +1,12 @@
-import axios from "axios";
-import { useAtom } from "jotai";
+import { useDeleteFile } from "@/queries";
+import { TContentCardProps } from "@/types/contentCard";
 import { DownloadCloud, FileText, Files, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getFiles } from "../actions/getFiles";
-import { getSize } from "../actions/getSize";
-import { filesAtom, sizeAtom } from "../store";
 import FileDataModal from "./file-data-modal";
 import RenameModal from "./rename-modal";
 import ResizeModal from "./resize-modal";
 import { Button } from "./ui/button";
 import { Dialog, DialogTrigger } from "./ui/dialog";
-import { TContentCardProps } from "@/types/contentCard";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,
@@ -24,29 +20,11 @@ const ContentCard: React.FC<TContentCardProps> = ({
     window.location.host
   }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setFiles] = useAtom(filesAtom);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [__, setSize] = useAtom(sizeAtom);
 
-  const deleteFile = () => {
-    toast.loading("Deleting file...");
-    axios
-      .delete(
-        `/api/cdn/delete/${type === "documents" ? "doc" : "image"}/${file_name}`
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          toast.dismiss();
-          toast.success("Deleted file!");
-          getFiles(type, setFiles);
-          getSize(setSize);
-        }
-      })
-      .catch((err: Error) => {
-        toast.dismiss();
-        toast.error(err.message);
-      });
+  const deleteFile = useDeleteFile(type === "documents" ? "doc" : "image");
+
+  const handleDeleteFile = () => {
+    deleteFile.mutate(file_name);
   };
 
   return (
@@ -100,7 +78,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
             <Button
               variant="destructive"
               size="icon"
-              onClick={() => file_name && deleteFile()}
+              onClick={() => file_name && handleDeleteFile()}
               aria-label="Delete file"
             >
               <Trash2 className="inline" size="24" />

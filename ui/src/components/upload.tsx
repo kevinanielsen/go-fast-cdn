@@ -26,6 +26,7 @@ const Upload = () => {
       const sanitizedFile = sanitizeFileName(file);
       uploadFileMutation.mutate(sanitizedFile);
     }
+    uploadFileMutation.reset();
   };
 
   const switchTab = (tab: "docs" | "images") => {
