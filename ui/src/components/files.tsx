@@ -20,7 +20,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
     <div className="w-full">
       <h2 className="text-2xl capitalize mb-8">{type}</h2>
       <Seperator />
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 max-h-[calc(100vh-81pt)] overflow-y-auto">
         {files.map((file) => (
           <ContentCard
             type={type}
