@@ -1,17 +1,9 @@
-import { useAtom } from "jotai";
-import { sizeAtom, sizeLoadingAtom } from "../store";
-import { useEffect } from "react";
-import { getSize } from "../actions/getSize";
+import { useGetSize } from "@/queries";
 
 const ContentSize = () => {
-  const [size, setSize] = useAtom(sizeAtom);
-  const [loading, setLoading] = useAtom(sizeLoadingAtom);
+  const size = useGetSize();
 
-  useEffect(() => {
-    getSize(setSize, setLoading);
-  }, [setSize, setLoading]);
-
-  if (loading)
+  if (size.isLoading)
     return (
       <div className="bottom-0 absolute mb-4">
         <span>Total content size:</span>
@@ -23,15 +15,18 @@ const ContentSize = () => {
     <div className="bottom-0 absolute mb-4">
       <span data-testid="content-size-label">Total content size:</span>
       <p className="font-bold" data-testid="content-size">
-        {size < 1000 && `${size} b`}
-        {999999 > size && size >= 1000 && `${Math.round(size / 100) / 10} KB`}
-        {1000000000 > size &&
-          size >= 1000000 &&
-          `${Math.round(size / 100000) / 10} MB`}
-        {1000000000000 > size &&
-          size >= 1000000000 &&
-          `${Math.round(size / 100000000) / 10} GB`}
-        {size >= 1000000000000 && `${Math.round(size / 100000000000) / 10} TB`}
+        {size.data < 1000 && `${size.data} b`}
+        {999999 > size.data &&
+          size.data >= 1000 &&
+          `${Math.round(size.data / 100) / 10} KB`}
+        {1000000000 > size.data &&
+          size.data >= 1000000 &&
+          `${Math.round(size.data / 100000) / 10} MB`}
+        {1000000000000 > size.data &&
+          size.data >= 1000000000 &&
+          `${Math.round(size.data / 100000000) / 10} GB`}
+        {size.data >= 1000000000000 &&
+          `${Math.round(size.data / 100000000000) / 10} TB`}
       </p>
     </div>
   );

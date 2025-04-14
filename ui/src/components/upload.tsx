@@ -1,20 +1,12 @@
+import { useUploadFile } from "@/queries";
+import { sanitizeFileName } from "@/utils";
 import { useRef } from "react";
+import { useParams } from "wouter";
 import DocsInput from "./docs-input";
 import ImageInput from "./image-input";
 import Seperator from "./seperator";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useParams } from "wouter";
-import { sizeAtom, sizeLoadingAtom } from "../store";
-import { useAtom } from "jotai";
-import { getSize } from "../actions/getSize";
 
 const Upload = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setLoading] = useAtom(sizeLoadingAtom);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [__, setSize] = useAtom(sizeAtom);
-
   const tab = useParams<{ tab: "images" | "docs" }>().tab;
 
   if (tab === undefined || tab === null) {
@@ -22,35 +14,19 @@ const Upload = () => {
   }
 
   const file = useRef<HTMLInputElement>(null);
+  const type = tab === "docs" ? "doc" : "image";
+  const uploadFileMutation = useUploadFile(type);
 
-  const uploadFile = async () => {
+  const handleUploadFile = async () => {
     const files = file.current?.files;
 
-    if (files !== null && files !== undefined) {
-      toast.loading("Uploading...");
-      const type = tab === "docs" ? "doc" : "image";
+    if (!files) return;
 
-      for (let file of files) {
-        const form = new FormData();
-        form.append(type, file);
-
-        await axios
-          .post<{ url: string }>(`/api/cdn/upload/${type}`, form)
-          .then((res) => {
-            if (res.status === 200) {
-              toast.dismiss();
-              toast.success("Successfully uploaded file!");
-              getSize(setSize, setLoading);
-            }
-          })
-          .catch((err: Error) => {
-            toast.dismiss();
-            toast.error(err.message);
-          });
-      }
-
-      location.reload();
+    for (const file of files) {
+      const sanitizedFile = sanitizeFileName(file);
+      uploadFileMutation.mutate(sanitizedFile);
     }
+    uploadFileMutation.reset();
   };
 
   const switchTab = (tab: "docs" | "images") => {
@@ -81,10 +57,14 @@ const Upload = () => {
             Images
           </button>
         </nav>
-        <form action="" className="flex flex-col h-full" onSubmit={(e) => {
-              e.preventDefault();
-              uploadFile();
-            }}>
+        <form
+          action=""
+          className="flex flex-col h-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUploadFile();
+          }}
+        >
           {tab === "docs" ? (
             <DocsInput fileRef={file} />
           ) : (
