@@ -14,8 +14,8 @@ export const queryKeys = {
   size: () => [{ ...queryKeys.all[0], scope: "size" }] as const,
   image: (filename: string) =>
     [{ ...queryKeys.all[0], scope: "file-data", filename }] as const,
-  dimensions: (heigth: number, width: number) =>
-    [{ ...queryKeys.all[0], scope: "aaaa", heigth, width }] as const,
+  dimensions: (height: number, width: number) =>
+    [{ ...queryKeys.all[0], scope: "aaaa", height, width }] as const,
   images: (type: "documents" | "images") =>
     [{ ...queryKeys.all[0], scope: "files", type }] as const,
 };
