@@ -84,7 +84,7 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename }) => {
       toast.dismiss();
       setResizeFormData({
         width: fileMetadata.width ?? 0,
-        height: fileMetadata.width ?? 0,
+        height: fileMetadata.height ?? 0,
       });
     }
   }, [fileMetadata]);
