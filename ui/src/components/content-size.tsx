@@ -3,7 +3,7 @@ import { useGetSize } from "@/queries";
 const ContentSize = () => {
   const size = useGetSize();
 
-  if (size.isPending)
+  if (size.isLoading)
     return (
       <div className="bottom-0 absolute mb-4">
         <span>Total content size:</span>
