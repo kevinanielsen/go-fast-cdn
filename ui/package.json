@@ -42,7 +42,7 @@
     "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.3.6",
     "typescript": "^5.2.2",
-    "vite": "^5.0.13",
+    "vite": "^5.4.19",
     "wouter": "^2.12.1"
   }
 }
