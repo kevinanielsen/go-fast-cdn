@@ -1,11 +1,10 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogOut, User as UserIcon, Settings as SettingsIcon } from 'lucide-react';
-import { useLocation, Link } from 'wouter';
+import { Link } from 'wouter';
 
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();
-  const [, navigate] = useLocation();
 
   if (!user) return null;
   return (
