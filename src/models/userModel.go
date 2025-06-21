@@ -8,7 +8,10 @@ import (
 )
 
 type User struct {
-	gorm.Model
+	ID           uint       `json:"id" gorm:"primaryKey"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
+	DeletedAt    *time.Time `json:"deleted_at,omitempty" gorm:"index"`
 	Email        string     `json:"email" gorm:"unique;not null" validate:"required,email"`
 	PasswordHash string     `json:"-" gorm:"not null"`
 	Role         string     `json:"role" gorm:"default:user" validate:"oneof=admin user"`

@@ -30,6 +30,7 @@ export const adminUserService = {
     return res.data;
   },
   async deleteUser(id: number): Promise<void> {
+    if (!id && id !== 0) throw new Error('User ID is required');
     await api.delete(`/${id}`);
   },
 };

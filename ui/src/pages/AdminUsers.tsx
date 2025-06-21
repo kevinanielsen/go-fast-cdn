@@ -44,7 +44,11 @@ export default function AdminUsers() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number | undefined) => {
+    if (typeof id !== 'number' || isNaN(id)) {
+      alert('Invalid user ID. Cannot delete user.');
+      return;
+    }
     if (window.confirm('Delete this user?')) {
       await adminUserService.deleteUser(id);
       fetchUsers();
@@ -75,7 +79,7 @@ export default function AdminUsers() {
         </thead>
         <tbody>
           {users.map(user => (
-            <tr key={user.id}>
+            <tr key={user.id ?? user.email}>
               <td>{user.email}</td>
               <td>{user.role}</td>
               <td>{user.is_verified ? 'Yes' : 'No'}</td>
