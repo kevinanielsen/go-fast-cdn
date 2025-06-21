@@ -56,42 +56,105 @@ export default function AdminUsers() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Admin User Management</h2>
-      <form onSubmit={editingId ? handleUpdate : handleAdd} className="mb-6 flex gap-2 flex-wrap">
-        <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className="input input-bordered" required />
-        {!editingId && <input name="password" value={form.password || ''} onChange={handleChange} placeholder="Password" className="input input-bordered" required type="password" />}
-        <select name="role" value={form.role} onChange={handleChange} className="input input-bordered">
+    <div>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Admin User Management</h1>
+      <form
+        onSubmit={editingId ? handleUpdate : handleAdd}
+        className="mb-6 flex flex-wrap gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100"
+      >
+        <input
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className="input input-bordered w-full md:w-auto flex-1"
+          required
+        />
+        {!editingId && (
+          <input
+            name="password"
+            value={form.password || ''}
+            onChange={handleChange}
+            placeholder="Password"
+            className="input input-bordered w-full md:w-auto flex-1"
+            required
+            type="password"
+          />
+        )}
+        <select
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          className="input input-bordered w-full md:w-auto flex-1"
+        >
           <option value="user">user</option>
           <option value="admin">admin</option>
         </select>
-        <button className="btn btn-primary" type="submit">{editingId ? 'Update' : 'Add'} User</button>
-        {editingId && <button className="btn btn-secondary" type="button" onClick={() => { setEditingId(null); setForm(emptyUser); }}>Cancel</button>}
+        <div className="flex gap-2 w-full md:w-auto">
+          <button className="btn btn-primary w-full" type="submit">
+            {editingId ? 'Update' : 'Add'} User
+          </button>
+          {editingId && (
+            <button
+              className="btn btn-secondary w-full"
+              type="button"
+              onClick={() => {
+                setEditingId(null);
+                setForm(emptyUser);
+              }}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
-      <table className="table w-full">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Verified</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <tr key={user.id ?? user.email}>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>{user.is_verified ? 'Yes' : 'No'}</td>
-              <td>
-                <button className="btn btn-xs btn-info mr-2" onClick={() => handleEdit(user)}>Edit</button>
-                <button className="btn btn-xs btn-error" onClick={() => handleDelete(user.id)}>Delete</button>
-              </td>
+      <div className="overflow-x-auto rounded-lg border border-gray-100 bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700">Email</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700">Role</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700">Verified</th>
+              <th className="py-3 px-4 text-left font-semibold text-gray-700">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {loading && <div>Loading...</div>}
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-100">
+            {users.map((user) => (
+              <tr key={user.id ?? user.email} className="hover:bg-gray-50 transition">
+                <td className="py-3 px-4 text-gray-900">{user.email}</td>
+                <td className="py-3 px-4">
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${user.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700'}`}>
+                    {user.role}
+                  </span>
+                </td>
+                <td className="py-3 px-4">
+                  {user.is_verified ? (
+                    <span className="inline-block w-3 h-3 bg-green-400 rounded-full mr-2"></span>
+                  ) : (
+                    <span className="inline-block w-3 h-3 bg-red-400 rounded-full mr-2"></span>
+                  )}
+                  {user.is_verified ? 'Yes' : 'No'}
+                </td>
+                <td className="py-3 px-4 flex gap-2">
+                  <button
+                    className="btn btn-xs btn-info"
+                    onClick={() => handleEdit(user)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-xs btn-error"
+                    onClick={() => handleDelete(user.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {loading && <div className="mt-4 text-center text-gray-500">Loading...</div>}
     </div>
   );
 }
