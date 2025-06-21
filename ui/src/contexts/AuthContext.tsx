@@ -11,6 +11,7 @@ interface AuthContextType {
   register: (email: string, password: string, role?: string) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
+  refreshUserProfile: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -115,7 +116,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       toast.success('Logged out successfully');
     }
   };
-
   const refreshToken = async (): Promise<boolean> => {
     try {
       const storedRefreshToken = localStorage.getItem('refreshToken');
@@ -128,6 +128,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return true;
     } catch (error) {
       clearAuthData();
+      return false;
+    }
+  };
+  const refreshUserProfile = async (): Promise<boolean> => {
+    try {
+      console.log("[DEBUG] AuthContext - Fetching fresh user profile...");
+      const profile = await authService.getProfile();
+      console.log("[DEBUG] AuthContext - Got profile from API:", profile);
+      setUser(profile);
+      localStorage.setItem('user', JSON.stringify(profile));
+      console.log("[DEBUG] AuthContext - Updated user state and localStorage");
+      return true;
+    } catch (error) {
+      console.error('Failed to refresh user profile:', error);
       return false;
     }
   };
@@ -146,7 +160,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('user');
     setUser(null);
   };
-
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
@@ -155,6 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     refreshToken,
+    refreshUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

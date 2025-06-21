@@ -5,7 +5,9 @@ import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 
 const UserSettings: React.FC = () => {
-  const { user, refreshToken, logout } = useAuth();
+  const { user, refreshToken, refreshUserProfile, logout } = useAuth();
+  console.log("[DEBUG] UserSettings - Current user:", user);
+  console.log("[DEBUG] UserSettings - is_2fa_enabled:", user?.is_2fa_enabled);
   const [email, setEmail] = useState(user?.email || "");
   const [newEmail, setNewEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -62,8 +64,7 @@ const UserSettings: React.FC = () => {
       toast.error(err?.response?.data?.error || "Failed to start 2FA setup");
     }
     setLoading(false);
-  };
-  const handle2FAVerify = async (e: React.FormEvent) => {
+  };  const handle2FAVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -71,24 +72,25 @@ const UserSettings: React.FC = () => {
       toast.success("2FA enabled!");
       setShow2FASetup(false);
       setTwoFACode("");
-      await refreshToken();
+      await refreshUserProfile(); // Refresh user profile to get updated 2FA status
     } catch (err: any) {
       toast.error(err?.response?.data?.error || "Invalid code");
     }
     setLoading(false);
-  };  const handle2FADisable = async () => {
+  };const handle2FADisable = async () => {
     setShow2FADisable(true);
-  };
-
-  const confirmDisable2FA = async (e: React.FormEvent) => {
+  };  const confirmDisable2FA = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      console.log("[DEBUG] Disabling 2FA...");
       await authService.setup2FA({ enable: false, token: disableTwoFACode });
       toast.success("2FA disabled");
       setShow2FADisable(false);
       setDisableTwoFACode("");
-      await refreshToken();
+      console.log("[DEBUG] About to refresh user profile...");
+      const refreshed = await refreshUserProfile();
+      console.log("[DEBUG] User profile refresh result:", refreshed);
     } catch (err: any) {
       toast.error(err?.response?.data?.error || "Failed to disable 2FA");
     }

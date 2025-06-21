@@ -85,7 +85,6 @@ func (s *Server) AddApiRoutes() {
 	{
 		resize.PUT("/image", iHandlers.HandleImageResize)
 	}
-
 	// Admin-only routes
 	adminRoutes := api.Group("/admin")
 	adminRoutes.Use(authMiddleware.RequireAuth(), authMiddleware.RequireAdmin())

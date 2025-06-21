@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+	"log"
 	"time"
 
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
@@ -24,8 +26,21 @@ func (r *UserRepo) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	err := r.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
+		log.Printf("[DEBUG] GetUserByEmail - Failed to get user %s: %v", email, err)
 		return nil, err
 	}
+	log.Printf("[DEBUG] GetUserByEmail - Retrieved user %d (%s) - Is2FAEnabled: %t, HasSecret: %t",
+		user.ID, user.Email,
+		func() bool {
+			if user.Is2FAEnabled == nil {
+				return false
+			}
+			return *user.Is2FAEnabled
+		}(),
+		func() bool {
+			return user.TwoFASecret != nil && *user.TwoFASecret != ""
+		}())
+
 	return &user, nil
 }
 
@@ -33,8 +48,21 @@ func (r *UserRepo) GetUserByID(id uint) (*models.User, error) {
 	var user models.User
 	err := r.db.First(&user, id).Error
 	if err != nil {
+		log.Printf("[DEBUG] GetUserByID - Failed to get user %d: %v", id, err)
 		return nil, err
 	}
+	log.Printf("[DEBUG] GetUserByID - Retrieved user %d - Is2FAEnabled: %t, HasSecret: %t",
+		user.ID,
+		func() bool {
+			if user.Is2FAEnabled == nil {
+				return false
+			}
+			return *user.Is2FAEnabled
+		}(),
+		func() bool {
+			return user.TwoFASecret != nil && *user.TwoFASecret != ""
+		}())
+
 	return &user, nil
 }
 
@@ -99,8 +127,83 @@ func (r *UserRepo) UpdateUserEmail(userID uint, newEmail string) error {
 }
 
 func (r *UserRepo) Set2FA(userID uint, secret string, enabled bool) error {
-	return r.db.Model(&models.User{}).Where("id = ?", userID).Updates(models.User{
-		TwoFASecret:  secret,
-		Is2FAEnabled: enabled,
-	}).Error
+	log.Printf("[DEBUG] Set2FA called - UserID: %d, Secret: %s, Enabled: %t",
+		userID,
+		func() string {
+			if secret == "" {
+				return "<empty>"
+			}
+			return fmt.Sprintf("<length:%d>", len(secret))
+		}(),
+		enabled)
+
+	// First, let's check the current state before update
+	var currentUser models.User
+	if err := r.db.Where("id = ?", userID).First(&currentUser).Error; err != nil {
+		log.Printf("[ERROR] Set2FA - Failed to get current user state: %v", err)
+		return err
+	}
+	log.Printf("[DEBUG] Set2FA - Current state before update - UserID: %d, Is2FAEnabled: %t, TwoFASecret: %s",
+		currentUser.ID,
+		func() bool {
+			if currentUser.Is2FAEnabled == nil {
+				return false
+			}
+			return *currentUser.Is2FAEnabled
+		}(),
+		func() string {
+			if currentUser.TwoFASecret == nil {
+				return "<nil>"
+			}
+			if *currentUser.TwoFASecret == "" {
+				return "<empty>"
+			}
+			return fmt.Sprintf("<length:%d>", len(*currentUser.TwoFASecret))
+		}()) // Perform the update using pointer values to handle zero values correctly
+	secretPtr := &secret
+	enabledPtr := &enabled
+
+	// If we're disabling 2FA, set secret to nil (NULL in database)
+	if !enabled && secret == "" {
+		secretPtr = nil
+	}
+
+	result := r.db.Model(&models.User{}).Where("id = ?", userID).Updates(models.User{
+		TwoFASecret:  secretPtr,
+		Is2FAEnabled: enabledPtr,
+	})
+
+	if result.Error != nil {
+		log.Printf("[ERROR] Set2FA - Database update failed: %v", result.Error)
+		return result.Error
+	}
+
+	log.Printf("[DEBUG] Set2FA - Database update completed - Rows affected: %d", result.RowsAffected)
+
+	// Verify the update by checking the current state
+	var updatedUser models.User
+	if err := r.db.Where("id = ?", userID).First(&updatedUser).Error; err != nil {
+		log.Printf("[ERROR] Set2FA - Failed to verify updated state: %v", err)
+		return err
+	}
+
+	log.Printf("[DEBUG] Set2FA - State after update - UserID: %d, Is2FAEnabled: %t, TwoFASecret: %s",
+		updatedUser.ID,
+		func() bool {
+			if updatedUser.Is2FAEnabled == nil {
+				return false
+			}
+			return *updatedUser.Is2FAEnabled
+		}(),
+		func() string {
+			if updatedUser.TwoFASecret == nil {
+				return "<nil>"
+			}
+			if *updatedUser.TwoFASecret == "" {
+				return "<empty>"
+			}
+			return fmt.Sprintf("<length:%d>", len(*updatedUser.TwoFASecret))
+		}())
+
+	return nil
 }
