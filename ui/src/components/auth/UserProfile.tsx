@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { LogOut, User as UserIcon } from 'lucide-react';
+import { LogOut, User as UserIcon, Settings as SettingsIcon } from 'lucide-react';
+import { Link } from 'wouter';
 
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();
@@ -22,6 +23,13 @@ const UserProfile: React.FC = () => {
             {user.role}
           </p>
         </div>
+        <Link
+          to="/settings"
+          className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-500"
+          title="User Settings"
+        >
+          <SettingsIcon className="h-5 w-5" />
+        </Link>
         <button
           onClick={logout}
           className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-500"

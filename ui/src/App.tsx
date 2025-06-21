@@ -11,6 +11,7 @@ import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserProfile from "./components/auth/UserProfile";
 import AuthTest from "./pages/AuthTest";
+import UserSettings from "./components/auth/UserSettings";
 
 function AppContent() {
   return (    <>
@@ -23,7 +24,7 @@ function AppContent() {
           <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
             {/* Top section */}
             <div className="flex-1">
-              <h1 className="text-xl font-bold">Go-Fast CDN</h1>
+              <Link to="/" className="text-xl font-bold block mb-2">Go-Fast CDN</Link>
               <Seperator />
               <Link to="/upload" className="flex font-bold gap-4 items-center">
                 <UploadIcon />
@@ -61,6 +62,7 @@ function AppContent() {
             <Route path="/documents">{<Files type="documents" />}</Route>
             <Route path="/upload">{<Upload />}</Route>
             <Route path="/upload/:tab">{<Upload />}</Route>
+            <Route path="/settings">{<ProtectedRoute><UserSettings /></ProtectedRoute>}</Route>
             <Route path="/">
               <div className="text-center py-12">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">

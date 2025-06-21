@@ -36,6 +36,15 @@ type ChangePasswordRequest struct {
 	NewPassword     string `json:"new_password" validate:"required,min=8"`
 }
 
+type ChangeEmailRequest struct {
+	NewEmail string `json:"new_email" validate:"required,email"`
+}
+
+type TwoFASetupRequest struct {
+	Enable bool `json:"enable"`
+	Token  string `json:"token"`
+}
+
 type AuthResponse struct {
 	User         *UserResponse      `json:"user"`
 	AccessToken  string             `json:"access_token"`
@@ -315,6 +324,43 @@ func (h *AuthHandler) ChangePassword(c *gin.Context) {
 	h.userRepo.RevokeAllUserSessions(userModel.ID)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
+}
+
+// ChangeEmail allows a user to change their email
+func (h *AuthHandler) ChangeEmail(c *gin.Context) {
+	var req ChangeEmailRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
+		return
+	}
+	if err := h.validator.Struct(req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Validation failed", "details": err.Error()})
+		return
+	}
+	userID := c.GetUint("userID")
+	if err := h.userRepo.UpdateUserEmail(userID, req.NewEmail); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update email"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Email updated successfully"})
+}
+
+// 2FA setup (TOTP)
+func (h *AuthHandler) Setup2FA(c *gin.Context) {
+	var req TwoFASetupRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
+		return
+	}
+	userID := c.GetUint("userID")
+	// Generate or verify TOTP secret here (pseudo)
+	// For now, just enable/disable 2FA
+	secret := "dummy-secret" // Replace with real TOTP secret logic
+	if err := h.userRepo.Set2FA(userID, secret, req.Enable); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update 2FA"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "2FA updated successfully", "secret": secret})
 }
 
 // Helper function to convert user model to response

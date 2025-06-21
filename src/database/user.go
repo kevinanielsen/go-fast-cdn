@@ -93,3 +93,14 @@ func (r *UserRepo) GetPasswordResetByToken(token string) (*models.PasswordReset,
 func (r *UserRepo) MarkPasswordResetAsUsed(resetID uint) error {
 	return r.db.Model(&models.PasswordReset{}).Where("id = ?", resetID).Update("is_used", true).Error
 }
+
+func (r *UserRepo) UpdateUserEmail(userID uint, newEmail string) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Update("email", newEmail).Error
+}
+
+func (r *UserRepo) Set2FA(userID uint, secret string, enabled bool) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Updates(map[string]interface{}{
+		"two_fa_secret":  secret,
+		"is2_fa_enabled": enabled,
+	}).Error
+}

@@ -9,11 +9,13 @@ import (
 
 type User struct {
 	gorm.Model
-	Email        string    `json:"email" gorm:"unique;not null" validate:"required,email"`
-	PasswordHash string    `json:"-" gorm:"not null"`
-	Role         string    `json:"role" gorm:"default:user" validate:"oneof=admin user"`
-	IsVerified   bool      `json:"is_verified" gorm:"default:false"`
-	LastLogin    *time.Time `json:"last_login"`
+	Email         string    `json:"email" gorm:"unique;not null" validate:"required,email"`
+	PasswordHash  string    `json:"-" gorm:"not null"`
+	Role          string    `json:"role" gorm:"default:user" validate:"oneof=admin user"`
+	IsVerified    bool      `json:"is_verified" gorm:"default:false"`
+	LastLogin     *time.Time `json:"last_login"`
+	Is2FAEnabled  bool      `json:"is_2fa_enabled" gorm:"default:false"`
+	TwoFASecret   string    `json:"-" gorm:"default:null"`
 }
 
 type UserSession struct {
@@ -53,6 +55,8 @@ type UserRepository interface {
 	CreatePasswordReset(reset *PasswordReset) error
 	GetPasswordResetByToken(token string) (*PasswordReset, error)
 	MarkPasswordResetAsUsed(resetID uint) error
+	UpdateUserEmail(userID uint, newEmail string) error
+	Set2FA(userID uint, secret string, enabled bool) error
 }
 
 // HashPassword hashes a plain text password
