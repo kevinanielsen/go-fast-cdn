@@ -18,6 +18,7 @@ export interface AuthResponse {
 export interface LoginRequest {
   email: string;
   password: string;
+  two_fa_token?: string;
 }
 
 export interface RegisterRequest {
@@ -41,4 +42,9 @@ export interface AuthState {
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+}
+
+export interface TwoFARequiredResponse {
+  error: string;
+  requires_2fa: boolean;
 }

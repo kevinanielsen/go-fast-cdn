@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string, twoFAToken?: string) => Promise<{ success: boolean; requires2FA?: boolean }>;
   register: (email: string, password: string, role?: string) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
@@ -62,17 +62,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(false);
     }
   };
-
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string, twoFAToken?: string): Promise<{ success: boolean; requires2FA?: boolean }> => {
     try {
       setIsLoading(true);
-      const response = await authService.login({ email, password });
+      const loginData: any = { email, password };
+      if (twoFAToken) {
+        loginData.two_fa_token = twoFAToken;
+      }
+      
+      const response = await authService.login(loginData);
       setAuthData(response);
       toast.success('Login successful!');
-      return true;
+      return { success: true };
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Login failed');
-      return false;
+      const errorData = error.response?.data;
+      if (errorData?.requires_2fa) {
+        return { success: false, requires2FA: true };
+      }
+      
+      toast.error(errorData?.error || 'Login failed');
+      return { success: false };
     } finally {
       setIsLoading(false);
     }
