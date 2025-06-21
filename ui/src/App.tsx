@@ -20,8 +20,8 @@ function AppContent() {
       <Route path="/register">{<Register />}</Route>
       <Route path="/auth-test">{<AuthTest />}</Route>
       
-      <ProtectedRoute>        <div className="flex max-h-screen w-screen">
-          <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
+      <ProtectedRoute>        <div className="flex min-h-screen w-screen">
+          <nav className="min-w-[256px] h-screen sticky top-0 border-r shadow-lg pt-4 px-4 flex flex-col overflow-y-auto">
             {/* Top section */}
             <div className="flex-1">
               <Link to="/" className="text-xl font-bold block mb-2">Go-Fast CDN</Link>
@@ -57,7 +57,7 @@ function AppContent() {
               <UserProfile />
             </div>
           </nav>
-          <main className="m-4 h-auto flex flex-col w-full">
+          <main className="m-4 flex-1 w-full overflow-y-auto">
             <Route path="/images">{<Files type="images" />}</Route>
             <Route path="/documents">{<Files type="documents" />}</Route>
             <Route path="/upload">{<Upload />}</Route>

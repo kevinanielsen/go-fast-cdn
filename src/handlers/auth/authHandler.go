@@ -23,8 +23,9 @@ type RegisterRequest struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required"`
+	Email      string `json:"email" validate:"required,email"`
+	Password   string `json:"password" validate:"required"`
+	TwoFAToken string `json:"two_fa_token,omitempty"`
 }
 
 type RefreshRequest struct {
@@ -41,23 +42,23 @@ type ChangeEmailRequest struct {
 }
 
 type TwoFASetupRequest struct {
-	Enable bool `json:"enable"`
+	Enable bool   `json:"enable"`
 	Token  string `json:"token"`
 }
 
 type AuthResponse struct {
-	User         *UserResponse      `json:"user"`
-	AccessToken  string             `json:"access_token"`
-	RefreshToken string             `json:"refresh_token"`
-	ExpiresIn    int64              `json:"expires_in"`
+	User         *UserResponse `json:"user"`
+	AccessToken  string        `json:"access_token"`
+	RefreshToken string        `json:"refresh_token"`
+	ExpiresIn    int64         `json:"expires_in"`
 }
 
 type UserResponse struct {
-	ID         uint      `json:"id"`
-	Email      string    `json:"email"`
-	Role       string    `json:"role"`
-	IsVerified bool      `json:"is_verified"`
-	CreatedAt  time.Time `json:"created_at"`
+	ID         uint       `json:"id"`
+	Email      string     `json:"email"`
+	Role       string     `json:"role"`
+	IsVerified bool       `json:"is_verified"`
+	CreatedAt  time.Time  `json:"created_at"`
 	LastLogin  *time.Time `json:"last_login"`
 }
 
@@ -159,11 +160,22 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
-
 	// Check password
 	if !user.CheckPassword(req.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
+	}
+
+	// Check 2FA if enabled
+	if user.Is2FAEnabled {
+		if req.TwoFAToken == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "2FA token required", "requires_2fa": true})
+			return
+		}
+		if !auth.ValidateTOTP(user.TwoFASecret, req.TwoFAToken) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid 2FA token"})
+			return
+		}
 	}
 
 	// Update last login
@@ -337,7 +349,7 @@ func (h *AuthHandler) ChangeEmail(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Validation failed", "details": err.Error()})
 		return
 	}
-	userID := c.GetUint("userID")
+	userID := c.GetUint("user_id")
 	if err := h.userRepo.UpdateUserEmail(userID, req.NewEmail); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update email"})
 		return
@@ -347,7 +359,7 @@ func (h *AuthHandler) ChangeEmail(c *gin.Context) {
 
 // 2FA setup (TOTP)
 func (h *AuthHandler) Setup2FA(c *gin.Context) {
-	userID := c.GetUint("userID")
+	userID := c.GetUint("user_id")
 	user, err := h.userRepo.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
@@ -393,7 +405,7 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 
 // 2FA verify endpoint
 func (h *AuthHandler) Verify2FA(c *gin.Context) {
-	userID := c.GetUint("userID")
+	userID := c.GetUint("user_id")
 	user, err := h.userRepo.GetUserByID(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { cdnApiClient } from "../../services/authService";
+import { authService, cdnApiClient } from "../../services/authService";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 
@@ -47,26 +47,26 @@ const UserSettings: React.FC = () => {
       toast.error(err?.response?.data?.error || "Failed to update password");
     }
     setLoading(false);
-  };
-
-  const start2FASetup = async () => {
+  };  const start2FASetup = async () => {
     setLoading(true);
     try {
-      const res = await cdnApiClient.post("/auth/2fa", { enable: true });
-      setTwoFASecret(res.data.secret);
-      setOtpauthUrl(res.data.otpauth_url);
+      const res = await authService.setup2FA({ enable: true });
+      console.log("2FA API Response:", res);
+      
+      setTwoFASecret(res.secret);
+      setOtpauthUrl(res.otpauth_url);
       setShow2FASetup(true);
     } catch (err: any) {
+      console.error("2FA Setup Error:", err);
       toast.error(err?.response?.data?.error || "Failed to start 2FA setup");
     }
     setLoading(false);
   };
-
   const handle2FAVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await cdnApiClient.post("/auth/2fa/verify", { token: twoFACode });
+      await authService.verify2FA({ token: twoFACode });
       toast.success("2FA enabled!");
       setShow2FASetup(false);
       setTwoFACode("");
@@ -76,11 +76,10 @@ const UserSettings: React.FC = () => {
     }
     setLoading(false);
   };
-
   const handle2FADisable = async () => {
     setLoading(true);
     try {
-      await cdnApiClient.post("/auth/2fa", { enable: false });
+      await authService.setup2FA({ enable: false });
       toast.success("2FA disabled");
       setShow2FASetup(false);
       setTwoFASecret("");
@@ -90,10 +89,8 @@ const UserSettings: React.FC = () => {
       toast.error(err?.response?.data?.error || "Failed to disable 2FA");
     }
     setLoading(false);
-  };
-
-  return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded shadow">
+  };  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-6">User Settings</h2>
       <form onSubmit={handleChangeEmail} className="mb-6">
         <label className="block mb-2 font-semibold">Change Email</label>
@@ -131,45 +128,95 @@ const UserSettings: React.FC = () => {
           Update Password
         </button>
       </form>
-      <div className="mb-6">
-        <label className="block mb-2 font-semibold">Two-Factor Authentication (2FA)</label>
+      <div className="mb-6">        <label className="block mb-2 font-semibold">Two-Factor Authentication (2FA)</label>
         {user?.is_2fa_enabled ? (
-          <button className="btn btn-secondary" disabled={loading} onClick={handle2FADisable} type="button">
-            Disable 2FA
-          </button>
-        ) : show2FASetup ? (
-          <div className="flex flex-col items-center space-y-4 p-4 border rounded bg-gray-50">
+          <button 
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium" 
+            disabled={loading} 
+            onClick={handle2FADisable} 
+            type="button"
+          >
+            {loading ? 'Disabling...' : 'Disable 2FA'}
+          </button>        ) : show2FASetup ? (
+          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+              Set up Two-Factor Authentication
+            </h3>
+            
             {otpauthUrl && (
-              <div>
-                <pre className="text-xs bg-gray-100 p-2 rounded mb-2">
-                  {JSON.stringify({ otpauthUrl, twoFASecret }, null, 2)}
-                </pre>
-                <QRCode value={otpauthUrl} size={128} />
-                <span className="text-xs mt-2">Scan this QR code in your authenticator app.</span>
+              <div className="space-y-4">
+                {/* QR Code Section */}
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="bg-white p-3 rounded-lg border-2 border-gray-100 shadow-sm">
+                    <QRCode value={otpauthUrl} size={140} />
+                  </div>
+                  <p className="text-xs text-gray-600 text-center max-w-sm">
+                    Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
+                  </p>
+                </div>
+
+                {/* Manual Entry Section */}
                 {twoFASecret && (
-                  <span className="text-xs break-all">Authenticator Key: <b>{twoFASecret}</b></span>
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">
+                      Can't scan? Enter this key manually:
+                    </h4>
+                    <div className="bg-white p-2 rounded border border-gray-300 font-mono text-xs text-gray-800 break-all select-all cursor-pointer hover:bg-gray-50 transition-colors">
+                      {twoFASecret}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Click to select and copy the key above
+                    </p>
+                  </div>
                 )}
+
+                {/* Verification Form */}
+                <div className="border-t border-gray-200 pt-4">
+                  <form onSubmit={handle2FAVerify} className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Enter verification code from your authenticator app:
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center text-lg tracking-widest font-mono"
+                        value={twoFACode}
+                        onChange={e => setTwoFACode(e.target.value)}
+                        placeholder="000000"
+                        required
+                        pattern="[0-9]{6}"
+                        maxLength={6}
+                      />
+                    </div>
+                    <div className="flex space-x-3">
+                      <button 
+                        type="button"
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        onClick={() => setShow2FASetup(false)}
+                        disabled={loading}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        type="submit"
+                        className="flex-1 px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        disabled={loading}
+                      >
+                        {loading ? 'Verifying...' : 'Enable 2FA'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             )}
-            <form onSubmit={handle2FAVerify} className="w-full flex flex-col items-center space-y-2">
-              <input
-                type="text"
-                className="input input-bordered w-full"
-                value={twoFACode}
-                onChange={e => setTwoFACode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                required
-                pattern="[0-9]{6}"
-                maxLength={6}
-              />
-              <button className="btn btn-primary w-full" disabled={loading} type="submit">
-                Confirm & Enable 2FA
-              </button>
-            </form>
-          </div>
-        ) : (
-          <button className="btn btn-secondary" disabled={loading} onClick={start2FASetup} type="button">
-            Enable 2FA
+          </div>) : (
+          <button 
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium" 
+            disabled={loading} 
+            onClick={start2FASetup} 
+            type="button"
+          >
+            {loading ? 'Setting up...' : 'Enable 2FA'}
           </button>
         )}
       </div>

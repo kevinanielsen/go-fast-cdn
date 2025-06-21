@@ -95,6 +95,16 @@ export const authService = {
   async changePassword(data: ChangePasswordRequest): Promise<void> {
     await apiClient.put('/change-password', data);
   },
+
+  // 2FA methods
+  async setup2FA(data: { enable: boolean }): Promise<{ secret: string; otpauth_url: string }> {
+    const response = await apiClient.post('/2fa', data);
+    return response.data;
+  },
+
+  async verify2FA(data: { token: string }): Promise<void> {
+    await apiClient.post('/2fa/verify', data);
+  },
 };
 
 // CDN API client with auth

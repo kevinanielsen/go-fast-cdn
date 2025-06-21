@@ -59,7 +59,7 @@ func (r *UserRepo) CreateSession(session *models.UserSession) error {
 
 func (r *UserRepo) GetSessionByRefreshToken(token string) (*models.UserSession, error) {
 	var session models.UserSession
-	err := r.db.Preload("User").Where("refresh_token = ? AND is_revoked = ? AND expires_at > ?", 
+	err := r.db.Preload("User").Where("refresh_token = ? AND is_revoked = ? AND expires_at > ?",
 		token, false, time.Now()).First(&session).Error
 	if err != nil {
 		return nil, err
@@ -82,7 +82,7 @@ func (r *UserRepo) CreatePasswordReset(reset *models.PasswordReset) error {
 
 func (r *UserRepo) GetPasswordResetByToken(token string) (*models.PasswordReset, error) {
 	var reset models.PasswordReset
-	err := r.db.Preload("User").Where("token = ? AND is_used = ? AND expires_at > ?", 
+	err := r.db.Preload("User").Where("token = ? AND is_used = ? AND expires_at > ?",
 		token, false, time.Now()).First(&reset).Error
 	if err != nil {
 		return nil, err
@@ -99,8 +99,8 @@ func (r *UserRepo) UpdateUserEmail(userID uint, newEmail string) error {
 }
 
 func (r *UserRepo) Set2FA(userID uint, secret string, enabled bool) error {
-	return r.db.Model(&models.User{}).Where("id = ?", userID).Updates(map[string]interface{}{
-		"two_fa_secret":  secret,
-		"is2_fa_enabled": enabled,
+	return r.db.Model(&models.User{}).Where("id = ?", userID).Updates(models.User{
+		TwoFASecret:  secret,
+		Is2FAEnabled: enabled,
 	}).Error
 }
