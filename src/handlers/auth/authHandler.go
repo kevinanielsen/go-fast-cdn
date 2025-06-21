@@ -54,12 +54,13 @@ type AuthResponse struct {
 }
 
 type UserResponse struct {
-	ID         uint       `json:"id"`
-	Email      string     `json:"email"`
-	Role       string     `json:"role"`
-	IsVerified bool       `json:"is_verified"`
-	CreatedAt  time.Time  `json:"created_at"`
-	LastLogin  *time.Time `json:"last_login"`
+	ID           uint       `json:"id"`
+	Email        string     `json:"email"`
+	Role         string     `json:"role"`
+	IsVerified   bool       `json:"is_verified"`
+	CreatedAt    time.Time  `json:"created_at"`
+	LastLogin    *time.Time `json:"last_login"`
+	Is2FAEnabled bool       `json:"is_2fa_enabled"`
 }
 
 func NewAuthHandler(userRepo models.UserRepository) *AuthHandler {
@@ -391,9 +392,27 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"secret": secret, "otpauth_url": otpauthURL})
 		return
 	}
-
 	// If disabling 2FA
 	if !req.Enable {
+		// Check if user has 2FA enabled
+		if !user.Is2FAEnabled {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "2FA is not enabled"})
+			return
+		}
+
+		// Require 2FA token to disable
+		if req.Token == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "2FA token required to disable 2FA"})
+			return
+		}
+
+		// Validate the 2FA token
+		if !auth.ValidateTOTP(user.TwoFASecret, req.Token) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid 2FA code"})
+			return
+		}
+
+		// Disable 2FA
 		if err := h.userRepo.Set2FA(userID, "", false); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to disable 2FA"})
 			return
@@ -437,11 +456,12 @@ func (h *AuthHandler) Verify2FA(c *gin.Context) {
 // Helper function to convert user model to response
 func (h *AuthHandler) userToResponse(user *models.User) *UserResponse {
 	return &UserResponse{
-		ID:         user.ID,
-		Email:      user.Email,
-		Role:       user.Role,
-		IsVerified: user.IsVerified,
-		CreatedAt:  user.CreatedAt,
-		LastLogin:  user.LastLogin,
+		ID:           user.ID,
+		Email:        user.Email,
+		Role:         user.Role,
+		IsVerified:   user.IsVerified,
+		CreatedAt:    user.CreatedAt,
+		LastLogin:    user.LastLogin,
+		Is2FAEnabled: user.Is2FAEnabled,
 	}
 }

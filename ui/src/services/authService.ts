@@ -97,7 +97,7 @@ export const authService = {
   },
 
   // 2FA methods
-  async setup2FA(data: { enable: boolean }): Promise<{ secret: string; otpauth_url: string }> {
+  async setup2FA(data: { enable: boolean; token?: string }): Promise<{ secret: string; otpauth_url: string }> {
     const response = await apiClient.post('/2fa', data);
     return response.data;
   },
