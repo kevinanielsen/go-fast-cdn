@@ -90,5 +90,13 @@ func (s *Server) AddApiRoutes() {
 	adminRoutes.Use(authMiddleware.RequireAuth(), authMiddleware.RequireAdmin())
 	{
 		adminRoutes.POST("/drop/database", dbHandlers.HandleDropDB)
+
+		adminUserHandler := authHandlers.NewAdminUserHandler(database.NewUserRepo(database.DB))
+		{
+			adminRoutes.GET("/users", adminUserHandler.ListUsers)
+			adminRoutes.POST("/users", adminUserHandler.CreateUser)
+			adminRoutes.PUT("/users/:id", adminUserHandler.UpdateUser)
+			adminRoutes.DELETE("/users/:id", adminUserHandler.DeleteUser)
+		}
 	}
 }

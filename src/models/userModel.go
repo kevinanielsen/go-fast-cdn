@@ -44,6 +44,7 @@ type UserRepository interface {
 	UpdateUser(user *User) error
 	DeleteUser(id uint) error
 	GetAllUsers() ([]User, error)
+	CountUsers() (int64, error)
 
 	// Session management
 	CreateSession(session *UserSession) error

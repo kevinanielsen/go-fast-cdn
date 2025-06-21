@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserProfile from "./components/auth/UserProfile";
 import AuthTest from "./pages/AuthTest";
 import UserSettings from "./components/auth/UserSettings";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function AppContent() {
   return (    <>
@@ -63,6 +64,7 @@ function AppContent() {
             <Route path="/upload">{<Upload />}</Route>
             <Route path="/upload/:tab">{<Upload />}</Route>
             <Route path="/settings">{<ProtectedRoute><UserSettings /></ProtectedRoute>}</Route>
+            <Route path="/admin">{<AdminDashboard />}</Route>
             <Route path="/">
               <div className="text-center py-12">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">

@@ -102,6 +102,16 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		user.Role = "user"
 	}
 
+	// Check if this is the first user
+	userCount, err := h.userRepo.CountUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check user count"})
+		return
+	}
+	if userCount == 0 {
+		user.Role = "admin"
+	}
+
 	// Hash password
 	if err := user.HashPassword(req.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})

@@ -80,6 +80,12 @@ func (r *UserRepo) GetAllUsers() ([]models.User, error) {
 	return users, err
 }
 
+func (r *UserRepo) CountUsers() (int64, error) {
+	var count int64
+	err := r.db.Model(&models.User{}).Count(&count).Error
+	return count, err
+}
+
 // Session management
 func (r *UserRepo) CreateSession(session *models.UserSession) error {
 	return r.db.Create(session).Error
