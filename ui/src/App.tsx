@@ -19,36 +19,40 @@ function AppContent() {
       <Route path="/register">{<Register />}</Route>
       <Route path="/auth-test">{<AuthTest />}</Route>
       
-      <ProtectedRoute>
-        <div className="flex max-h-screen w-screen">
+      <ProtectedRoute>        <div className="flex max-h-screen w-screen">
           <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
-            <h1 className="text-xl font-bold">Go-Fast CDN</h1>
-            <Seperator />
-            <Link to="/upload" className="flex font-bold gap-4 items-center">
-              <UploadIcon />
-              Upload Content
-            </Link>
-            <Seperator />
-            <h3 className="text-lg mb-4 font-bold">Content</h3>
-            <ul className="flex flex-col gap-4">
-              <li>
-                <Link to="/images" className="flex font-bold gap-4 items-center">
-                  <Image />
-                  Images
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/documents"
-                  className="flex font-bold gap-4 items-center"
-                >
-                  <FilesIcon />
-                  Documents
-                </Link>
-              </li>
-            </ul>
-            <ContentSize />
+            {/* Top section */}
+            <div className="flex-1">
+              <h1 className="text-xl font-bold">Go-Fast CDN</h1>
+              <Seperator />
+              <Link to="/upload" className="flex font-bold gap-4 items-center">
+                <UploadIcon />
+                Upload Content
+              </Link>
+              <Seperator />
+              <h3 className="text-lg mb-4 font-bold">Content</h3>
+              <ul className="flex flex-col gap-4">
+                <li>
+                  <Link to="/images" className="flex font-bold gap-4 items-center">
+                    <Image />
+                    Images
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/documents"
+                    className="flex font-bold gap-4 items-center"
+                  >
+                    <FilesIcon />
+                    Documents
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Bottom section */}
             <div className="mt-auto">
+              <ContentSize />
               <UserProfile />
             </div>
           </nav>

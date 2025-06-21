@@ -6,10 +6,9 @@ const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();
 
   if (!user) return null;
-
   return (
     <div className="relative">
-      <div className="flex items-center space-x-3 p-4 border-t">
+      <div className="flex items-center space-x-3 p-4">
         <div className="flex-shrink-0">
           <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
             <UserIcon className="h-5 w-5 text-white" />
