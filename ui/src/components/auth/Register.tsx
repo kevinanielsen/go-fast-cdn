@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'wouter';
+import configService from '../../services/configService';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -8,8 +9,18 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [registrationEnabled, setRegistrationEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { register } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    setLoading(true);
+    configService.getRegistrationEnabled().then((enabled) => {
+      setRegistrationEnabled(enabled);
+      setLoading(false);
+    });
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +45,54 @@ const Register: React.FC = () => {
     
     setIsLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Create your account
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Or{' '}
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                sign in to existing account
+              </Link>
+            </p>
+          </div>
+          <div className="rounded-md bg-gray-100 p-4 text-center">
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!registrationEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Create your account
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Or{' '}
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                sign in to existing account
+              </Link>
+            </p>
+          </div>
+          <div className="rounded-md bg-red-50 p-4 text-center">
+            <div className="text-sm text-red-700">
+              Registration is currently disabled. Please check back later.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

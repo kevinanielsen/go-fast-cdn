@@ -14,45 +14,13 @@ import AuthTest from "./pages/AuthTest";
 import UserSettings from "./components/auth/UserSettings";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/auth/AdminRoute";
-import { useEffect, useState } from "react";
-import configService from "./services/configService";
 
 function AppContent() {
-  const [registrationEnabled, setRegistrationEnabled] = useState(true);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    configService.getRegistrationEnabled().then((enabled) => {
-      setRegistrationEnabled(enabled);
-      setLoading(false);
-    });
-  }, []);
-
   return (
     <>
       <Toaster />
       <Route path="/login">{<Login />}</Route>
-      <Route path="/register">
-        {loading ? null : registrationEnabled ? (
-          <Register />
-        ) : (
-          <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 text-center">
-              <h2 className="mt-6 text-2xl font-bold text-gray-900">
-                Registration is currently disabled
-              </h2>
-              <p className="mt-2 text-gray-600">
-                Please contact an administrator for access.
-              </p>
-              <Link to="/login">
-                <button className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold">
-                  Return to Login
-                </button>
-              </Link>
-            </div>
-          </div>
-        )}
-      </Route>
+      <Route path="/register">{<Register />}</Route>
       <Route path="/auth-test">{<AuthTest />}</Route>
 
       <ProtectedRoute>

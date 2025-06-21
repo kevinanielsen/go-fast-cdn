@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { authService, cdnApiClient } from "../../services/authService";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
+import { Link } from "wouter";
 
 const UserSettings: React.FC = () => {
   const { user, refreshToken, refreshUserProfile, logout } = useAuth();
@@ -279,6 +280,15 @@ const UserSettings: React.FC = () => {
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Admin Dashboard Link (bottom, left-aligned) */}
+      {user?.role === 'admin' && (
+        <div className="mt-8 text-left">
+          <Link to="/admin" className="text-blue-600 font-bold hover:underline">
+            &rarr; Go to Admin Dashboard
+          </Link>
         </div>
       )}
     </div>
