@@ -1,5 +1,5 @@
-import { useDeleteFile } from "@/queries";
-import { TContentCardProps } from "@/types/contentCard";
+import { useDeleteFile } from "../queries";
+import { TContentCardProps } from "../types/contentCard";
 import { DownloadCloud, FileText, Files, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import FileDataModal from "./file-data-modal";

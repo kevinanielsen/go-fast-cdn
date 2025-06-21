@@ -1,4 +1,4 @@
-import { useGetFileData } from "@/queries";
+import { useGetFileData } from "../queries";
 import Seperator from "./seperator";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 

@@ -1,4 +1,4 @@
-import { useGetSize } from "@/queries";
+import { useGetSize } from "../queries";
 
 const ContentSize = () => {
   const size = useGetSize();

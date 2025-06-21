@@ -5,48 +5,94 @@ import { Image, Upload as UploadIcon, Files as FilesIcon } from "lucide-react";
 import Seperator from "./components/seperator";
 import Upload from "./components/upload";
 import ContentSize from "./components/content-size";
+import { AuthProvider } from "./contexts/AuthContext";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import UserProfile from "./components/auth/UserProfile";
+import AuthTest from "./pages/AuthTest";
+
+function AppContent() {
+  return (    <>
+      <Toaster />
+      <Route path="/login">{<Login />}</Route>
+      <Route path="/register">{<Register />}</Route>
+      <Route path="/auth-test">{<AuthTest />}</Route>
+      
+      <ProtectedRoute>
+        <div className="flex max-h-screen w-screen">
+          <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
+            <h1 className="text-xl font-bold">Go-Fast CDN</h1>
+            <Seperator />
+            <Link to="/upload" className="flex font-bold gap-4 items-center">
+              <UploadIcon />
+              Upload Content
+            </Link>
+            <Seperator />
+            <h3 className="text-lg mb-4 font-bold">Content</h3>
+            <ul className="flex flex-col gap-4">
+              <li>
+                <Link to="/images" className="flex font-bold gap-4 items-center">
+                  <Image />
+                  Images
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/documents"
+                  className="flex font-bold gap-4 items-center"
+                >
+                  <FilesIcon />
+                  Documents
+                </Link>
+              </li>
+            </ul>
+            <ContentSize />
+            <div className="mt-auto">
+              <UserProfile />
+            </div>
+          </nav>
+          <main className="m-4 h-auto flex flex-col w-full">
+            <Route path="/images">{<Files type="images" />}</Route>
+            <Route path="/documents">{<Files type="documents" />}</Route>
+            <Route path="/upload">{<Upload />}</Route>
+            <Route path="/upload/:tab">{<Upload />}</Route>
+            <Route path="/">
+              <div className="text-center py-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                  Welcome to Go-Fast CDN
+                </h1>
+                <p className="text-gray-600 mb-8">
+                  Your secure, fast content delivery network
+                </p>
+                <div className="space-x-4">
+                  <Link 
+                    to="/upload" 
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    Start Uploading
+                  </Link>
+                  <Link 
+                    to="/images" 
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  >
+                    Browse Files
+                  </Link>
+                </div>
+              </div>
+            </Route>
+          </main>
+        </div>
+      </ProtectedRoute>
+    </>
+  );
+}
 
 function App() {
   return (
-    <>
-      <Toaster />
-      <div className="flex max-h-screen w-screen">
-        <nav className="min-w-[256px] min-h-screen h-full border-r shadow-lg pt-4 px-4 flex flex-col">
-          <h1 className="text-xl font-bold">Go-Fast CDN</h1>
-          <Seperator />
-          <Link to="/upload" className="flex font-bold gap-4 items-center">
-            <UploadIcon />
-            Upload Content
-          </Link>
-          <Seperator />
-          <h3 className="text-lg mb-4 font-bold">Content</h3>
-          <ul className="flex flex-col gap-4">
-            <li>
-              <Link to="/images" className="flex font-bold gap-4 items-center">
-                <Image />
-                Images
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/documents"
-                className="flex font-bold gap-4 items-center"
-              >
-                <FilesIcon />
-                Documents
-              </Link>
-            </li>
-          </ul>
-          <ContentSize />
-        </nav>
-        <main className="m-4 h-auto flex flex-col w-full">
-          <Route path="/images">{<Files type="images" />}</Route>
-          <Route path="/documents">{<Files type="documents" />}</Route>
-          <Route path="/upload">{<Upload />}</Route>
-          <Route path="/upload/:tab">{<Upload />}</Route>
-        </main>
-      </div>
-    </>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
