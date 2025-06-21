@@ -3,6 +3,19 @@ import { User } from '../types/auth';
 
 const api = axios.create({ baseURL: '/api/admin/users' });
 
+// Attach Authorization header with access token for every request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const adminUserService = {
   async listUsers(): Promise<User[]> {
     const res = await api.get('/');

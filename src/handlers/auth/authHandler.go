@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/kevinanielsen/go-fast-cdn/src/auth"
+	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 )
 
@@ -92,6 +93,21 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
+	// Check registration enabled in config
+	configRepo := database.NewConfigRepo(database.DB)
+	userCount, err := h.userRepo.CountUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check user count"})
+		return
+	}
+	if userCount > 0 {
+		val, err := configRepo.Get("registration_enabled")
+		if err == nil && val == "false" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Registration is currently disabled"})
+			return
+		}
+	}
+
 	// Create new user
 	user := &models.User{
 		Email: req.Email,
@@ -103,11 +119,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 	// Check if this is the first user
-	userCount, err := h.userRepo.CountUsers()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check user count"})
-		return
-	}
 	if userCount == 0 {
 		user.Role = "admin"
 	}

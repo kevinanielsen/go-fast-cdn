@@ -98,5 +98,14 @@ func (s *Server) AddApiRoutes() {
 			adminRoutes.PUT("/users/:id", adminUserHandler.UpdateUser)
 			adminRoutes.DELETE("/users/:id", adminUserHandler.DeleteUser)
 		}
+
+		// Config endpoints (admin only)
+		configHandler := handlers.NewConfigHandler(database.NewConfigRepo(database.DB))
+		adminRoutes.GET("/config/registration", configHandler.GetRegistrationEnabled)
+		adminRoutes.POST("/config/registration", configHandler.SetRegistrationEnabled)
 	}
+
+	// Public config endpoint for registration status
+	configHandler := handlers.NewConfigHandler(database.NewConfigRepo(database.DB))
+	api.GET("/config/registration", configHandler.GetRegistrationEnabled)
 }
