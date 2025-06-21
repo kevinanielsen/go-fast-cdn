@@ -5,6 +5,7 @@ export interface User {
   is_verified: boolean;
   created_at: string;
   last_login?: string;
+  is_2fa_enabled?: boolean;
 }
 
 export interface AuthResponse {

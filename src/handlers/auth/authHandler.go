@@ -347,20 +347,79 @@ func (h *AuthHandler) ChangeEmail(c *gin.Context) {
 
 // 2FA setup (TOTP)
 func (h *AuthHandler) Setup2FA(c *gin.Context) {
-	var req TwoFASetupRequest
+	userID := c.GetUint("userID")
+	user, err := h.userRepo.GetUserByID(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
+		return
+	}
+
+	var req struct {
+		Enable bool   `json:"enable"`
+		Token  string `json:"token"`
+	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
 		return
 	}
-	userID := c.GetUint("userID")
-	// Generate or verify TOTP secret here (pseudo)
-	// For now, just enable/disable 2FA
-	secret := "dummy-secret" // Replace with real TOTP secret logic
-	if err := h.userRepo.Set2FA(userID, secret, req.Enable); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update 2FA"})
+
+	if req.Enable {
+		// Generate secret and QR code URL
+		secret, otpauthURL, err := auth.GenerateTOTPSecret(user.Email)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate secret"})
+			return
+		}
+		// Save secret to user (but not enabled yet)
+		if err := h.userRepo.Set2FA(userID, secret, false); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save secret"})
+			return
+		}
+		// Return secret and otpauth URL for QR code
+		c.JSON(http.StatusOK, gin.H{"secret": secret, "otpauth_url": otpauthURL})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "2FA updated successfully", "secret": secret})
+
+	// If disabling 2FA
+	if !req.Enable {
+		if err := h.userRepo.Set2FA(userID, "", false); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to disable 2FA"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "2FA disabled"})
+		return
+	}
+}
+
+// 2FA verify endpoint
+func (h *AuthHandler) Verify2FA(c *gin.Context) {
+	userID := c.GetUint("userID")
+	user, err := h.userRepo.GetUserByID(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
+		return
+	}
+	var req struct {
+		Token string `json:"token"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request format"})
+		return
+	}
+	if user.TwoFASecret == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "2FA not initialized"})
+		return
+	}
+	if !auth.ValidateTOTP(user.TwoFASecret, req.Token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid 2FA code"})
+		return
+	}
+	// Enable 2FA
+	if err := h.userRepo.Set2FA(userID, user.TwoFASecret, true); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to enable 2FA"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "2FA enabled"})
 }
 
 // Helper function to convert user model to response

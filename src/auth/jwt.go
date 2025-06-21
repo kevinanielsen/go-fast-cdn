@@ -32,7 +32,7 @@ type TokenPair struct {
 func NewJWTService() *JWTService {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "your-super-secret-jwt-key-change-in-production"
+		secret = "your-super-secret-jwt-key-change-in-production-use-at-least-32-characters"
 	}
 	return &JWTService{
 		secretKey: []byte(secret),

@@ -41,6 +41,7 @@ func (s *Server) AddApiRoutes() {
 		authProtected.PUT("/change-password", authHandler.ChangePassword)
 		authProtected.PUT("/change-email", authHandler.ChangeEmail)
 		authProtected.POST("/2fa", authHandler.Setup2FA)
+		authProtected.POST("/2fa/verify", authHandler.Verify2FA)
 	}
 
 	cdn := api.Group("/cdn")

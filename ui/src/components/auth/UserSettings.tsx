@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { cdnApiClient } from "../../services/authService";
 import toast from "react-hot-toast";
+import QRCode from "react-qr-code";
 
 const UserSettings: React.FC = () => {
   const { user, refreshToken, logout } = useAuth();
@@ -9,9 +10,11 @@ const UserSettings: React.FC = () => {
   const [newEmail, setNewEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [enable2FA, setEnable2FA] = useState(false);
   const [twoFASecret, setTwoFASecret] = useState("");
   const [loading, setLoading] = useState(false);
+  const [show2FASetup, setShow2FASetup] = useState(false);
+  const [otpauthUrl, setOtpauthUrl] = useState("");
+  const [twoFACode, setTwoFACode] = useState("");
 
   const handleChangeEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,16 +49,45 @@ const UserSettings: React.FC = () => {
     setLoading(false);
   };
 
-  const handle2FA = async (e: React.FormEvent) => {
+  const start2FASetup = async () => {
+    setLoading(true);
+    try {
+      const res = await cdnApiClient.post("/auth/2fa", { enable: true });
+      setTwoFASecret(res.data.secret);
+      setOtpauthUrl(res.data.otpauth_url);
+      setShow2FASetup(true);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || "Failed to start 2FA setup");
+    }
+    setLoading(false);
+  };
+
+  const handle2FAVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await cdnApiClient.post("/auth/2fa", { enable: !enable2FA });
-      setEnable2FA(!enable2FA);
-      setTwoFASecret(res.data.secret || "");
-      toast.success("2FA status updated!");
+      await cdnApiClient.post("/auth/2fa/verify", { token: twoFACode });
+      toast.success("2FA enabled!");
+      setShow2FASetup(false);
+      setTwoFACode("");
+      await refreshToken();
     } catch (err: any) {
-      toast.error(err?.response?.data?.error || "Failed to update 2FA");
+      toast.error(err?.response?.data?.error || "Invalid code");
+    }
+    setLoading(false);
+  };
+
+  const handle2FADisable = async () => {
+    setLoading(true);
+    try {
+      await cdnApiClient.post("/auth/2fa", { enable: false });
+      toast.success("2FA disabled");
+      setShow2FASetup(false);
+      setTwoFASecret("");
+      setOtpauthUrl("");
+      await refreshToken();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || "Failed to disable 2FA");
     }
     setLoading(false);
   };
@@ -99,19 +131,48 @@ const UserSettings: React.FC = () => {
           Update Password
         </button>
       </form>
-      <form onSubmit={handle2FA} className="mb-6">
+      <div className="mb-6">
         <label className="block mb-2 font-semibold">Two-Factor Authentication (2FA)</label>
-        <button className="btn btn-secondary" disabled={loading} type="submit">
-          {enable2FA ? "Disable 2FA" : "Enable 2FA"}
-        </button>
-        {twoFASecret && (
-          <div className="mt-2 text-xs text-gray-600">
-            <span>Secret: {twoFASecret}</span>
-            <br />
-            <span>Scan this secret in your authenticator app.</span>
+        {user?.is_2fa_enabled ? (
+          <button className="btn btn-secondary" disabled={loading} onClick={handle2FADisable} type="button">
+            Disable 2FA
+          </button>
+        ) : show2FASetup ? (
+          <div className="flex flex-col items-center space-y-4 p-4 border rounded bg-gray-50">
+            {otpauthUrl && (
+              <div>
+                <pre className="text-xs bg-gray-100 p-2 rounded mb-2">
+                  {JSON.stringify({ otpauthUrl, twoFASecret }, null, 2)}
+                </pre>
+                <QRCode value={otpauthUrl} size={128} />
+                <span className="text-xs mt-2">Scan this QR code in your authenticator app.</span>
+                {twoFASecret && (
+                  <span className="text-xs break-all">Authenticator Key: <b>{twoFASecret}</b></span>
+                )}
+              </div>
+            )}
+            <form onSubmit={handle2FAVerify} className="w-full flex flex-col items-center space-y-2">
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                value={twoFACode}
+                onChange={e => setTwoFACode(e.target.value)}
+                placeholder="Enter 6-digit code"
+                required
+                pattern="[0-9]{6}"
+                maxLength={6}
+              />
+              <button className="btn btn-primary w-full" disabled={loading} type="submit">
+                Confirm & Enable 2FA
+              </button>
+            </form>
           </div>
+        ) : (
+          <button className="btn btn-secondary" disabled={loading} onClick={start2FASetup} type="button">
+            Enable 2FA
+          </button>
         )}
-      </form>
+      </div>
     </div>
   );
 };
