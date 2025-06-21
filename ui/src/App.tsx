@@ -24,7 +24,6 @@ function AppContent() {
       <Route path="/auth-test">{<AuthTest />}</Route>
 
       <ProtectedRoute>
-        {" "}
         <div className="flex min-h-screen w-screen">
           <nav className="min-w-[256px] h-screen sticky top-0 border-r shadow-lg pt-4 px-4 flex flex-col overflow-y-auto">
             {/* Top section */}

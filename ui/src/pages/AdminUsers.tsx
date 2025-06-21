@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { adminUserService } from '../services/adminUserService';
-import { User } from '../types/auth';
+import { User } from '@/types/auth';
 
 const emptyUser = { email: '', password: '', role: 'user' };
 

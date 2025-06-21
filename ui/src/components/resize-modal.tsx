@@ -1,5 +1,5 @@
 import { queryKeys, useResizeImage, useResizeModal } from "../queries";
-import { ImageDimensions } from "../types/imageDimensions";
+import { ImageDimensions } from "@/types/imageDimensions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Scaling } from "lucide-react";
 import { useEffect, useState } from "react";

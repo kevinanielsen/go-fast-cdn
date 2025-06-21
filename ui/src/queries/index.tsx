@@ -1,5 +1,5 @@
-import { FileMetadata } from "../types/fileMetadata";
-import { TContentCardProps } from "../types/contentCard";
+import { FileMetadata } from "@/types/fileMetadata";
+import { TContentCardProps } from "@/types/contentCard";
 import {
   useMutation,
   UseMutationOptions,

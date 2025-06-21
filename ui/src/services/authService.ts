@@ -6,7 +6,7 @@ import {
   RefreshRequest, 
   User, 
   ChangePasswordRequest 
-} from '../types/auth';
+} from '@/types/auth';
 
 const API_BASE_URL = '/api/auth';
 
