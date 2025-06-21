@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { LogOut, User as UserIcon, Settings as SettingsIcon } from 'lucide-react';
-import { Link } from 'wouter';
+import { useLocation } from 'wouter';
 
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();
+  const [, navigate] = useLocation();
 
   if (!user) return null;
   return (
@@ -23,19 +24,19 @@ const UserProfile: React.FC = () => {
             {user.role}
           </p>
         </div>
-        <Link
-          to="/settings"
+        <button
+          onClick={() => navigate('/settings')}
           className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-500"
           title="User Settings"
         >
-          <SettingsIcon className="h-5 w-5" />
-        </Link>
+          <SettingsIcon className="h-5 w-5" strokeWidth={2} color="currentColor" />
+        </button>
         <button
           onClick={logout}
           className="flex-shrink-0 p-2 text-gray-400 hover:text-gray-500"
           title="Logout"
         >
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-5 w-5" strokeWidth={2} color="currentColor" />
         </button>
       </div>
     </div>
