@@ -1,6 +1,7 @@
-import { useGetFiles } from "@/queries";
+import { useGetFiles } from "@/hooks/queries";
 import ContentCard from "./content-card";
 import Seperator from "./seperator";
+import { Skeleton } from "./ui/skeleton";
 
 type TFilesProps = {
   type: "images" | "documents";
@@ -14,16 +15,29 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
       <h2 className="text-2xl capitalize mb-8">{type}</h2>
       <Seperator />
       <div className="flex flex-wrap gap-4">
-        {files.data?.map((file) => (
-          <ContentCard
-            type={type}
-            file_name={file.file_name}
-            ID={file.ID}
-            createdAt={file.createdAt}
-            updatedAt={file.updatedAt}
-            key={file.ID}
-          />
-        ))}
+        {files.isLoading ? (
+          <>
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+            <Skeleton className="min-h-[264px] w-64 max-w-[256px]" />
+          </>
+        ) : (
+          <>
+            {files.data?.map((file) => (
+              <ContentCard
+                type={type}
+                file_name={file.file_name}
+                ID={file.ID}
+                createdAt={file.createdAt}
+                updatedAt={file.updatedAt}
+                key={file.ID}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );
