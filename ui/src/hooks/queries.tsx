@@ -85,14 +85,14 @@ export function useResizeModal(
   });
 }
 
-export function useUploadFile(type: "doc" | "image") {
+export function useUploadFile() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async (payload: { file: File; type: "doc" | "image" }) => {
       const form = new FormData();
-      form.append(type, file);
-      const res = await fetch(`/api/cdn/upload/${type}`, {
+      form.append(payload.type, payload.file);
+      const res = await fetch(`/api/cdn/upload/${payload.type}`, {
         method: "POST",
         body: form,
       });
@@ -112,7 +112,7 @@ export function useUploadFile(type: "doc" | "image") {
     onSuccess: () => {
       toast.dismiss();
       toast.success("Successfully uploaded file!");
-      queryClient.invalidateQueries({ queryKey: queryKeys.size() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.all });
     },
     onError: (err: Error) => {
       toast.dismiss();
