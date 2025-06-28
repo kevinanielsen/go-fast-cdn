@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { queryKeys, useRenameFile } from "@/queries";
+import { queryKeys, useRenameFile } from "@/hooks/queries";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 

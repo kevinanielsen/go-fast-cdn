@@ -1,4 +1,4 @@
-import { useDeleteFile } from "@/queries";
+import { useDeleteFile } from "@/hooks/queries";
 import { TContentCardProps } from "@/types/contentCard";
 import { DownloadCloud, FileText, Files, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -19,7 +19,6 @@ const ContentCard: React.FC<TContentCardProps> = ({
   const url = `${window.location.protocol}//${
     window.location.host
   }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
-
 
   const deleteFile = useDeleteFile(type === "documents" ? "doc" : "image");
 
