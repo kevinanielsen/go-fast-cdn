@@ -7,7 +7,11 @@ import SidebarNav from "./components/sidebar-nav";
 function App() {
   return (
     <>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          duration: 5000,
+        }}
+      />
       <SidebarProvider>
         <div className="flex max-h-screen w-screen">
           <SidebarNav />
