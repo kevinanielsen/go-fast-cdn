@@ -1,10 +1,11 @@
 import { sanitizeFileName } from "@/utils";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn } from "@/lib/utils";
 import DocCardUpload from "../doc-card-upload";
 import ImageCardUpload from "./image-card-upload";
 import FileInput from "./file-input";
+import toast from "react-hot-toast";
 
 interface UploadProps {
   files: File[];
@@ -13,6 +14,7 @@ interface UploadProps {
   tab: "documents" | "images";
   onChangeTab: (tab: "documents" | "images") => void;
 }
+
 const UploadForm = ({
   isLoading,
   files,
@@ -21,6 +23,7 @@ const UploadForm = ({
   tab,
 }: UploadProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const handleOnChangeFiles = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,23 +43,92 @@ const UploadForm = ({
     [files, onChangeFiles]
   );
 
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragOver(false);
+
+      if (isLoading) return;
+
+      const droppedFiles = Array.from(e.dataTransfer.files);
+
+      // check if the dropped files match the current tab
+      const acceptedTypes =
+        tab === "documents"
+          ? [
+              "text/plain",
+              "application/zip",
+              "application/msword",
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+              "application/pdf",
+              "application/rtf",
+              "application/x-freearc",
+            ]
+          : [
+              "image/jpeg",
+              "image/png",
+              "image/jpg",
+              "image/webp",
+              "image/gif",
+              "image/bmp",
+            ];
+      const isValidFiles = droppedFiles.every((file) =>
+        acceptedTypes.includes(file.type)
+      );
+      if (!isValidFiles) {
+        toast.error(
+          `Invalid file type. Please upload ${
+            tab === "documents" ? "documents" : "images"
+          } only.`
+        );
+        return;
+      }
+      if (droppedFiles.length === 0) return;
+      onChangeFiles([...files, ...droppedFiles]);
+    },
+    [isLoading, onChangeFiles, files, tab]
+  );
+
+  const handleClick = useCallback(() => {
+    if (fileRef.current && files.length === 0 && !isLoading) {
+      fileRef.current.click();
+    }
+  }, [files.length, isLoading]);
+
   return (
     <div
       id="drop-zone"
       className={cn(
-        "w-full h-96 border-2 border-dashed rounded-md border-zinc-300",
+        "w-full h-96 border-2 border-dashed rounded-md transition-colors",
         {
-          "cursor-pointer": files.length === 0,
+          "cursor-pointer": files.length === 0 && !isLoading,
+          "border-zinc-300": !isDragOver,
+          "border-blue-400 bg-blue-50": isDragOver,
+          "opacity-50": isLoading,
         }
       )}
-      onClick={() => {
-        if (fileRef.current && files.length === 0 && !isLoading) {
-          fileRef.current.click();
-        }
-      }}
+      onClick={handleClick}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
     >
       {files.length > 0 ? (
-        <div className="flex gap-2 flex-wrap p-2">
+        <div className="flex gap-2 flex-wrap p-2 overflow-y-auto max-h-80">
           {tab === "documents" ? (
             <>
               {files.map((file, index) => (
@@ -89,22 +161,33 @@ const UploadForm = ({
             value={tab}
           >
             <TabsList
-              className="self-center"
+              className="self-center mb-4"
               onClick={(e) => e.stopPropagation()}
             >
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="images">Images</TabsTrigger>
             </TabsList>
-            <FileInput
-              type="documents"
-              fileRef={fileRef}
-              onFileChange={handleOnChangeFiles}
-            />
-            <FileInput
-              type="images"
-              fileRef={fileRef}
-              onFileChange={handleOnChangeFiles}
-            />
+
+            {isDragOver ? (
+              <div className="text-center">
+                <p className="text-blue-600 font-medium">
+                  Drop files here to upload
+                </p>
+              </div>
+            ) : (
+              <>
+                <FileInput
+                  type="documents"
+                  fileRef={fileRef}
+                  onFileChange={handleOnChangeFiles}
+                />
+                <FileInput
+                  type="images"
+                  fileRef={fileRef}
+                  onFileChange={handleOnChangeFiles}
+                />
+              </>
+            )}
           </Tabs>
         </div>
       )}
