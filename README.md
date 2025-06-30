@@ -22,6 +22,10 @@ Utilizing an SQLite database with GORM and the Gin web framework. UI built with 
 
 See our documentation at [kevinanielsen.github.io/go-fast-cdn/](https://kevinanielsen.github.io/go-fast-cdn/)
 
+## Community
+
+Join the [discord](https://discord.gg/z9uqNtU6yS) to talk to fellow users and contributors!
+
 ## Development
 
 ### Clone the Repository
