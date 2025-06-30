@@ -21,8 +21,10 @@ func HandleDropDB(c *gin.Context) {
 		c.String(http.StatusUnauthorized, "Invalid token: %s", token)
 		return
 	}
-
 	database.DB.Migrator().DropTable(models.Doc{})
 	database.DB.Migrator().DropTable(models.Image{})
+	database.DB.Migrator().DropTable(models.User{})
+	database.DB.Migrator().DropTable(models.UserSession{})
+	database.DB.Migrator().DropTable(models.PasswordReset{})
 	database.Migrate()
 }

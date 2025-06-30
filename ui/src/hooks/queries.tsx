@@ -8,6 +8,7 @@ import {
   UseQueryResult,
 } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { cdnApiClient } from "../services/authService";
 
 export const queryKeys = {
   all: [{ entity: "cdn" }] as const,
@@ -24,10 +25,8 @@ export function useGetSize() {
   return useQuery({
     queryKey: queryKeys.size(),
     queryFn: async () => {
-      const res = await fetch("/api/cdn/size");
-      if (!res.ok) throw new Error("Network response was not ok");
-      const data = await res.json();
-      return data.cdn_size_bytes;
+      const res = await cdnApiClient.get("/size");
+      return res.data.cdn_size_bytes;
     },
   });
 }
@@ -44,11 +43,10 @@ export function useGetFileData({
   return useQuery({
     queryKey: queryKeys.image(filename),
     queryFn: async (): Promise<FileMetadata> => {
-      const res = await fetch(
-        `/api/cdn/${type === "documents" ? "doc" : "image"}/${filename}`
+      const res = await cdnApiClient.get(
+        `/${type === "documents" ? "doc" : "image"}/${filename}`
       );
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      return res.data;
     },
   });
 }
@@ -63,11 +61,10 @@ export function useGetFiles({
   return useQuery({
     queryKey: queryKeys.images(type),
     queryFn: async () => {
-      const res = await fetch(
-        `/api/cdn/${type === "images" ? "image" : "doc"}/all`
+      const res = await cdnApiClient.get(
+        `/${type === "images" ? "image" : "doc"}/all`
       );
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      return res.data;
     },
   });
 }
@@ -78,9 +75,8 @@ export function useResizeModal(
   return useQuery({
     queryKey: queryKeys.image(filename),
     queryFn: async (): Promise<FileMetadata> => {
-      const res = await fetch(`/api/cdn/image/${filename}`);
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      const res = await cdnApiClient.get(`/image/${filename}`);
+      return res.data;
     },
   });
 }
@@ -92,31 +88,23 @@ export function useUploadFile() {
     mutationFn: async (payload: { file: File; type: "doc" | "image" }) => {
       const form = new FormData();
       form.append(payload.type, payload.file);
-      const res = await fetch(`/api/cdn/upload/${payload.type}`, {
-        method: "POST",
-        body: form,
+      const res = await cdnApiClient.post(`/upload/${payload.type}`, form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      if (res.statusText === "Conflict") {
-        const error = await res.text();
-        console.error("Upload error:", error);
-        throw new Error("File already uploaded.");
-      }
-      if (!res.ok) {
-        const error = await res.text();
-        console.error("Upload error:", error);
-        throw new Error("Network response was not ok");
-      }
-
-      return res.json();
+      return res.data;
     },
     onSuccess: () => {
       toast.dismiss();
       toast.success("Successfully uploaded file!");
       queryClient.invalidateQueries({ queryKey: queryKeys.all });
     },
-    onError: (err: Error) => {
+    onError: (err: any) => {
       toast.dismiss();
-      toast.error(err.message);
+      const message =
+        err.response?.data?.error || err.message || "Upload failed";
+      toast.error(message);
     },
   });
 }
@@ -127,12 +115,12 @@ export function useRenameFile(
 ) {
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const res = await fetch(`/api/cdn/rename/${type}`, {
-        method: "PUT",
-        body: formData,
+      const res = await cdnApiClient.put(`/rename/${type}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      return res.data;
     },
     ...options,
   });
@@ -149,12 +137,12 @@ export function useResizeImage(
 ) {
   return useMutation({
     mutationFn: async (data: ResizeImageParams) => {
-      const res = await fetch(`/api/cdn/resize/image`, {
-        method: "PUT",
-        body: JSON.stringify(data),
+      const res = await cdnApiClient.put(`/resize/image`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
+      return res.data;
     },
     ...options,
   });
@@ -165,13 +153,8 @@ export function useDeleteFile(type: "doc" | "image") {
 
   return useMutation({
     mutationFn: async (filename: string) => {
-      console.log("ttt", type);
-      const res = await fetch(`/api/cdn/delete/${type}/${filename}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Network response was not ok");
-      console.log("res", res);
-      return res.json();
+      const res = await cdnApiClient.delete(`/delete/${type}/${filename}`);
+      return res.data;
     },
     onSuccess: () => {
       toast.dismiss();
@@ -183,10 +166,11 @@ export function useDeleteFile(type: "doc" | "image") {
         queryKey: queryKeys.images(type === "image" ? "images" : "documents"),
       });
     },
-    onError: (err: Error) => {
+    onError: (err: any) => {
       toast.dismiss();
-      toast.error(err.message);
-      console.error(err.message);
+      const message =
+        err.response?.data?.error || err.message || "Delete failed";
+      toast.error(message);
     },
   });
 }
