@@ -1,5 +1,5 @@
-import { useUploadFile } from "@/queries";
-import { sanitizeFileName } from "@/utils";
+import { useUploadFile } from "../queries";
+import { sanitizeFileName } from "../utils";
 import { useRef } from "react";
 import { useParams } from "wouter";
 import DocsInput from "./docs-input";

@@ -36,7 +36,7 @@ func ConnectToDB() {
 	}
 	log.Println("Connected to database!")
 
-	database.AutoMigrate(&models.Image{}, &models.Doc{})
+	database.AutoMigrate(&models.Image{}, &models.Doc{}, &models.Config{})
 	DB = database
 	log.Println("Database initialized!")
 }

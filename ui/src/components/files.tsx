@@ -1,4 +1,4 @@
-import { useGetFiles } from "@/queries";
+import { useGetFiles } from "../queries";
 import ContentCard from "./content-card";
 import Seperator from "./seperator";
 
