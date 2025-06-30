@@ -14,7 +14,7 @@ git clone git@github.com:kevinanielsen/go-fast-cdn
 ```
 
 ```bash title="HTTPS"
-git clone https://github.com:kevinanielsen/go-fast-cdn
+git clone https://github.com/kevinanielsen/go-fast-cdn
 ```
 
 ### Setting up the project

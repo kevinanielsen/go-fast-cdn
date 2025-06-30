@@ -31,7 +31,7 @@ Join the [discord](https://discord.gg/z9uqNtU6yS) to talk to fellow users and co
 ### Clone the Repository
 
 `git clone git@github.com:kevinanielsen/go-fast-cdn`
-or `git clone https://github.com:kevinanielsen/go-fast-cdn`
+or `git clone https://github.com/kevinanielsen/go-fast-cdn`
 
 ### Add env variables
 
@@ -51,7 +51,7 @@ Your binary should now be tested, built, and you can run it with `bin/go-fast-cd
 ### Quick start with Docker
 
 `git clone git@github.com:kevinanielsen/go-fast-cdn`
-or `git clone https://github.com:kevinanielsen/go-fast-cdn`
+or `git clone https://github.com/kevinanielsen/go-fast-cdn`
 
 ```
 docker-compose up -d
