@@ -14,10 +14,23 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "./ui/sidebar";
-import { FilesIcon, Image, LayoutDashboard } from "lucide-react";
+import {
+  ChevronUp,
+  FilesIcon,
+  Image,
+  LayoutDashboard,
+  User2,
+} from "lucide-react";
 import ContentSize from "./content-size";
 import { cn } from "@/lib/utils";
 import UploadModal from "./upload/upload-modal";
+import UserProfile from "./auth/UserProfile";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const SidebarNav = () => {
   const { state } = useSidebar();
@@ -46,7 +59,11 @@ const SidebarNav = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={location === "/"}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location === "/"}
+                  tooltip="Dashboard"
+                >
                   <Link to="/">
                     <LayoutDashboard />
                     Dashboard
@@ -62,7 +79,11 @@ const SidebarNav = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={location === "/images"}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location === "/images"}
+                  tooltip="Images"
+                >
                   <Link to="/images">
                     <Image />
                     Images
@@ -71,7 +92,11 @@ const SidebarNav = () => {
                 {/* <SidebarMenuBadge>0</SidebarMenuBadge> */}
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={location === "/documents"}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location === "/documents"}
+                  tooltip="Documents"
+                >
                   <Link to="/documents">
                     <FilesIcon />
                     Documents
@@ -83,7 +108,10 @@ const SidebarNav = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>{state !== "collapsed" && <ContentSize />}</SidebarFooter>
+      <SidebarFooter>
+        {state !== "collapsed" && <ContentSize />}
+        <UserProfile />
+      </SidebarFooter>
     </Sidebar>
   );
 };

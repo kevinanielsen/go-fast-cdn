@@ -11,7 +11,7 @@ const ContentSize = () => {
     );
 
   return (
-    <div className="mb-2 p-4 border-t bg-gray-50">
+    <div className="mb-2 p-2 bg-gray-50">
       <span data-testid="content-size-label">Total content size:</span>
       <p className="font-bold" data-testid="content-size">
         {size.data < 1000 && `${size.data} b`}
