@@ -1,4 +1,9 @@
 import { Loader2Icon, Plus } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useUploadFile } from "@/hooks/queries";
+import { useMutation } from "@tanstack/react-query";
+import { sanitizeFileName } from "@/utils";
+import UploadForm from "./upload-form";
 import {
   Dialog,
   DialogClose,
@@ -8,14 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { SidebarGroupAction } from "../ui/sidebar";
-import { Button } from "../ui/button";
-import { useCallback, useState } from "react";
-import { useUploadFile } from "@/hooks/queries";
-import { useMutation } from "@tanstack/react-query";
-import { sanitizeFileName } from "@/utils";
-import UploadForm from "./upload-form";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { SidebarGroupAction } from "@/components/ui/sidebar";
 
 const UploadModal = () => {
   const [open, setOpen] = useState(false);

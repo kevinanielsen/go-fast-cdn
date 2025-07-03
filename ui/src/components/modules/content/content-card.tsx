@@ -5,8 +5,8 @@ import { toast } from "react-hot-toast";
 import FileDataModal from "./file-data-modal";
 import RenameModal from "./rename-modal";
 import ResizeModal from "./resize-modal";
-import { Button } from "./ui/button";
-import { Dialog, DialogTrigger } from "./ui/dialog";
+import { Button } from "../../ui/button";
+import { Dialog, DialogTrigger } from "../../ui/dialog";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,

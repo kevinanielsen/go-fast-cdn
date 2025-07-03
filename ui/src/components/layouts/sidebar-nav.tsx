@@ -21,11 +21,11 @@ import {
   Settings2,
   Users,
 } from "lucide-react";
-import ContentSize from "../content-size";
+import ContentSize from "../modules/content/content-size";
 import { cn } from "@/lib/utils";
-import UploadModal from "../upload/upload-modal";
-import UserProfile from "../auth/UserProfile";
+import UserProfile from "../modules/auth/UserProfile";
 import { useAuth } from "@/contexts/AuthContext";
+import UploadModal from "../modules/content/upload/upload-modal";
 
 interface NavigationItem {
   href: string;

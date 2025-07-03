@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Link, useLocation } from 'wouter';
-import configService from '../../services/configService';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../../contexts/AuthContext";
+import { Link, useLocation } from "wouter";
+import configService from "../../../services/configService";
 
 const Register: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [registrationEnabled, setRegistrationEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
   const { register } = useAuth();
@@ -24,25 +24,25 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
-    
+
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
+      setError("Password must be at least 8 characters long");
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     const success = await register(email, password);
     if (success) {
-      setLocation('/');
+      setLocation("/");
     }
-    
+
     setIsLoading(false);
   };
 
@@ -55,8 +55,11 @@ const Register: React.FC = () => {
               Create your account
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Or{' '}
-              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              Or{" "}
+              <Link
+                to="/login"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 sign in to existing account
               </Link>
             </p>
@@ -78,8 +81,11 @@ const Register: React.FC = () => {
               Create your account
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Or{' '}
-              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              Or{" "}
+              <Link
+                to="/login"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 sign in to existing account
               </Link>
             </p>
@@ -102,8 +108,11 @@ const Register: React.FC = () => {
             Create your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            Or{" "}
+            <Link
+              to="/login"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
               sign in to existing account
             </Link>
           </p>
@@ -114,7 +123,7 @@ const Register: React.FC = () => {
               <div className="text-sm text-red-700">{error}</div>
             </div>
           )}
-          
+
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -172,7 +181,7 @@ const Register: React.FC = () => {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? "Creating account..." : "Create account"}
             </button>
           </div>
         </form>

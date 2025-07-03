@@ -1,5 +1,5 @@
+import { TabsContent } from "@/components/ui/tabs";
 import React from "react";
-import { TabsContent } from "../ui/tabs";
 
 interface FileInputProps {
   type: "documents" | "images";

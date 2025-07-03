@@ -1,5 +1,5 @@
 import { useGetFiles } from "@/hooks/queries";
-import ContentCard from "../../content-card";
+import ContentCard from "./content-card";
 import { Skeleton } from "../../ui/skeleton";
 import MainContentWrapper from "../../layouts/main-content-wrapper";
 

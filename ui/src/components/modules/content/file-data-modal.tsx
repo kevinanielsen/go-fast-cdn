@@ -1,6 +1,6 @@
 import { useGetFileData } from "@/hooks/queries";
-import Seperator from "./seperator";
-import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import Seperator from "../../seperator";
+import { DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
 
 type TFileDataModalProps = {
   filename: string;

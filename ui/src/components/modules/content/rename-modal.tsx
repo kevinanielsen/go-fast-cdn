@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
 import { useState } from "react";
 import { queryKeys, useRenameFile } from "@/hooks/queries";
 import toast from "react-hot-toast";

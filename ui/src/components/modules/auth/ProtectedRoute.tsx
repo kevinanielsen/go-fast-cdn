@@ -1,13 +1,16 @@
-import React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Redirect } from 'wouter';
+import React from "react";
+import { useAuth } from "../../../contexts/AuthContext";
+import { Redirect } from "wouter";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requiredRole,
+}) => {
   const { isAuthenticated, user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -27,7 +30,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Denied</h1>
-          <p className="mt-2 text-gray-600">You don't have permission to access this page.</p>
+          <p className="mt-2 text-gray-600">
+            You don't have permission to access this page.
+          </p>
         </div>
       </div>
     );

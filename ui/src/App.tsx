@@ -4,13 +4,13 @@ import Files from "./components/modules/content/files";
 import { SidebarProvider } from "./components/ui/sidebar";
 import SidebarNav from "./components/layouts/sidebar-nav";
 import { AuthProvider } from "./contexts/AuthContext";
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Login from "./components/modules/auth/Login";
+import Register from "./components/modules/auth/Register";
+import ProtectedRoute from "./components/modules/auth/ProtectedRoute";
 import AuthTest from "./pages/AuthTest";
 import UserSettings from "./components/modules/settings/UserSettings";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminRoute from "./components/auth/AdminRoute";
+import AdminRoute from "./components/modules/auth/AdminRoute";
 
 function AppContent() {
   return (

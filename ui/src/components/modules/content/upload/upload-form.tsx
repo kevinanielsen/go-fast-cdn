@@ -1,11 +1,11 @@
 import { sanitizeFileName } from "@/utils";
 import { useCallback, useRef, useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { cn } from "@/lib/utils";
-import DocCardUpload from "../doc-card-upload";
 import ImageCardUpload from "./image-card-upload";
 import FileInput from "./file-input";
 import toast from "react-hot-toast";
+import DocCardUpload from "./doc-card-upload";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface UploadProps {
   files: File[];
