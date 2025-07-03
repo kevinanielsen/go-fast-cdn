@@ -1,7 +1,7 @@
 import { useGetFiles } from "@/hooks/queries";
-import ContentCard from "./content-card";
-import Seperator from "./seperator";
-import { Skeleton } from "./ui/skeleton";
+import ContentCard from "../../content-card";
+import { Skeleton } from "../../ui/skeleton";
+import MainContentWrapper from "../../layouts/main-content-wrapper";
 
 type TFilesProps = {
   type: "images" | "documents";
@@ -11,9 +11,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
   const files = useGetFiles({ type });
 
   return (
-    <div className="w-full">
-      <h2 className="text-2xl capitalize mb-8">{type}</h2>
-      <Seperator />
+    <MainContentWrapper title={type}>
       <div className="flex flex-wrap gap-4">
         {files.isLoading ? (
           <>
@@ -39,7 +37,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
           </>
         )}
       </div>
-    </div>
+    </MainContentWrapper>
   );
 };
 

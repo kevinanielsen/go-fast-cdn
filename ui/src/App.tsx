@@ -1,14 +1,14 @@
 import { Link, Route } from "wouter";
 import { Toaster } from "react-hot-toast";
-import Files from "./components/files";
+import Files from "./components/modules/content/files";
 import { SidebarProvider } from "./components/ui/sidebar";
-import SidebarNav from "./components/sidebar-nav";
+import SidebarNav from "./components/layouts/sidebar-nav";
 import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthTest from "./pages/AuthTest";
-import UserSettings from "./components/auth/UserSettings";
+import UserSettings from "./components/modules/settings/UserSettings";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/auth/AdminRoute";
 
@@ -31,13 +31,7 @@ function AppContent() {
             <main className="m-4 h-auto w-full">
               <Route path="/images">{<Files type="images" />}</Route>
               <Route path="/documents">{<Files type="documents" />}</Route>
-              <Route path="/settings">
-                {
-                  <ProtectedRoute>
-                    <UserSettings />
-                  </ProtectedRoute>
-                }
-              </Route>
+              <Route path="/settings">{<UserSettings />}</Route>
               <Route path="/admin">
                 {
                   <AdminRoute>

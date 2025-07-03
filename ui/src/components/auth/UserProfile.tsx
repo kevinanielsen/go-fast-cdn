@@ -4,7 +4,6 @@ import {
   LogOut,
   User as UserIcon,
   Settings as SettingsIcon,
-  User2,
   ChevronUp,
 } from "lucide-react";
 import { Link } from "wouter";
@@ -68,7 +67,7 @@ const UserProfile: React.FC = () => {
             className="w-[--radix-popper-anchor-width]"
           >
             <DropdownMenuItem asChild>
-              <Link title="User Settings" href="/settings">
+              <Link href="/settings">
                 <SettingsIcon />
                 Settings
               </Link>
