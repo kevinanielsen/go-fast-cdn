@@ -1,12 +1,12 @@
-import axios, { AxiosResponse } from "axios";
 import {
-  AuthResponse,
-  LoginRequest,
-  RegisterRequest,
-  RefreshRequest,
-  User,
-  ChangePasswordRequest,
+  IAuthResponse,
+  IChangePasswordRequest,
+  ILoginRequest,
+  IRefreshTokenRequest,
+  IRegisterRequest,
 } from "@/types/auth";
+import { TUser } from "@/types/user";
+import axios, { AxiosResponse } from "axios";
 
 const API_BASE_URL = "/api/auth";
 
@@ -72,40 +72,40 @@ apiClient.interceptors.response.use(
 );
 
 export const authService = {
-  async login(data: LoginRequest): Promise<AuthResponse> {
-    const response: AxiosResponse<AuthResponse> = await apiClient.post(
+  async login(data: ILoginRequest): Promise<IAuthResponse> {
+    const response: AxiosResponse<IAuthResponse> = await apiClient.post(
       "/login",
       data
     );
     return response.data;
   },
 
-  async register(data: RegisterRequest): Promise<AuthResponse> {
-    const response: AxiosResponse<AuthResponse> = await apiClient.post(
+  async register(data: IRegisterRequest): Promise<IAuthResponse> {
+    const response: AxiosResponse<IAuthResponse> = await apiClient.post(
       "/register",
       data
     );
     return response.data;
   },
 
-  async refreshToken(data: RefreshRequest): Promise<AuthResponse> {
-    const response: AxiosResponse<AuthResponse> = await apiClient.post(
+  async refreshToken(data: IRefreshTokenRequest): Promise<IAuthResponse> {
+    const response: AxiosResponse<IAuthResponse> = await apiClient.post(
       "/refresh",
       data
     );
     return response.data;
   },
 
-  async logout(data: RefreshRequest): Promise<void> {
+  async logout(data: IRefreshTokenRequest): Promise<void> {
     await apiClient.post("/logout", data);
   },
 
-  async getProfile(): Promise<User> {
-    const response: AxiosResponse<User> = await apiClient.get("/profile");
+  async getProfile(): Promise<TUser> {
+    const response: AxiosResponse<TUser> = await apiClient.get("/profile");
     return response.data;
   },
 
-  async changePassword(data: ChangePasswordRequest): Promise<void> {
+  async changePassword(data: IChangePasswordRequest): Promise<void> {
     await apiClient.put("/change-password", data);
   },
 

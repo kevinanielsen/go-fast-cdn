@@ -12,9 +12,10 @@ import { Button } from "../../ui/button";
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { useState } from "react";
-import { queryKeys, useRenameFile } from "@/hooks/queries";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import useRenameFileMutation from "./hooks/use-rename-file-mutation";
+import { constant } from "@/lib/constant";
 
 type RenameModalProps = {
   filename?: string;
@@ -26,7 +27,7 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const renameFileMutation = useRenameFile(
+  const renameFileMutation = useRenameFileMutation(
     type === "documents" ? "doc" : "image",
     {
       onSuccess: () => {
@@ -35,7 +36,7 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
         });
         setIsOpen(false);
         queryClient.invalidateQueries({
-          queryKey: queryKeys.images(
+          queryKey: constant.queryKeys.images(
             type === "images" ? "images" : "documents"
           ),
         });

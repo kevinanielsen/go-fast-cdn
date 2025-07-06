@@ -1,6 +1,5 @@
 import { Loader2Icon, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useUploadFile } from "@/hooks/queries";
 import { useMutation } from "@tanstack/react-query";
 import { sanitizeFileName } from "@/utils";
 import UploadForm from "./upload-form";
@@ -16,13 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { SidebarGroupAction } from "@/components/ui/sidebar";
+import useUploadFileMutation from "../hooks/use-upload-file-mutation";
 
 const UploadModal = () => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [tab, setTab] = useState<"documents" | "images">("documents");
 
-  const uploadFileMutation = useUploadFile();
+  const uploadFileMutation = useUploadFileMutation();
 
   const handleReset = useCallback(() => {
     setFiles([]);

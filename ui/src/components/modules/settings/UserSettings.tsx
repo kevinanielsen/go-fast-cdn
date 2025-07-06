@@ -189,11 +189,11 @@ const UserSettings: React.FC = () => {
         <Form {...emailForm}>
           <form
             onSubmit={emailForm.handleSubmit(handleSubmitEmail)}
-            className="space-y-6"
+            className="space-y-4"
           >
             <div>
               <h3 className="mb-4 text-lg font-medium">Change Email</h3>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <FormField
                   control={emailForm.control}
                   name="email"
@@ -229,11 +229,11 @@ const UserSettings: React.FC = () => {
         <Form {...passwordForm}>
           <form
             onSubmit={passwordForm.handleSubmit(handleSubmitPassword)}
-            className="space-y-6"
+            className="space-y-4"
           >
             <div>
               <h3 className="mb-4 text-lg font-medium">Change Password</h3>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <FormField
                   control={passwordForm.control}
                   name="currentPassword"

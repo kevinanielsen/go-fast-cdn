@@ -1,13 +1,14 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import { User, AuthResponse } from "@/types/auth";
 import { authService } from "../services/authService";
 import toast from "react-hot-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { IErrorResponse } from "@/types/response";
+import { TRole, TUser } from "@/types/user";
+import { IAuthResponse } from "@/types/auth";
 
 interface AuthContextType {
-  user: User | undefined;
+  user: TUser | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (
@@ -15,11 +16,7 @@ interface AuthContextType {
     password: string,
     twoFAToken?: string
   ) => Promise<{ success: boolean; requires2FA?: boolean }>;
-  register: (
-    email: string,
-    password: string,
-    role?: string
-  ) => Promise<boolean>;
+  register: (email: string, password: string, role?: TRole) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
   refreshUserProfile: () => Promise<void>;
@@ -61,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     mutationFn: (payload: {
       email: string;
       password: string;
-      role?: string;
+      role?: TRole;
     }) => {
       return authService.register({
         email: payload.email,
@@ -105,7 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (
     email: string,
     password: string,
-    role?: string
+    role?: TRole
   ): Promise<boolean> => {
     try {
       const response = await mutationRegister.mutateAsync({
@@ -134,6 +131,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       clearAuthData();
       toast.success("Logged out successfully");
+      window.location.href = "/login"; // Redirect to login page
     }
   };
   const refreshToken = async (): Promise<boolean> => {
@@ -157,7 +155,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     await refetch();
   };
 
-  const setAuthData = (authResponse: AuthResponse) => {
+  const setAuthData = (authResponse: IAuthResponse) => {
     const { user, access_token, refresh_token } = authResponse;
     localStorage.setItem("accessToken", access_token);
     localStorage.setItem("refreshToken", refresh_token);
@@ -169,8 +167,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
-    refetch(); // Refetch user profile to clear state
   };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,

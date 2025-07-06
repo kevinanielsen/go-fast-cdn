@@ -1,7 +1,7 @@
-import { useGetSize } from "@/hooks/queries";
+import useGetSizeQuery from "./hooks/use-get-size-query";
 
 const ContentSize = () => {
-  const size = useGetSize();
+  const size = useGetSizeQuery();
   if (size.isLoading)
     return (
       <div className="mb-2 p-4 border-t bg-gray-50">

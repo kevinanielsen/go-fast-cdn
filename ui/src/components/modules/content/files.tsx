@@ -1,14 +1,14 @@
-import { useGetFiles } from "@/hooks/queries";
 import ContentCard from "./content-card";
 import { Skeleton } from "../../ui/skeleton";
 import MainContentWrapper from "../../layouts/main-content-wrapper";
+import useGetFilesQuery from "./hooks/use-get-files-query";
 
 type TFilesProps = {
   type: "images" | "documents";
 };
 
 const Files: React.FC<TFilesProps> = ({ type }) => {
-  const files = useGetFiles({ type });
+  const files = useGetFilesQuery({ type });
 
   return (
     <MainContentWrapper title={type}>
@@ -29,8 +29,8 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
                 type={type}
                 file_name={file.file_name}
                 ID={file.ID}
-                createdAt={file.createdAt}
-                updatedAt={file.updatedAt}
+                createdAt={file.CreatedAt}
+                updatedAt={file.UpdatedAt}
                 key={file.ID}
               />
             ))}

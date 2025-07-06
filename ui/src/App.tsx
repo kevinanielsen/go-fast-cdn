@@ -9,8 +9,8 @@ import Register from "./components/modules/auth/Register";
 import ProtectedRoute from "./components/modules/auth/ProtectedRoute";
 import AuthTest from "./pages/AuthTest";
 import UserSettings from "./components/modules/settings/UserSettings";
-import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/modules/auth/AdminRoute";
+import UserManagementPage from "./components/modules/master-data/user-management/user-management-page";
 
 function AppContent() {
   return (
@@ -29,16 +29,6 @@ function AppContent() {
           <div className="flex min-h-screen w-screen">
             <SidebarNav />
             <main className="m-4 h-auto w-full">
-              <Route path="/images">{<Files type="images" />}</Route>
-              <Route path="/documents">{<Files type="documents" />}</Route>
-              <Route path="/settings">{<UserSettings />}</Route>
-              <Route path="/admin">
-                {
-                  <AdminRoute>
-                    <AdminDashboard />
-                  </AdminRoute>
-                }
-              </Route>
               <Route path="/">
                 <div className="text-center py-12">
                   <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -62,6 +52,14 @@ function AppContent() {
                     </Link>
                   </div>
                 </div>
+              </Route>
+              <Route path="/images">{<Files type="images" />}</Route>
+              <Route path="/documents">{<Files type="documents" />}</Route>
+              <Route path="/settings">{<UserSettings />}</Route>
+              <Route path="/admin/user-management">
+                <AdminRoute>
+                  <UserManagementPage />
+                </AdminRoute>
               </Route>
             </main>
           </div>

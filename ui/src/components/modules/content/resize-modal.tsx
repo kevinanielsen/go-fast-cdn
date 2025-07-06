@@ -1,4 +1,3 @@
-import { queryKeys, useResizeImage, useResizeModal } from "@/hooks/queries";
 import { ImageDimensions } from "@/types/imageDimensions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Scaling } from "lucide-react";
@@ -16,6 +15,9 @@ import {
 } from "../../ui/dialog";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
+import useResizeModalQuery from "./hooks/use-resize-modal-query";
+import useResizeImageMutation from "./hooks/use-resize-image-mutation";
+import { constant } from "@/lib/constant";
 
 type ResizeModalProps = {
   filename: string;
@@ -27,16 +29,16 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename }) => {
     height: 0,
   });
   const queryClient = useQueryClient();
-  const resizeModal = useResizeModal(filename);
+  const resizeModal = useResizeModalQuery(filename);
   const fileMetadata = resizeModal.data;
 
-  const resizeFileMutation = useResizeImage({
+  const resizeFileMutation = useResizeImageMutation({
     onSuccess: () => {
       toast.dismiss();
       const toastId = toast.loading("Processing...");
       toast.success("File resized!", { id: toastId, duration: 1500 });
       queryClient.invalidateQueries({
-        queryKey: queryKeys.dimensions(
+        queryKey: constant.queryKeys.dimensions(
           resizeFormData.height,
           resizeFormData.width
         ),

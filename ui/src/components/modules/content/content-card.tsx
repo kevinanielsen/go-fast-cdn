@@ -1,4 +1,3 @@
-import { useDeleteFile } from "@/hooks/queries";
 import { TContentCardProps } from "@/types/contentCard";
 import { DownloadCloud, FileText, Files, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -7,6 +6,7 @@ import RenameModal from "./rename-modal";
 import ResizeModal from "./resize-modal";
 import { Button } from "../../ui/button";
 import { Dialog, DialogTrigger } from "../../ui/dialog";
+import useDeleteFileMutation from "./hooks/use-delete-file-mutation";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,
@@ -20,7 +20,9 @@ const ContentCard: React.FC<TContentCardProps> = ({
     window.location.host
   }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
 
-  const deleteFile = useDeleteFile(type === "documents" ? "doc" : "image");
+  const deleteFile = useDeleteFileMutation(
+    type === "documents" ? "doc" : "image"
+  );
 
   const handleDeleteFile = () => {
     deleteFile.mutate(file_name);

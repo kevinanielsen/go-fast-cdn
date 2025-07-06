@@ -1,6 +1,6 @@
-import { useGetFileData } from "@/hooks/queries";
 import Seperator from "../../seperator";
 import { DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
+import useGetFileDataQuery from "./hooks/use-get-file-data-query";
 
 type TFileDataModalProps = {
   filename: string;
@@ -8,7 +8,7 @@ type TFileDataModalProps = {
 };
 
 const FileDataModal: React.FC<TFileDataModalProps> = ({ filename, type }) => {
-  const fileData = useGetFileData({ filename, type });
+  const fileData = useGetFileDataQuery({ filename, type });
 
   if (!fileData.data)
     return (

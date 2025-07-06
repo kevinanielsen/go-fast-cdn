@@ -14,13 +14,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "../ui/sidebar";
-import {
-  FilesIcon,
-  Image,
-  LayoutDashboard,
-  Settings2,
-  Users,
-} from "lucide-react";
+import { FilesIcon, Image, LayoutDashboard, Users } from "lucide-react";
 import ContentSize from "../modules/content/content-size";
 import { cn } from "@/lib/utils";
 import UserProfile from "../modules/auth/UserProfile";
@@ -60,22 +54,10 @@ const CONTENT_ITEMS: NavigationItem[] = [
 
 const ADMIN_ITEMS: NavigationItem[] = [
   {
-    href: "/admin",
-    icon: LayoutDashboard,
-    label: "Dashboard",
-    tooltip: "Dashboard",
-  },
-  {
     href: "/admin/user-management",
     icon: Users,
     label: "User Management",
     tooltip: "User Management",
-  },
-  {
-    href: "/admin/settings",
-    icon: Settings2,
-    label: "Settings",
-    tooltip: "Settings",
   },
 ];
 
