@@ -28,7 +28,8 @@ const UploadModal = () => {
     setFiles([]);
     setTab("documents");
     setOpen(false);
-  }, []);
+    uploadFileMutation.reset();
+  }, [uploadFileMutation]);
 
   const { mutate: uploadFileMutate, isPending: isUploadPending } = useMutation({
     mutationFn: async () => {
