@@ -20,15 +20,12 @@ const useUploadFileMutation = () => {
       return res.data;
     },
     onSuccess: () => {
-      toast.dismiss();
       toast.success("Successfully uploaded file!");
       queryClient.invalidateQueries({ queryKey: constant.queryKeys.all });
     },
     onError: (error) => {
       const err = error as AxiosError<IErrorResponse>;
-      toast.dismiss();
-      const message =
-        err.response?.data?.error || err.message || "Upload failed";
+      const message = err.response?.data?.error || "Upload failed";
       toast.error(message);
     },
   });

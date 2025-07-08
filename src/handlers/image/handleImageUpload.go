@@ -74,7 +74,9 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 
 	imageInDatabase := h.repo.GetImageByCheckSum(fileHashBuffer[:])
 	if len(imageInDatabase.Checksum) > 0 {
-		c.JSON(http.StatusConflict, "File already exists")
+		c.JSON(http.StatusConflict, gin.H{
+			"error": "File already exists",
+		})
 		return
 	}
 
