@@ -32,7 +32,7 @@ Dette projekt følger [@commitlint-konventionen](https://github.com/conventional
 Et eksempel på en commit-besked, der følger denne konvention, kunne være
 
 ```txt
-docs: tilføj commit-konvention til bidragsguide
+docs: add commit-convention to contribution guide
 ```
 
 For yderligere at specificere, hvad din commit ændrer, kan du tilføje et omfang med parenteser, som dette:
