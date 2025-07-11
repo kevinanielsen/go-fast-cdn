@@ -43,4 +43,4 @@ feat(api): add endpoint for file uploads
 
 ## Dokumentation
 
-[Github](https://github.com/kevinanielsen/go-fast-cdn/) er et monorepo, hvor dokumentationen kan findes i /docs-mappen. Hvis du vil anmode om dokumentation for en funktion, skal du oprette et nyt issue på Github. Hvis du har løsningen på et issue eller vil redigere dokumentationen, skal du forke projektet, og når du er klar, åbne en ny pull request.
+[Github](https://github.com/kevinanielsen/go-fast-cdn/) er et monorepo, hvor dokumentationen kan findes i mappen `/docs`. Hvis du vil anmode om dokumentation for en funktion, skal du oprette et nyt issue på Github. Hvis du har løsningen på et issue eller vil redigere dokumentationen, skal du forke projektet, og når du er klar, åbne en ny pull request.
