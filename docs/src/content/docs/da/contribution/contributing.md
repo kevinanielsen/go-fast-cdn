@@ -38,7 +38,7 @@ docs: add commit-convention to contribution guide
 For yderligere at specificere, hvad din commit ændrer, kan du tilføje et omfang med parenteser, som dette:
 
 ```txt
-feat(api): tilføj endepunkt for fil-uploads
+feat(api): add endpoint for file uploads
 ```
 
 ## Dokumentation
