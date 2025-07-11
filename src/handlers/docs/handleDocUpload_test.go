@@ -252,5 +252,7 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 
 	// second statement
 	require.Equal(t, http.StatusConflict, ww.Result().StatusCode)
-	require.Equal(t, ww.Body.String(), "\"File already exists\"")
+	require.Equal(t, ww.Body.String(),
+		`{"error":"File already exists"}`,
+	)
 }

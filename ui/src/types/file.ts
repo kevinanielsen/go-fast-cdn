@@ -1,10 +1,8 @@
-type File = {
-  file_name: string;
+export type TFile = {
   ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string | null;
+  file_name: string;
   checksum: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
 };
-
-export default File;
