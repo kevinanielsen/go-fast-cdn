@@ -1,0 +1,103 @@
+---
+title: API Reference
+description: En komplet reference til Go-Fast CDN API'en.
+---
+
+Go-Fast CDN API'en er dokumenteret ved hjælp af OpenAPI-specifikationen. Dette dokument giver en reference for alle tilgængelige API-endepunkter.
+
+Vores OpenAPI-specifikation er tilgængelig i filen `static/openapi.json` i roden af repositoriet.
+
+## API-endepunkter
+
+### CDN
+
+#### `GET /api/cdn/size`
+
+Få den samlede størrelse af CDN'et i bytes.
+
+- **Successvar (200)**:
+  - `cdn_size_bytes`: (heltal) Størrelsen på CDN'et i bytes.
+
+#### `GET /api/cdn/doc/all`
+
+Få alle dokumenter.
+
+- **Successvar (200)**: En liste over dokumenter med deres metadata.
+
+#### `GET /api/cdn/doc/{fileName}`
+
+Hent metadata om et specifikt dokument.
+
+- **Stiparametre**:
+  - `fileName` (string, påkrævet): Navnet på dokumentet.
+- **Svar**:
+  - `200`: Metadata om dokumentet.
+  - `400`: Dokumentets filnavn blev ikke angivet.
+  - `404`: Dokument ikke fundet.
+  - `500`: Ukendt fejl.
+
+#### `GET /api/cdn/image/all`
+
+Få alle billeder.
+
+- **Successvar (200)**: En liste over billeder med deres metadata.
+
+#### `GET /api/cdn/image/{fileName}`
+
+Henter metadata om et specifikt billede.
+
+- **Stiparametre**:
+  - `fileName` (string, påkrævet): Navnet på billedet.
+- **Svar**:
+  - `200`: Metadata om billedet.
+  - `400`: Billedets filnavn blev ikke angivet.
+  - `404`: Billede ikke fundet.
+  - `500`: Ukendt fejl.
+
+### Autentificering
+
+#### `POST /api/auth/register`
+
+Registrer en ny bruger.
+
+- **Anmodningskrop**:
+  - `username` (string, påkrævet)
+  - `password` (string, påkrævet)
+- **Svar**:
+  - `201`: Bruger oprettet med succes.
+  - `400`: Ugyldig anmodningskrop.
+  - `500`: Kunne ikke oprette bruger.
+
+#### `POST /api/auth/login`
+
+Log en bruger ind.
+
+- **Anmodningskrop**:
+  - `username` (string, påkrævet)
+  - `password` (string, påkrævet)
+- **Svar**:
+  - `200`: Login lykkedes. Returnerer et JWT-token.
+  - `400`: Ugyldig anmodningskrop.
+  - `401`: Ugyldige legitimationsoplysninger.
+
+### Admin
+
+Disse endepunkter kræver typisk autentificering.
+
+#### `GET /api/admin/users`
+
+Få alle brugere.
+
+- **Svar**:
+  - `200`: En liste over alle brugere.
+
+#### `DELETE /api/admin/users/{id}`
+
+Slet en bruger.
+
+- **Stiparametre**:
+  - `id` (heltal, påkrævet): ID'et på den bruger, der skal slettes.
+- **Svar**:
+  - `200`: Bruger slettet med succes.
+  - `400`: Ugyldigt bruger-ID.
+  - `500`: Kunne ikke slette bruger. 

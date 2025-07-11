@@ -1,0 +1,103 @@
+---
+title: Referencia de la API
+description: Una referencia completa para la API de Go-Fast CDN.
+---
+
+La API de Go-Fast CDN está documentada utilizando la Especificación OpenAPI. Este documento proporciona una referencia para todos los endpoints de la API disponibles.
+
+Nuestra especificación OpenAPI está disponible en el archivo `static/openapi.json` en la raíz del repositorio.
+
+## Endpoints de la API
+
+### CDN
+
+#### `GET /api/cdn/size`
+
+Obtiene el tamaño total del CDN en bytes.
+
+- **Respuesta Exitosa (200)**:
+  - `cdn_size_bytes`: (entero) El tamaño del CDN en bytes.
+
+#### `GET /api/cdn/doc/all`
+
+Obtiene todos los documentos.
+
+- **Respuesta Exitosa (200)**: Una lista de documentos con sus metadatos.
+
+#### `GET /api/cdn/doc/{fileName}`
+
+Recupera metadatos sobre un documento específico.
+
+- **Parámetros de Ruta**:
+  - `fileName` (string, requerido): El nombre del documento.
+- **Respuestas**:
+  - `200`: Metadatos sobre el documento.
+  - `400`: No se proporcionó el nombre del archivo del documento.
+  - `404`: Documento no encontrado.
+  - `500`: Error desconocido.
+
+#### `GET /api/cdn/image/all`
+
+Obtiene todas las imágenes.
+
+- **Respuesta Exitosa (200)**: Una lista de imágenes con sus metadatos.
+
+#### `GET /api/cdn/image/{fileName}`
+
+Recupera metadatos sobre una imagen específica.
+
+- **Parámetros de Ruta**:
+  - `fileName` (string, requerido): El nombre de la imagen.
+- **Respuestas**:
+  - `200`: Metadatos sobre la imagen.
+  - `400`: No se proporcionó el nombre del archivo de la imagen.
+  - `404`: Imagen no encontrada.
+  - `500`: Error desconocido.
+
+### Autenticación
+
+#### `POST /api/auth/register`
+
+Registra un nuevo usuario.
+
+- **Cuerpo de la Solicitud**:
+  - `username` (string, requerido)
+  - `password` (string, requerido)
+- **Respuestas**:
+  - `201`: Usuario creado exitosamente.
+  - `400`: Cuerpo de la solicitud inválido.
+  - `500`: No se pudo crear el usuario.
+
+#### `POST /api/auth/login`
+
+Inicia sesión de un usuario.
+
+- **Cuerpo de la Solicitud**:
+  - `username` (string, requerido)
+  - `password` (string, requerido)
+- **Respuestas**:
+  - `200`: Inicio de sesión exitoso. Devuelve un token JWT.
+  - `400`: Cuerpo de la solicitud inválido.
+  - `401`: Credenciales inválidas.
+
+### Administración
+
+Estos endpoints generalmente requieren autenticación.
+
+#### `GET /api/admin/users`
+
+Obtiene todos los usuarios.
+
+- **Respuestas**:
+  - `200`: Una lista de todos los usuarios.
+
+#### `DELETE /api/admin/users/{id}`
+
+Elimina un usuario.
+
+- **Parámetros de Ruta**:
+  - `id` (entero, requerido): El ID del usuario a eliminar.
+- **Respuestas**:
+  - `200`: Usuario eliminado exitosamente.
+  - `400`: ID de usuario inválido.
+  - `500`: No se pudo eliminar el usuario. 
