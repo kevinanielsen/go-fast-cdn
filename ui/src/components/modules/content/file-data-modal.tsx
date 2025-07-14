@@ -1,4 +1,3 @@
-import Seperator from "../../seperator";
 import { DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
 import useGetFileDataQuery from "./hooks/use-get-file-data-query";
 
@@ -12,7 +11,7 @@ const FileDataModal: React.FC<TFileDataModalProps> = ({ filename, type }) => {
 
   if (!fileData.data)
     return (
-      <DialogContent className="overflow-hidden">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{filename}</DialogTitle>
         </DialogHeader>
@@ -20,10 +19,9 @@ const FileDataModal: React.FC<TFileDataModalProps> = ({ filename, type }) => {
       </DialogContent>
     );
   return (
-    <DialogContent className="overflow-clip">
-      <DialogHeader className="w-[90%]">
-        <DialogTitle className="truncate">{filename}</DialogTitle>
-        <Seperator />
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>{filename}</DialogTitle>
       </DialogHeader>
 
       <div className="">

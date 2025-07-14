@@ -16,6 +16,8 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import useRenameFileMutation from "./hooks/use-rename-file-mutation";
 import { constant } from "@/lib/constant";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 type RenameModalProps = {
   filename?: string;
@@ -67,10 +69,17 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild className="text-sky-600">
-        <Button size="icon" variant="ghost">
-          <SquarePen className="inline" size="24" />
-        </Button>
+      <DialogTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="ghost" className="text-sky-600">
+              <SquarePen />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p>Rename {type === "images" ? "Image" : "Document"}</p>
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form

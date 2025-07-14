@@ -4,17 +4,16 @@ import { toast } from "react-hot-toast";
 import FileDataModal from "./file-data-modal";
 import RenameModal from "./rename-modal";
 import ResizeModal from "./resize-modal";
-import { Button } from "../../ui/button";
+import { Button, buttonVariants } from "../../ui/button";
 import { Dialog, DialogTrigger } from "../../ui/dialog";
 import useDeleteFileMutation from "./hooks/use-delete-file-mutation";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,
   type = "documents",
   disabled = false,
-  // ID,
-  // createdAt,
-  // updatedAt,
 }) => {
   const url = `${window.location.protocol}//${
     window.location.host
@@ -46,44 +45,69 @@ const ContentCard: React.FC<TContentCardProps> = ({
         </DialogTrigger>
         <FileDataModal filename={file_name} type={type} />
       </Dialog>
-      <div className="w-full flex flex-col">
-        <p className="truncate w-64 pr-7">{file_name}</p>
+      <div className="w-full flex flex-col gap-2">
+        <p className="truncate">{file_name}</p>
         {/* Non-destructive buttons */}
         <div className={`flex w-full justify-between ${disabled && "sr-only"}`}>
           <div className="flex">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-sky-600"
-              onClick={() => {
-                navigator.clipboard.writeText(url);
-                toast.success("clipboard saved");
-              }}
-              aria-label="Copy Link"
-            >
-              <Files className="inline" size="24" />
-            </Button>
-            <a
-              className="hover:bg-accent hover:text-accent-foreground h-10 w-10 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-sky-600"
-              aria-label="Download file"
-              href={url}
-              download
-            >
-              <DownloadCloud className="inline" size="24" />
-            </a>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-sky-600"
+                  onClick={() => {
+                    navigator.clipboard.writeText(url);
+                    toast.success("clipboard saved");
+                  }}
+                  aria-label="Copy Link"
+                >
+                  <Files />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>Copy Link to clipboard</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger>
+                <a
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "icon",
+                    className: "text-sky-600",
+                  })}
+                  aria-label="Download file"
+                  href={url}
+                  download
+                >
+                  <DownloadCloud />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>Download file</p>
+              </TooltipContent>
+            </Tooltip>
             <RenameModal type={type} filename={file_name} />
             {type === "images" && <ResizeModal filename={file_name ?? ""} />}
           </div>
           {/* Destructive buttons */}
           <div className="flex gap-2">
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={() => file_name && handleDeleteFile()}
-              aria-label="Delete file"
-            >
-              <Trash2 className="inline" size="24" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => file_name && handleDeleteFile()}
+                  aria-label="Delete file"
+                >
+                  <Trash2 className="inline" size="24" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <p>Delete file</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>

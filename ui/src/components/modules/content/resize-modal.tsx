@@ -18,6 +18,11 @@ import { Label } from "../../ui/label";
 import useResizeModalQuery from "./hooks/use-resize-modal-query";
 import useResizeImageMutation from "./hooks/use-resize-image-mutation";
 import { constant } from "@/lib/constant";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type ResizeModalProps = {
   filename: string;
@@ -93,10 +98,17 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename }) => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild className="text-sky-600">
-        <Button size="icon" variant="ghost">
-          <Scaling className="inline" size="24" />
-        </Button>
+      <DialogTrigger asChild>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button size="icon" variant="ghost" className="text-sky-600">
+              <Scaling className="inline" size="24" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <p>Resize Image</p>
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form
