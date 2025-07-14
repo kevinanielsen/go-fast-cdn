@@ -21,6 +21,7 @@ import UseToggleRegistrationMutation from "./hooks/use-toggle-registration-mutat
 import toast from "react-hot-toast";
 import useUsersQuery from "./hooks/use-users-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 const UserManagementPage = () => {
   const { data } = useUsersQuery();
@@ -257,13 +258,29 @@ const UserManagementPage = () => {
     <MainContentWrapper title="User Management">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <Input
-            className="w-full max-w-xs"
-            placeholder="Search users by email or role"
-            value={debounceSearch}
-            onChange={handleSearchChange}
-            aria-label="Search users"
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              className="w-full max-w-md min-w-xs"
+              placeholder="Search users by email or role"
+              value={debounceSearch}
+              onChange={handleSearchChange}
+              aria-label="Search users"
+            />
+            <Button
+              variant="outline"
+              className={cn({
+                hidden: !search,
+              })}
+              onClick={() => {
+                setSearch("");
+                setDebounceSearch("");
+              }}
+              aria-label="Clear search"
+            >
+              <X />
+              Clear Search
+            </Button>
+          </div>
           <div className="flex items-center gap-2">
             {defineButtonState}
             <Button
