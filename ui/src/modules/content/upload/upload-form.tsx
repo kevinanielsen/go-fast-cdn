@@ -13,6 +13,7 @@ interface UploadProps {
   isLoading: boolean;
   tab: "documents" | "images";
   onChangeTab: (tab: "documents" | "images") => void;
+  disableTabSwitching?: boolean;
 }
 
 const UploadForm = ({
@@ -21,6 +22,7 @@ const UploadForm = ({
   onChangeFiles,
   onChangeTab,
   tab,
+  disableTabSwitching = false,
 }: UploadProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -154,41 +156,78 @@ const UploadForm = ({
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-full">
-          <Tabs
-            onValueChange={(value) => {
-              onChangeTab(value as "documents" | "images");
-            }}
-            value={tab}
-          >
-            <TabsList
-              className="self-center mb-4"
-              onClick={(e) => e.stopPropagation()}
+          {disableTabSwitching ? (
+            // When tab switching is disabled, show content without tabs
+            <>
+              {isDragOver ? (
+                <div className="text-center">
+                  <p className="text-blue-600 font-medium">
+                    Drop files here to upload
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <p className="text-gray-500 text-center">
+                    {tab === "documents"
+                      ? "Drop your documents here, or click to select files."
+                      : "Drop your images here, or click to select files."}
+                  </p>
+                  <input
+                    type="file"
+                    accept={
+                      tab === "documents"
+                        ? "text/plain,application/zip,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/rtf,application/x-freearc"
+                        : "image/jpeg,image/png,image/jpg,image/webp,image/gif,image/bmp"
+                    }
+                    multiple
+                    name={tab}
+                    id={tab}
+                    aria-label={`Select ${tab}`}
+                    ref={fileRef}
+                    className="hidden"
+                    onChange={handleOnChangeFiles}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            // When tab switching is enabled, show tabs with content
+            <Tabs
+              onValueChange={(value) => {
+                onChangeTab(value as "documents" | "images");
+              }}
+              value={tab}
             >
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="images">Images</TabsTrigger>
-            </TabsList>
+              <TabsList
+                className="self-center mb-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <TabsTrigger value="documents">Documents</TabsTrigger>
+                <TabsTrigger value="images">Images</TabsTrigger>
+              </TabsList>
 
-            {isDragOver ? (
-              <div className="text-center">
-                <p className="text-blue-600 font-medium">
-                  Drop files here to upload
-                </p>
-              </div>
-            ) : (
-              <>
-                <FileInput
-                  type="documents"
-                  fileRef={fileRef}
-                  onFileChange={handleOnChangeFiles}
-                />
-                <FileInput
-                  type="images"
-                  fileRef={fileRef}
-                  onFileChange={handleOnChangeFiles}
-                />
-              </>
-            )}
-          </Tabs>
+              {isDragOver ? (
+                <div className="text-center">
+                  <p className="text-blue-600 font-medium">
+                    Drop files here to upload
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <FileInput
+                    type="documents"
+                    fileRef={fileRef}
+                    onFileChange={handleOnChangeFiles}
+                  />
+                  <FileInput
+                    type="images"
+                    fileRef={fileRef}
+                    onFileChange={handleOnChangeFiles}
+                  />
+                </>
+              )}
+            </Tabs>
+          )}
         </div>
       )}
     </div>

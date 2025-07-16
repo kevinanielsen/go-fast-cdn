@@ -20,19 +20,33 @@ import { AxiosError } from "axios";
 import { IErrorResponse } from "@/types/response";
 import toast from "react-hot-toast";
 
-const UploadModal = () => {
+type ConditionalUploadModalProps =
+  | { placement: "header"; type: "documents" | "images" }
+  | { placement?: "sidebar"; type?: "documents" | "images" };
+
+const UploadModal = ({
+  placement = "sidebar",
+  type,
+}: ConditionalUploadModalProps) => {
   const [open, setOpen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [tab, setTab] = useState<"documents" | "images">("documents");
+
+  // Set initial tab based on type when placement is header, otherwise default to documents
+  const [tab, setTab] = useState<"documents" | "images">(
+    placement === "header" && type ? type : "documents"
+  );
 
   const uploadFileMutation = useUploadFileMutation();
 
   const handleReset = useCallback(() => {
     setFiles([]);
-    setTab("documents");
+
+    // Reset tab to initial value based on placement and type
+    const initialTab = placement === "header" && type ? type : "documents";
+    setTab(initialTab);
     setOpen(false);
     uploadFileMutation.reset();
-  }, [uploadFileMutation]);
+  }, [uploadFileMutation, placement, type]);
 
   const { mutate: uploadFileMutate, isPending: isUploadPending } = useMutation({
     mutationFn: async () => {
@@ -66,9 +80,16 @@ const UploadModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen} modal>
       <DialogTrigger asChild>
-        <SidebarGroupAction title="Add Content">
-          <Plus /> <span className="sr-only">Add Content</span>
-        </SidebarGroupAction>
+        {placement === "header" ? (
+          <Button onClick={() => {}} variant="default">
+            <Plus />
+            Add {type === "images" ? "Image" : "Document"}
+          </Button>
+        ) : (
+          <SidebarGroupAction title="Add Content">
+            <Plus /> <span className="sr-only">Add Content</span>
+          </SidebarGroupAction>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -84,6 +105,7 @@ const UploadModal = () => {
           onChangeTab={setTab}
           files={files}
           onChangeFiles={setFiles}
+          disableTabSwitching={placement === "header"}
         />
 
         <DialogFooter className="sm:justify-end">

@@ -3,7 +3,7 @@ import useGetFilesQuery from "./hooks/use-get-files-query";
 import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { List, Plus, Trash, X } from "lucide-react";
+import { List, Trash, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MainContentWrapper from "@/components/layouts/main-content-wrapper";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import UploadModal from "./upload/upload-modal";
 
 type TFilesProps = {
   type: "images" | "documents";
@@ -185,10 +186,7 @@ const Files: React.FC<TFilesProps> = ({ type }) => {
                   <List />
                   Select
                 </Button>
-                <Button onClick={() => {}} variant="default">
-                  <Plus />
-                  Add {type === "images" ? "Image" : "Document"}
-                </Button>
+                <UploadModal placement="header" type={type} />
               </>
             )}
           </section>
