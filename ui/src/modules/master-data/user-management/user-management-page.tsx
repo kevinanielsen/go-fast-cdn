@@ -258,7 +258,7 @@ const UserManagementPage = () => {
     <MainContentWrapper title="User Management">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <section className="flex items-center gap-2">
             <Input
               className="w-full max-w-md min-w-xs"
               placeholder="Search users by email or role"
@@ -280,8 +280,8 @@ const UserManagementPage = () => {
               <X />
               Clear Search
             </Button>
-          </div>
-          <div className="flex items-center gap-2">
+          </section>
+          <section className="flex items-center gap-2">
             {defineButtonState}
             <Button
               onClick={() => {
@@ -293,7 +293,7 @@ const UserManagementPage = () => {
               <Plus />
               Add User
             </Button>
-          </div>
+          </section>
         </div>
         <DataTable globalFilter={search} columns={columns} data={data || []} />
       </div>
