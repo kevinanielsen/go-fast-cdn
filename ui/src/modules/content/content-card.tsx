@@ -35,7 +35,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
     <div className="border rounded-lg shadow-lg flex flex-col min-h-[264px] w-64 max-w-[256px] justify-between items-center gap-4 p-4 relative">
       {isSelecting && (
         <Checkbox
-          className="absolute top-2 right-2"
+          className="absolute top-2 right-2 bg-background"
           checked={isSelected}
           onCheckedChange={() => onSelect && onSelect(file_name)}
           disabled={disabled}
