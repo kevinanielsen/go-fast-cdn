@@ -5,4 +5,7 @@ export type TContentCardProps = {
   createdAt: string;
   updatedAt: string;
   disabled?: boolean;
+  isSelected?: boolean;
+  onSelect?: (fileName: string) => void;
+  isSelecting?: boolean;
 };

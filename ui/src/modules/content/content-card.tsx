@@ -8,12 +8,16 @@ import useDeleteFileMutation from "./hooks/use-delete-file-mutation";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,
   type = "documents",
   disabled = false,
+  isSelected,
+  onSelect,
+  isSelecting,
 }) => {
   const url = `${window.location.protocol}//${
     window.location.host
@@ -28,9 +32,18 @@ const ContentCard: React.FC<TContentCardProps> = ({
   };
 
   return (
-    <div className="border rounded-lg shadow-lg flex flex-col min-h-[264px] w-64 max-w-[256px] justify-between items-center gap-4 p-4">
+    <div className="border rounded-lg shadow-lg flex flex-col min-h-[264px] w-64 max-w-[256px] justify-between items-center gap-4 p-4 relative">
+      {isSelecting && (
+        <Checkbox
+          className="absolute top-2 right-2"
+          checked={isSelected}
+          onCheckedChange={() => onSelect && onSelect(file_name)}
+          disabled={disabled}
+          aria-label="Select file"
+        />
+      )}
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger disabled={isSelecting}>
           {type === "images" ? (
             <img
               src={url}
@@ -61,6 +74,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
                     toast.success("clipboard saved");
                   }}
                   aria-label="Copy Link"
+                  disabled={isSelecting}
                 >
                   <Files />
                 </Button>
@@ -71,25 +85,33 @@ const ContentCard: React.FC<TContentCardProps> = ({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger>
-                <a
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "icon",
-                    className: "text-sky-600",
-                  })}
-                  aria-label="Download file"
-                  href={url}
-                  download
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-sky-600"
+                  disabled={isSelecting}
+                  asChild={!isSelecting}
                 >
-                  <DownloadCloud />
-                </a>
+                  <a href={url} download aria-label="Download file">
+                    <DownloadCloud />
+                  </a>
+                </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
                 <p>Download file</p>
               </TooltipContent>
             </Tooltip>
-            <RenameModal type={type} filename={file_name} />
-            {type === "images" && <ResizeModal filename={file_name ?? ""} />}
+            <RenameModal
+              type={type}
+              filename={file_name}
+              isSelecting={isSelecting}
+            />
+            {type === "images" && (
+              <ResizeModal
+                filename={file_name ?? ""}
+                isSelecting={isSelecting}
+              />
+            )}
           </div>
           {/* Destructive buttons */}
           <div className="flex gap-2">
@@ -100,6 +122,7 @@ const ContentCard: React.FC<TContentCardProps> = ({
                   size="icon"
                   onClick={() => file_name && handleDeleteFile()}
                   aria-label="Delete file"
+                  disabled={isSelecting}
                 >
                   <Trash2 className="inline" size="24" />
                 </Button>

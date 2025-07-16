@@ -16,6 +16,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { SidebarGroupAction } from "@/components/ui/sidebar";
 import useUploadFileMutation from "../hooks/use-upload-file-mutation";
+import { AxiosError } from "axios";
+import { IErrorResponse } from "@/types/response";
+import toast from "react-hot-toast";
 
 const UploadModal = () => {
   const [open, setOpen] = useState(false);
@@ -45,6 +48,11 @@ const UploadModal = () => {
     },
     onSuccess: () => {
       handleReset();
+    },
+    onError: (error) => {
+      const err = error as AxiosError<IErrorResponse>;
+      const message = err.response?.data?.error || "Upload failed";
+      toast.error(message);
     },
   });
 

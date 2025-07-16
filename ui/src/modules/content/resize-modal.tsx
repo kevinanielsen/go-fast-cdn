@@ -26,9 +26,10 @@ import { Input } from "@/components/ui/input";
 
 type ResizeModalProps = {
   filename: string;
+  isSelecting?: boolean;
 };
 
-const ResizeModal: React.FC<ResizeModalProps> = ({ filename }) => {
+const ResizeModal: React.FC<ResizeModalProps> = ({ filename, isSelecting }) => {
   const [resizeFormData, setResizeFormData] = useState<ImageDimensions>({
     width: 0,
     height: 0,
@@ -101,7 +102,12 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename }) => {
       <DialogTrigger asChild>
         <Tooltip>
           <TooltipTrigger>
-            <Button size="icon" variant="ghost" className="text-sky-600">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="text-sky-600"
+              disabled={isSelecting}
+            >
               <Scaling className="inline" size="24" />
             </Button>
           </TooltipTrigger>

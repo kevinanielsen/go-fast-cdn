@@ -1,8 +1,6 @@
 import { constant } from "@/lib/constant";
 import { cdnApiClient } from "@/services/authService";
-import { IErrorResponse } from "@/types/response";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 const useUploadFileMutation = () => {
@@ -22,11 +20,6 @@ const useUploadFileMutation = () => {
     onSuccess: () => {
       toast.success("Successfully uploaded file!");
       queryClient.invalidateQueries({ queryKey: constant.queryKeys.all });
-    },
-    onError: (error) => {
-      const err = error as AxiosError<IErrorResponse>;
-      const message = err.response?.data?.error || "Upload failed";
-      toast.error(message);
     },
   });
 };

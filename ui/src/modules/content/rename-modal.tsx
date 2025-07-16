@@ -22,9 +22,14 @@ import { Input } from "@/components/ui/input";
 type RenameModalProps = {
   filename?: string;
   type: "images" | "documents";
+  isSelecting?: boolean;
 };
 
-const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
+const RenameModal: React.FC<RenameModalProps> = ({
+  filename,
+  type,
+  isSelecting,
+}) => {
   const [newFilename, setNewFilename] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -72,7 +77,12 @@ const RenameModal: React.FC<RenameModalProps> = ({ filename, type }) => {
       <DialogTrigger asChild>
         <Tooltip>
           <TooltipTrigger>
-            <Button size="icon" variant="ghost" className="text-sky-600">
+            <Button
+              size="icon"
+              variant="ghost"
+              className="text-sky-600"
+              disabled={isSelecting}
+            >
               <SquarePen />
             </Button>
           </TooltipTrigger>
