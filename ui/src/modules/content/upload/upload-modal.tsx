@@ -1,6 +1,6 @@
 import { Loader2Icon, Plus } from "lucide-react";
 import { useCallback, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sanitizeFileName } from "@/utils";
 import UploadForm from "./upload-form";
 import {
@@ -19,6 +19,7 @@ import useUploadFileMutation from "../hooks/use-upload-file-mutation";
 import { AxiosError } from "axios";
 import { IErrorResponse } from "@/types/response";
 import toast from "react-hot-toast";
+import { constant } from "@/lib/constant";
 
 type ConditionalUploadModalProps =
   | { placement: "header"; type: "documents" | "images" }
@@ -48,6 +49,8 @@ const UploadModal = ({
     uploadFileMutation.reset();
   }, [uploadFileMutation, placement, type]);
 
+  const queryClient = useQueryClient();
+
   const { mutate: uploadFileMutate, isPending: isUploadPending } = useMutation({
     mutationFn: async () => {
       return Promise.all(
@@ -60,7 +63,14 @@ const UploadModal = ({
         })
       );
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      toast.success("Successfully uploaded file!");
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: constant.queryKeys.all }),
+        queryClient.invalidateQueries({
+          queryKey: [constant.queryKeys.dashboard],
+        }),
+      ]);
       handleReset();
     },
     onError: (error) => {

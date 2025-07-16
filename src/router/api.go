@@ -57,6 +57,12 @@ func (s *Server) AddApiRoutes() {
 		cdn.GET("/image/:filename", iHandlers.HandleImageMetadata)
 		cdn.Static("/download/images", util.ExPath+"/uploads/images")
 		cdn.Static("/download/docs", util.ExPath+"/uploads/docs")
+		cdn.GET("/dashboard", handlers.NewDashboardHandler(
+			database.NewDocRepo(database.DB),
+			database.NewImageRepo(database.DB),
+			database.NewUserRepo(database.DB),
+			database.NewConfigRepo(database.DB),
+		).GetDashboard)
 	}
 
 	// Protected CDN routes (require authentication)

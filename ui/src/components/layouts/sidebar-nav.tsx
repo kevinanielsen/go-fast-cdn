@@ -18,7 +18,6 @@ import { FilesIcon, Image, LayoutDashboard, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import UserProfile from "@/modules/auth/UserProfile";
-import ContentSize from "@/modules/content/content-size";
 import UploadModal from "@/modules/content/upload/upload-modal";
 
 interface NavigationItem {
@@ -151,7 +150,6 @@ const SidebarNav = () => {
       </SidebarContent>
 
       <SidebarFooter>
-        {!isCollapsed && <ContentSize />}
         <UserProfile />
       </SidebarFooter>
     </Sidebar>

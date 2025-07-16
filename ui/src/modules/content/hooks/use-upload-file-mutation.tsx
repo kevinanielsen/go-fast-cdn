@@ -1,11 +1,7 @@
-import { constant } from "@/lib/constant";
 import { cdnApiClient } from "@/services/authService";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const useUploadFileMutation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (payload: { file: File; type: "doc" | "image" }) => {
       const form = new FormData();
@@ -16,10 +12,6 @@ const useUploadFileMutation = () => {
         },
       });
       return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Successfully uploaded file!");
-      queryClient.invalidateQueries({ queryKey: constant.queryKeys.all });
     },
   });
 };

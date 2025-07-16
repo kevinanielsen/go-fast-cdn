@@ -1,4 +1,4 @@
-import { Link, Route } from "wouter";
+import { Route } from "wouter";
 import { Toaster } from "react-hot-toast";
 import { SidebarProvider } from "./components/ui/sidebar";
 import SidebarNav from "./components/layouts/sidebar-nav";
@@ -11,6 +11,7 @@ import Files from "./modules/content/files";
 import UserSettings from "./modules/settings/UserSettings";
 import AdminRoute from "./modules/auth/AdminRoute";
 import UserManagementPage from "./modules/master-data/user-management/user-management-page";
+import DashboardPage from "./modules/dashboard/pages/dashboard-page";
 
 function AppContent() {
   return (
@@ -29,30 +30,7 @@ function AppContent() {
           <div className="flex min-h-screen w-screen">
             <SidebarNav />
             <main className="m-4 h-auto w-full">
-              <Route path="/">
-                <div className="text-center py-12">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                    Welcome to Go-Fast CDN
-                  </h1>
-                  <p className="text-gray-600 mb-8">
-                    Your secure, fast content delivery network
-                  </p>
-                  <div className="space-x-4">
-                    <Link
-                      to="/upload"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                    >
-                      Start Uploading
-                    </Link>
-                    <Link
-                      to="/images"
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Browse Files
-                    </Link>
-                  </div>
-                </div>
-              </Route>
+              <Route path="/">{<DashboardPage />}</Route>
               <Route path="/images">{<Files type="images" />}</Route>
               <Route path="/documents">{<Files type="documents" />}</Route>
               <Route path="/settings">{<UserSettings />}</Route>

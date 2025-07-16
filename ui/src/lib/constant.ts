@@ -10,5 +10,6 @@ export const constant = {
       [{ ...constant.queryKeys.all[0], scope: "files", type }] as const,
     users: "users",
     registrationEnabled: "registration-enabled",
+    dashboard: "dashboard",
   },
 };
