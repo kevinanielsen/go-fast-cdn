@@ -1,6 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
-import { authService, cdnApiClient } from "../../../services/authService";
 import toast from "react-hot-toast";
 import MainContentWrapper from "@/components/layouts/main-content-wrapper";
 import z from "zod";
@@ -28,6 +26,8 @@ import {
 } from "./schema";
 import TwoFactorSection from "./two-factor-section";
 import TwoFactorDialogs from "./two-factor-modal";
+import { useAuth } from "@/contexts/AuthContext";
+import { authService, cdnApiClient } from "@/services/authService";
 
 const UserSettings: React.FC = () => {
   const { user, refreshToken, refreshUserProfile, logout } = useAuth();

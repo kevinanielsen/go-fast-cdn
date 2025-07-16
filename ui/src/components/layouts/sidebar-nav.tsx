@@ -15,11 +15,11 @@ import {
   useSidebar,
 } from "../ui/sidebar";
 import { FilesIcon, Image, LayoutDashboard, Users } from "lucide-react";
-import ContentSize from "../modules/content/content-size";
 import { cn } from "@/lib/utils";
-import UserProfile from "../modules/auth/UserProfile";
 import { useAuth } from "@/contexts/AuthContext";
-import UploadModal from "../modules/content/upload/upload-modal";
+import UserProfile from "@/modules/auth/UserProfile";
+import ContentSize from "@/modules/content/content-size";
+import UploadModal from "@/modules/content/upload/upload-modal";
 
 interface NavigationItem {
   href: string;

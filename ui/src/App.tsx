@@ -1,16 +1,16 @@
 import { Link, Route } from "wouter";
 import { Toaster } from "react-hot-toast";
-import Files from "./components/modules/content/files";
 import { SidebarProvider } from "./components/ui/sidebar";
 import SidebarNav from "./components/layouts/sidebar-nav";
 import { AuthProvider } from "./contexts/AuthContext";
-import Login from "./components/modules/auth/Login";
-import Register from "./components/modules/auth/Register";
-import ProtectedRoute from "./components/modules/auth/ProtectedRoute";
 import AuthTest from "./pages/AuthTest";
-import UserSettings from "./components/modules/settings/UserSettings";
-import AdminRoute from "./components/modules/auth/AdminRoute";
-import UserManagementPage from "./components/modules/master-data/user-management/user-management-page";
+import Login from "./modules/auth/Login";
+import Register from "./modules/auth/Register";
+import ProtectedRoute from "./modules/auth/ProtectedRoute";
+import Files from "./modules/content/files";
+import UserSettings from "./modules/settings/UserSettings";
+import AdminRoute from "./modules/auth/AdminRoute";
+import UserManagementPage from "./modules/master-data/user-management/user-management-page";
 
 function AppContent() {
   return (

@@ -1,7 +1,7 @@
+import { useAuth } from "@/contexts/AuthContext";
+import configService from "@/services/configService";
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
 import { Link, useLocation } from "wouter";
-import configService from "../../../services/configService";
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState("");

@@ -1,4 +1,4 @@
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { ReactNode } from "react";
 
 export default function AdminRoute({ children }: { children: ReactNode }) {

@@ -1,8 +1,8 @@
 import React from "react";
 import { AuthProvider } from "../contexts/AuthContext";
-import Login from "../components/modules/auth/Login";
-import Register from "../components/modules/auth/Register";
-import UserProfile from "../components/modules/auth/UserProfile";
+import Login from "@/modules/auth/Login";
+import Register from "@/modules/auth/Register";
+import UserProfile from "@/modules/auth/UserProfile";
 
 // Simple test page to verify auth components
 const AuthTest: React.FC = () => {

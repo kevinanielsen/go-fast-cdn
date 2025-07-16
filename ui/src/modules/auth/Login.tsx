@@ -1,5 +1,5 @@
+import { useAuth } from "@/contexts/AuthContext";
 import React, { useState } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
 import { Link, useLocation } from "wouter";
 
 const Login: React.FC = () => {

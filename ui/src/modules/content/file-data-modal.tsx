@@ -1,4 +1,8 @@
-import { DialogContent, DialogHeader, DialogTitle } from "../../ui/dialog";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import useGetFileDataQuery from "./hooks/use-get-file-data-query";
 
 type TFileDataModalProps = {

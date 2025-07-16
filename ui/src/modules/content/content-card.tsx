@@ -4,11 +4,11 @@ import { toast } from "react-hot-toast";
 import FileDataModal from "./file-data-modal";
 import RenameModal from "./rename-modal";
 import ResizeModal from "./resize-modal";
-import { Button, buttonVariants } from "../../ui/button";
-import { Dialog, DialogTrigger } from "../../ui/dialog";
 import useDeleteFileMutation from "./hooks/use-delete-file-mutation";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 const ContentCard: React.FC<TContentCardProps> = ({
   file_name,

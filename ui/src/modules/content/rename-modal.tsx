@@ -1,4 +1,11 @@
 import { SquarePen } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import useRenameFileMutation from "./hooks/use-rename-file-mutation";
+import { constant } from "@/lib/constant";
+import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import {
   Dialog,
   DialogContent,
@@ -7,17 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../ui/dialog";
-import { Button } from "../../ui/button";
-import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import useRenameFileMutation from "./hooks/use-rename-file-mutation";
-import { constant } from "@/lib/constant";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 type RenameModalProps = {
   filename?: string;

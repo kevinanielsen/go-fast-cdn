@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuth } from "../../../contexts/AuthContext";
 import {
   LogOut,
   User as UserIcon,
@@ -7,19 +6,20 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { Link } from "wouter";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../../ui/sidebar";
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/dropdown-menu";
 
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();

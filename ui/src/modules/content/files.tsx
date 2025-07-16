@@ -1,12 +1,12 @@
 import ContentCard from "./content-card";
-import { Skeleton } from "../../ui/skeleton";
-import MainContentWrapper from "../../layouts/main-content-wrapper";
 import useGetFilesQuery from "./hooks/use-get-files-query";
 import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import MainContentWrapper from "@/components/layouts/main-content-wrapper";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type TFilesProps = {
   type: "images" | "documents";
