@@ -74,9 +74,9 @@ const RenameModal: React.FC<RenameModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Tooltip>
-          <TooltipTrigger>
+      <Tooltip>
+        <TooltipTrigger>
+          <DialogTrigger asChild>
             <Button
               size="icon"
               variant="ghost"
@@ -85,12 +85,12 @@ const RenameModal: React.FC<RenameModalProps> = ({
             >
               <SquarePen />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <p>Rename {type === "images" ? "Image" : "Document"}</p>
-          </TooltipContent>
-        </Tooltip>
-      </DialogTrigger>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <p>Rename {type === "images" ? "Image" : "Document"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DialogContent className="sm:max-w-[425px]">
         <form
           onSubmit={(e) => {

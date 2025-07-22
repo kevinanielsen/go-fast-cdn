@@ -30,6 +30,7 @@ type ResizeModalProps = {
 };
 
 const ResizeModal: React.FC<ResizeModalProps> = ({ filename, isSelecting }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [resizeFormData, setResizeFormData] = useState<ImageDimensions>({
     width: 0,
     height: 0,
@@ -40,6 +41,7 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename, isSelecting }) => {
 
   const resizeFileMutation = useResizeImageMutation({
     onSuccess: () => {
+      setIsOpen(false);
       toast.dismiss();
       const toastId = toast.loading("Processing...");
       toast.success("File resized!", { id: toastId, duration: 1500 });
@@ -98,10 +100,10 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename, isSelecting }) => {
   }, [fileMetadata]);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Tooltip>
-          <TooltipTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Tooltip>
+        <TooltipTrigger>
+          <DialogTrigger asChild>
             <Button
               size="icon"
               variant="ghost"
@@ -110,12 +112,12 @@ const ResizeModal: React.FC<ResizeModalProps> = ({ filename, isSelecting }) => {
             >
               <Scaling className="inline" size="24" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <p>Resize Image</p>
-          </TooltipContent>
-        </Tooltip>
-      </DialogTrigger>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <p>Resize Image</p>
+        </TooltipContent>
+      </Tooltip>
       <DialogContent className="sm:max-w-[425px]">
         <form
           onSubmit={(e) => {
