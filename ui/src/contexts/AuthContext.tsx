@@ -1,169 +1,181 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, AuthResponse } from '@/types/auth';
-import { authService } from '../services/authService';
-import toast from 'react-hot-toast';
+import React, { createContext, useContext, ReactNode } from "react";
+import { authService } from "../services/authService";
+import toast from "react-hot-toast";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { IErrorResponse } from "@/types/response";
+import { TRole, TUser } from "@/types/user";
+import { IAuthResponse } from "@/types/auth";
 
 interface AuthContextType {
-  user: User | null;
+  user: TUser | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string, twoFAToken?: string) => Promise<{ success: boolean; requires2FA?: boolean }>;
-  register: (email: string, password: string, role?: string) => Promise<boolean>;
+  login: (
+    email: string,
+    password: string,
+    twoFAToken?: string
+  ) => Promise<{ success: boolean; requires2FA?: boolean }>;
+  register: (email: string, password: string, role?: TRole) => Promise<boolean>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
-  refreshUserProfile: () => Promise<boolean>;
+  refreshUserProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: user,
+    isLoading: profileQueryIsLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => authService.getProfile(),
+    enabled:
+      !!localStorage.getItem("accessToken") &&
+      !!localStorage.getItem("refreshToken"),
+  });
 
-  useEffect(() => {
-    // Check if user is logged in on app start
-    initializeAuth();
-  }, []);
+  const mutationLogin = useMutation({
+    mutationFn: (payload: {
+      email: string;
+      password: string;
+      twoFAToken?: string;
+    }) => {
+      return authService.login({
+        email: payload.email,
+        password: payload.password,
+        two_fa_token: payload.twoFAToken,
+      });
+    },
+  });
 
-  const initializeAuth = async () => {
+  const mutationRegister = useMutation({
+    mutationFn: (payload: {
+      email: string;
+      password: string;
+      role?: TRole;
+    }) => {
+      return authService.register({
+        email: payload.email,
+        password: payload.password,
+        role: payload.role,
+      });
+    },
+  });
+
+  const mutationLogout = useMutation({
+    mutationFn: (payload: { refresh_token: string }) => {
+      return authService.logout(payload);
+    },
+  });
+
+  const login = async (
+    email: string,
+    password: string,
+    twoFAToken?: string
+  ): Promise<{ success: boolean; requires2FA?: boolean }> => {
     try {
-      const storedToken = localStorage.getItem('accessToken');
-      const storedUser = localStorage.getItem('user');
-        if (storedToken && storedUser) {
-        // Verify token is still valid by making a profile request
-        try {
-          const profile = await authService.getProfile();
-          setUser(profile);
-        } catch (error) {
-          // Token might be expired, try to refresh
-          if (await refreshToken()) {
-            const profile = await authService.getProfile();
-            setUser(profile);
-          } else {
-            clearAuthData();
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Auth initialization error:', error);
-      clearAuthData();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const login = async (email: string, password: string, twoFAToken?: string): Promise<{ success: boolean; requires2FA?: boolean }> => {
-    try {
-      setIsLoading(true);
-      const loginData: any = { email, password };
-      if (twoFAToken) {
-        loginData.two_fa_token = twoFAToken;
-      }
-      
-      const response = await authService.login(loginData);
+      const response = await mutationLogin.mutateAsync({
+        email,
+        password,
+        twoFAToken,
+      });
       setAuthData(response);
-      toast.success('Login successful!');
+      toast.success("Login successful!");
       return { success: true };
-    } catch (error: any) {
-      const errorData = error.response?.data;
+    } catch (error) {
+      const errorResponse = error as AxiosError<IErrorResponse>;
+      const errorData = errorResponse.response?.data;
       if (errorData?.requires_2fa) {
         return { success: false, requires2FA: true };
       }
-      
-      toast.error(errorData?.error || 'Login failed');
+      toast.error(errorData?.error || "Login failed");
       return { success: false };
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const register = async (email: string, password: string, role?: string): Promise<boolean> => {
+  const register = async (
+    email: string,
+    password: string,
+    role?: TRole
+  ): Promise<boolean> => {
     try {
-      setIsLoading(true);
-      const response = await authService.register({ email, password, role });
+      const response = await mutationRegister.mutateAsync({
+        email,
+        password,
+        role,
+      });
       setAuthData(response);
-      toast.success('Registration successful!');
+      toast.success("Registration successful!");
       return true;
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Registration failed');
+    } catch (error) {
+      const errorResponse = error as AxiosError<IErrorResponse>;
+      toast.error(errorResponse.response?.data.error || "Registration failed");
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const logout = async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
-        await authService.logout({ refresh_token: refreshToken });
+        await mutationLogout.mutateAsync({ refresh_token: refreshToken });
       }
-    } catch (error) {
+    } catch {
       // Ignore logout errors
     } finally {
       clearAuthData();
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
+      window.location.href = "/login"; // Redirect to login page
     }
   };
   const refreshToken = async (): Promise<boolean> => {
     try {
-      const storedRefreshToken = localStorage.getItem('refreshToken');
+      const storedRefreshToken = localStorage.getItem("refreshToken");
       if (!storedRefreshToken) {
         return false;
       }
-      
-      const response = await authService.refreshToken({ refresh_token: storedRefreshToken });
+
+      const response = await authService.refreshToken({
+        refresh_token: storedRefreshToken,
+      });
       setAuthData(response);
       return true;
-    } catch (error) {
+    } catch {
       clearAuthData();
       return false;
     }
   };
-  const refreshUserProfile = async (): Promise<boolean> => {
-    try {
-      console.log("[DEBUG] AuthContext - Fetching fresh user profile...");
-      const profile = await authService.getProfile();
-      console.log("[DEBUG] AuthContext - Got profile from API:", profile);
-      setUser(profile);
-      localStorage.setItem('user', JSON.stringify(profile));
-      console.log("[DEBUG] AuthContext - Updated user state and localStorage");
-      return true;
-    } catch (error) {
-      console.error('Failed to refresh user profile:', error);
-      return false;
-    }
+  const refreshUserProfile = async (): Promise<void> => {
+    await refetch();
   };
 
-  const setAuthData = (authResponse: AuthResponse) => {
+  const setAuthData = (authResponse: IAuthResponse) => {
     const { user, access_token, refresh_token } = authResponse;
-    localStorage.setItem('accessToken', access_token);
-    localStorage.setItem('refreshToken', refresh_token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
+    localStorage.setItem("accessToken", access_token);
+    localStorage.setItem("refreshToken", refresh_token);
+    localStorage.setItem("user", JSON.stringify(user));
+    refetch(); // Refetch user profile after setting auth data
   };
 
   const clearAuthData = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
   };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
-    isLoading,
+    isLoading:
+      profileQueryIsLoading ||
+      mutationLogin.isPending ||
+      mutationRegister.isPending,
     login,
     register,
     logout,
@@ -172,4 +184,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

@@ -1,12 +1,12 @@
-import axios from 'axios';
-import { User } from '@/types/auth';
+import { IUserCreateRequest, TUser } from "@/types/user";
+import axios from "axios";
 
-const api = axios.create({ baseURL: '/api/admin/users' });
+const api = axios.create({ baseURL: "/api/admin/users" });
 
 // Attach Authorization header with access token for every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
@@ -17,20 +17,23 @@ api.interceptors.request.use(
 );
 
 export const adminUserService = {
-  async listUsers(): Promise<User[]> {
-    const res = await api.get('/');
+  async listUsers(): Promise<TUser[]> {
+    const res = await api.get("/");
     return res.data;
   },
-  async createUser(data: { email: string; password: string; role: string }): Promise<User> {
-    const res = await api.post('/', data);
+  async createUser(data: IUserCreateRequest): Promise<TUser> {
+    const res = await api.post("/", data);
     return res.data;
   },
-  async updateUser(id: number, data: Partial<{ email: string; role: string; is_verified: boolean }>): Promise<User> {
+  async updateUser(
+    id: number,
+    data: Partial<{ email: string; role: string; is_verified: boolean }>
+  ): Promise<TUser> {
     const res = await api.put(`/${id}`, data);
     return res.data;
   },
   async deleteUser(id: number): Promise<void> {
-    if (!id && id !== 0) throw new Error('User ID is required');
+    if (!id && id !== 0) throw new Error("User ID is required");
     await api.delete(`/${id}`);
   },
 };

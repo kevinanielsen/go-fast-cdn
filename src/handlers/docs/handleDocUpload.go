@@ -73,7 +73,7 @@ func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 
 	docInDatabase := h.repo.GetDocByCheckSum(fileHashBuffer[:])
 	if len(docInDatabase.Checksum) > 0 {
-		c.JSON(http.StatusConflict, "File already exists")
+		c.JSON(http.StatusConflict, gin.H{"error": "File already exists"})
 		return
 	}
 
