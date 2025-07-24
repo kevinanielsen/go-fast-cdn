@@ -4,8 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'New tag name'
+        description: "New tag name"
         required: true
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  id-token: write
 
 jobs:
   goreleaser:
@@ -32,7 +41,6 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: ui/pnpm-lock.yaml
 
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -48,10 +56,10 @@ jobs:
         run: go test ./...
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
           version: latest
           args: release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
