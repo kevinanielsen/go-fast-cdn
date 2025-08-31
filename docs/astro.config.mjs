@@ -6,16 +6,10 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
   site: "https://kevinanielsen.github.io",
   base: "/go-fast-cdn",
-  i18n: {
-    locales: ["en", "es", "da"],
-    defaultLocale: "en",
-    routing: {
-        prefixDefaultLocale: false
-    }
-  },
   integrations: [
     starlight({
       title: "Go-Fast CDN",
+      defaultLocale:"root",
       head: [
         {
           tag: "script",
@@ -28,6 +22,20 @@ export default defineConfig({
       ],
       social: {
         github: "https://github.com/kevinanielsen/go-fast-cdn",
+      },
+      locales: {
+        root: {
+          label: "English",
+          lang: "en",
+        },
+        da: {
+          label: "Dansk",
+          lang: "da",
+        },
+        es: {
+          label: "Español",
+          lang: "es",
+        },
       },
       sidebar: [
         {
