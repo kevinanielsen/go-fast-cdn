@@ -1,0 +1,103 @@
+---
+title: API Reference
+description: A complete reference for the Go-Fast CDN API.
+---
+
+The Go-Fast CDN API is documented using the OpenAPI Specification. This document provides a reference for all available API endpoints.
+
+Our OpenAPI specification is available in the `static/openapi.json` file in the root of the repository.
+
+## API Endpoints
+
+### CDN
+
+#### `GET /api/cdn/size`
+
+Get the total size of the CDN in bytes.
+
+- **Success Response (200)**:
+  - `cdn_size_bytes`: (integer) The size of the CDN in bytes.
+
+#### `GET /api/cdn/doc/all`
+
+Get all documents.
+
+- **Success Response (200)**: A list of documents with their metadata.
+
+#### `GET /api/cdn/doc/{fileName}`
+
+Retrieve metadata about a specific document.
+
+- **Path Parameters**:
+  - `fileName` (string, required): The name of the document.
+- **Responses**:
+  - `200`: Metadata about the document.
+  - `400`: Document filename was not provided.
+  - `404`: Document was not found.
+  - `500`: Unknown error.
+
+#### `GET /api/cdn/image/all`
+
+Get all images.
+
+- **Success Response (200)**: A list of images with their metadata.
+
+#### `GET /api/cdn/image/{fileName}`
+
+Retrieves metadata about a specific image.
+
+- **Path Parameters**:
+  - `fileName` (string, required): The name of the image.
+- **Responses**:
+  - `200`: Metadata about the image.
+  - `400`: Image filename was not provided.
+  - `404`: Image was not found.
+  - `500`: Unknown error.
+
+### Authentication
+
+#### `POST /api/auth/register`
+
+Register a new user.
+
+- **Request Body**:
+  - `username` (string, required)
+  - `password` (string, required)
+- **Responses**:
+  - `201`: User created successfully.
+  - `400`: Invalid request body.
+  - `500`: Could not create user.
+
+#### `POST /api/auth/login`
+
+Login a user.
+
+- **Request Body**:
+  - `username` (string, required)
+  - `password` (string, required)
+- **Responses**:
+  - `200`: Login successful. Returns a JWT token.
+  - `400`: Invalid request body.
+  - `401`: Invalid credentials.
+
+### Admin
+
+These endpoints typically require authentication.
+
+#### `GET /api/admin/users`
+
+Get all users.
+
+- **Responses**:
+  - `200`: A list of all users.
+
+#### `DELETE /api/admin/users/{id}`
+
+Delete a user.
+
+- **Path Parameters**:
+  - `id` (integer, required): The ID of the user to delete.
+- **Responses**:
+  - `200`: User deleted successfully.
+  - `400`: Invalid user ID.
+  - `500`: Could not delete user. 
