@@ -19,9 +19,8 @@ const ContentCard: React.FC<TContentCardProps> = ({
   onSelect,
   isSelecting,
 }) => {
-  const url = `${window.location.protocol}//${
-    window.location.host
-  }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
+  const url = `${window.location.protocol}//${window.location.host
+    }/api/cdn/download/${type === "documents" ? "docs" : "images"}/${file_name}`;
 
   const deleteFile = useDeleteFileMutation(
     type === "documents" ? "doc" : "image"
@@ -70,8 +69,20 @@ const ContentCard: React.FC<TContentCardProps> = ({
                   size="icon"
                   className="text-sky-600"
                   onClick={() => {
-                    navigator.clipboard.writeText(url);
-                    toast.success("clipboard saved");
+                    if (location.protocol == 'https:') {
+                      navigator.clipboard.writeText(url);
+                      toast.success("clipboard saved");
+                    } else {
+                      //https://stackoverflow.com/questions/72237719/not-being-able-to-copy-url-to-clipboard-without-adding-the-protocol-https
+                      const textArea = document.createElement("textarea");
+                      textArea.value = url;
+                      document.body.appendChild(textArea);
+                      textArea.focus({ preventScroll: true });
+                      textArea.select();
+                      document.execCommand('copy');
+                      document.body.removeChild(textArea);
+                      toast.success("clipboard saved");
+                    }
                   }}
                   aria-label="Copy Link"
                   disabled={isSelecting}
