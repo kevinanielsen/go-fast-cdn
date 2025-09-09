@@ -9,6 +9,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Go-Fast CDN",
+      defaultLocale:"root",
       head: [
         {
           tag: "script",
