@@ -60,7 +60,7 @@
     "tw-animate-css": "^1.3.4",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.35.1",
-    "vite": "^5.0.13",
+    "vite": "^6.1.6",
     "wouter": "^2.12.1"
   }
 }
