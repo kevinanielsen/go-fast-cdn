@@ -10,7 +10,7 @@
   </a>
 </p>
 
-# Go-Fast CDN
+# Go-Fast CDN (English)
 
 _"The PocketBase of CDNs" - Me_
 
@@ -52,6 +52,59 @@ Your binary should now be tested, built, and you can run it with `bin/go-fast-cd
 
 `git clone git@github.com:kevinanielsen/go-fast-cdn`
 or `git clone https://github.com/kevinanielsen/go-fast-cdn`
+
+```
+docker-compose up -d
+```
+
+
+
+# 🇫🇷 Go-Fast CDN (Français)
+
+*« Le PocketBase des CDNs » – Moi*
+
+### Un CDN rapide et simple d’utilisation, développé en Go.
+
+Il utilise une base de données SQLite avec GORM et le framework web Gin.
+L’interface utilisateur est construite avec [Vite](https://vite.js/), [React](https://react.dev/) et [wouter](https://github.com/molefrog/wouter).
+
+## Comment l’utiliser
+
+Consultez la documentation sur [kevinanielsen.github.io/go-fast-cdn/](https://kevinanielsen.github.io/go-fast-cdn/)
+
+## Communauté
+
+Rejoignez le [serveur Discord](https://discord.gg/z9uqNtU6yS) pour discuter avec d’autres utilisateurs et contributeurs !
+
+## Développement
+
+### Cloner le dépôt
+
+`git clone git@github.com:kevinanielsen/go-fast-cdn`
+ou
+`git clone https://github.com/kevinanielsen/go-fast-cdn`
+
+### Ajouter les variables d’environnement
+
+Ce projet utilise [dotenv](https://vault.dotenv.org/), et je vous recommande d’en faire autant. <br>
+Vous trouverez plus d’informations sur leur site. <br><br>
+Si vous ne souhaitez pas utiliser dotenv, renommez simplement le fichier `.example.env` en `.env` et complétez les champs nécessaires.
+
+### Compiler le binaire
+
+1. Exécutez `make prep`
+2. Exécutez `make clean`
+3. Exécutez `make test`
+4. Exécutez `make build`
+
+Votre binaire est maintenant testé, compilé et prêt à être lancé avec :
+`bin/go-fast-cdn-linux`, `bin/go-fast-cdn-windows` ou `bin/go-fast-cdn-darwin`
+
+### Démarrage rapide avec Docker
+
+`git clone git@github.com:kevinanielsen/go-fast-cdn`
+ou
+`git clone https://github.com/kevinanielsen/go-fast-cdn`
 
 ```
 docker-compose up -d
