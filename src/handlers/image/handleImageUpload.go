@@ -93,7 +93,7 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 	}
 
 	body := gin.H{
-		"file_url": c.Request.Host + "/download/images/" + savedFilename,
+		"file_url": c.Request.Host + "/api/cdn/download/images/" + savedFilename,
 	}
 
 	c.JSON(http.StatusOK, body)
