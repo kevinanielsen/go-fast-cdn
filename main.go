@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	ini "github.com/kevinanielsen/go-fast-cdn/src/initializers"
@@ -21,6 +18,5 @@ func init() {
 }
 
 func main() {
-	log.Printf("Starting server on port %v", os.Getenv("PORT"))
 	router.Router()
 }
