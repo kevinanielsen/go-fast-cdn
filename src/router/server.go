@@ -32,6 +32,7 @@ func WithMiddleware(middleware gin.HandlerFunc) func(*Server) {
 	}
 }
 
-func (s *Server) Run() {
-	s.Engine.Run(s.Port)
+func (s *Server) Run() error {
+	err := s.Engine.Run(s.Port)
+	return err
 }

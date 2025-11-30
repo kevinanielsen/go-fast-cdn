@@ -1,6 +1,7 @@
 package router
 
 import (
+	"log"
 	"os"
 
 	"github.com/kevinanielsen/go-fast-cdn/src/middleware"
@@ -23,5 +24,6 @@ func Router() {
 	// Add the embedded ui routes
 	ui.AddRoutes(s.Engine)
 
-	s.Run()
+	log.Printf("Starting server on port %v", port)
+	log.Fatal(s.Run())
 }
