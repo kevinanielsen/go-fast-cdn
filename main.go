@@ -11,7 +11,7 @@ import (
 func init() {
 	util.LoadExPath()
 	gin.SetMode("release")
-	ini.LoadEnvVariables(true)
+	ini.LoadEnvVariables(false)
 	ini.CreateFolders()
 	database.ConnectToDB()
 	database.Migrate() // Run database migrations
