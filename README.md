@@ -16,7 +16,9 @@ _"The PocketBase of CDNs" - Me_
 
 ### A fast and easy-to-use CDN, built with Go.
 
-Utilizing an SQLite database with GORM and the Gin web framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
+Supports **SQLite** (default) and **MySQL** databases with GORM and the Gin web framework. UI built with [Vite](https://vite.js/) + [React](https://react.dev/) and [wouter](https://github.com/molefrog/wouter).
+
+📊 **Database Support**: Automatically creates database and tables on startup.
 
 ## How to use
 
