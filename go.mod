@@ -4,6 +4,7 @@ go 1.21.2
 
 require (
 	github.com/anthonynsimon/bild v0.13.0
+	github.com/chai2010/webp v1.4.0
 	github.com/gin-gonic/contrib v0.0.0-20221130124618-7e01895a63f2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/glebarez/sqlite v1.10.0
@@ -14,6 +15,7 @@ require (
 	github.com/pquerna/otp v1.5.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.21.0
+	golang.org/x/image v0.18.0
 	gorm.io/gorm v1.25.5
 )
 

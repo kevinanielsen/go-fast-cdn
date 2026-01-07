@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
+	_ "golang.org/x/image/webp"
 )
 
 func HandleImageMetadata(c *gin.Context) {

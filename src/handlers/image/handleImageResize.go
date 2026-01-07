@@ -2,14 +2,18 @@ package handlers
 
 import (
 	"fmt"
+	"image"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
+	"github.com/chai2010/webp"
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
+	_ "golang.org/x/image/webp"
 )
 
 // TODO: add logging package
@@ -36,37 +40,69 @@ func HandleImageResize(c *gin.Context) {
 	}
 	imgType := strings.Split(filename, ".")[1]
 
-	filepath := filepath.Join(util.ExPath, "uploads", "images", filename)
+	filePath := filepath.Join(util.ExPath, "uploads", "images", filename)
 
-	img, err := imgio.Open(filepath)
+	// Open and decode image (supports webp via golang.org/x/image/webp)
+	file, err := os.Open(filePath)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	img = transform.Resize(img, body.Width, body.Height, transform.Linear)
+	defer file.Close()
 
-	// TODO: a shared accepted image type data could be added to be shared between upload and resize api
-	var encoder imgio.Encoder
-	switch imgType {
-	case "png":
-		encoder = imgio.PNGEncoder()
-	case "jpg", "jpeg":
-		// 75 is the default quality encoding parameter
-		encoder = imgio.JPEGEncoder(75)
-	case "bmp":
-		encoder = imgio.BMPEncoder()
-	default:
+	img, _, err := image.Decode(file)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": fmt.Sprintf("Image of type %s is not supported", imgType),
+			"error": err.Error(),
 		})
 		return
 	}
 
-	if err := imgio.Save(filepath, img, encoder); err != nil {
+	img = transform.Resize(img, body.Width, body.Height, transform.Linear)
+
+	// TODO: a shared accepted image type data could be added to be shared between upload and resize api
+	switch imgType {
+	case "png":
+		if err := imgio.Save(filePath, img, imgio.PNGEncoder()); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+	case "jpg", "jpeg":
+		if err := imgio.Save(filePath, img, imgio.JPEGEncoder(75)); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+	case "bmp":
+		if err := imgio.Save(filePath, img, imgio.BMPEncoder()); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+	case "webp":
+		outFile, err := os.Create(filePath)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		defer outFile.Close()
+		if err := webp.Encode(outFile, img, &webp.Options{Quality: 75}); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+	default:
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+			"error": fmt.Sprintf("Image of type %s is not supported", imgType),
 		})
 		return
 	}
