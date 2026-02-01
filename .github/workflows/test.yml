@@ -33,7 +33,7 @@ jobs:
           cache-dependency-path: ui/pnpm-lock.yaml
 
       - name: Build UI Dashboard
-        run: pnpm --dir=./ui install && pnpm --dir=./ui build
+        run: pnpm --dir=./ui install --no-frozen-lockfile && pnpm --dir=./ui build
 
       - name: Set up Go
         uses: actions/setup-go@v5
