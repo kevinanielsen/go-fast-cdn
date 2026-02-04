@@ -13,11 +13,23 @@ import (
 	_ "golang.org/x/image/webp"
 )
 
-func HandleImageMetadata(c *gin.Context) {
+func (h *ImageHandler) HandleImageMetadata(c *gin.Context) {
 	fileName := c.Param("filename")
 	if fileName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Image name is required",
+		})
+		return
+	}
+
+	img, err := h.repo.GetImageByFileName(fileName)
+	if err == nil && img.FileSize > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"filename":     img.FileName,
+			"download_url": c.Request.Host + "/api/cdn/download/images/" + img.FileName,
+			"file_size":    img.FileSize,
+			"width":        img.Width,
+			"height":       img.Height,
 		})
 		return
 	}
@@ -34,7 +46,7 @@ func HandleImageMetadata(c *gin.Context) {
 		} else {
 			defer file.Close()
 
-			img, _, err := image.Decode(file)
+			decodedImg, _, err := image.Decode(file)
 			if err != nil {
 				log.Printf("Failed to decode image %s: %s\n", fileName, err.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{
@@ -42,8 +54,8 @@ func HandleImageMetadata(c *gin.Context) {
 				})
 				return
 			}
-			width := img.Bounds().Dx()
-			height := img.Bounds().Dy()
+			width := decodedImg.Bounds().Dx()
+			height := decodedImg.Bounds().Dy()
 
 			body := gin.H{
 				"filename":     fileName,

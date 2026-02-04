@@ -69,15 +69,26 @@ func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 	doc := models.Doc{
 		FileName: filteredFilename,
 		Checksum: fileHashBuffer[:],
+		FileSize: fileHeader.Size,
+		MimeType: fileType,
 	}
 
-	docInDatabase := h.repo.GetDocByCheckSum(fileHashBuffer[:])
-	if len(docInDatabase.Checksum) > 0 {
-		c.JSON(http.StatusConflict, gin.H{"error": "File already exists"})
-		return
+	possiblyExists, _ := h.filter.PossiblyExists(fileHashBuffer[:])
+	if possiblyExists {
+		docInDatabase := h.repo.GetDocByCheckSum(fileHashBuffer[:])
+		if len(docInDatabase.Checksum) > 0 {
+			c.JSON(http.StatusConflict, gin.H{"error": "File already exists"})
+			return
+		}
 	}
 
 	savedFileName, err := h.repo.AddDoc(doc)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	h.filter.Add(fileHashBuffer[:])
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return

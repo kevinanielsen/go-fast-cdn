@@ -45,16 +45,16 @@ func (s *Server) AddApiRoutes() {
 	}
 
 	cdn := api.Group("/cdn")
-	docHandler := dHandlers.NewDocHandler(database.NewDocRepo(database.DB))
-	imageHandler := iHandlers.NewImageHandler(database.NewImageRepo(database.DB))
+	docHandler := dHandlers.NewDocHandlerWithFilter(database.NewDocRepo(database.DB), s.Filter)
+	imageHandler := iHandlers.NewImageHandlerWithFilter(database.NewImageRepo(database.DB), s.Filter)
 
 	// Public CDN routes (read-only)
 	{
 		cdn.GET("/size", handlers.GetSizeHandler)
 		cdn.GET("/doc/all", docHandler.HandleAllDocs)
-		cdn.GET("/doc/:filename", dHandlers.HandleDocMetadata)
+		cdn.GET("/doc/:filename", docHandler.HandleDocMetadata)
 		cdn.GET("/image/all", imageHandler.HandleAllImages)
-		cdn.GET("/image/:filename", iHandlers.HandleImageMetadata)
+		cdn.GET("/image/:filename", imageHandler.HandleImageMetadata)
 		cdn.Static("/download/images", util.ExPath+"/uploads/images")
 		cdn.Static("/download/docs", util.ExPath+"/uploads/docs")
 		cdn.GET("/dashboard", handlers.NewDashboardHandler(
