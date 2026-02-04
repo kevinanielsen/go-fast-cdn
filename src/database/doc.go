@@ -29,6 +29,12 @@ func (repo *DocRepo) GetDocByCheckSum(checksum []byte) models.Doc {
 	return entries
 }
 
+func (repo *DocRepo) GetDocByFileName(fileName string) (models.Doc, error) {
+	var doc models.Doc
+	result := repo.DB.Where("file_name = ?", fileName).First(&doc)
+	return doc, result.Error
+}
+
 func (repo *DocRepo) AddDoc(doc models.Doc) (string, error) {
 	result := repo.DB.Create(&doc)
 	if result.Error != nil {
