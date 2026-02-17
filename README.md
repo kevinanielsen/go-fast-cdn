@@ -67,8 +67,8 @@ For production deployments, you can separate admin UI from public CDN serving us
 1. Create proxy host for `admin.cdn.example.com` → `http://your-cdn:8080` (full access)
 2. Create proxy host for `cdn.example.com` → `http://your-cdn:8080`
 3. Edit the `cdn.example.com` proxy host → **Custom Locations** tab → Add:
-   - Location: `/api/cdn/images/` → Forward to `http://your-cdn:8080`
-   - Location: `/api/cdn/docs/` → Forward to `http://your-cdn:8080`
+   - Location: `/api/cdn/download/images/` → Forward to `http://your-cdn:8080`
+   - Location: `/api/cdn/download/docs/` → Forward to `http://your-cdn:8080`
 4. Click the **gear icon ⚙️** (top-right) → In **Custom Nginx Configuration**, add:
    ```
    location / {
