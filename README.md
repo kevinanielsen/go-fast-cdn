@@ -66,7 +66,13 @@ For production deployments, you can separate admin UI from public CDN serving us
 **Nginx Proxy Manager**:
 1. Create proxy host for `admin.cdn.example.com` → `http://your-cdn:8080` (full access)
 2. Create proxy host for `cdn.example.com` → `http://your-cdn:8080`
-3. In the second proxy host, add these Custom Locations:
-   - `/api/cdn/images/` → `http://your-cdn:8080`
-   - `/api/cdn/docs/` → `http://your-cdn:8080`
-4. In Advanced tab, add: `location / { return 403; }` to block other paths
+3. Edit the `cdn.example.com` proxy host → **Custom Locations** tab → Add:
+   - Location: `/api/cdn/images/` → Forward to `http://your-cdn:8080`
+   - Location: `/api/cdn/docs/` → Forward to `http://your-cdn:8080`
+4. Click the **gear icon ⚙️** (top-right) → In **Custom Nginx Configuration**, add:
+   ```
+   location / {
+       return 403;
+   }
+   ```
+5. Save. This blocks admin UI access on `cdn.example.com`
