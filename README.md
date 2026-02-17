@@ -56,3 +56,23 @@ or `git clone https://github.com/kevinanielsen/go-fast-cdn`
 ```
 docker-compose up -d
 ```
+
+### Subdomain Separation (Optional)
+
+For production deployments, you can separate admin UI from public CDN serving using subdomains.
+
+**Nginx**: See `nginx/example.conf` for a basic configuration.
+
+**Nginx Proxy Manager**:
+1. Create proxy host for `admin.cdn.example.com` → `http://your-cdn:8080` (full access)
+2. Create proxy host for `cdn.example.com` → `http://your-cdn:8080`
+3. Edit the `cdn.example.com` proxy host → **Custom Locations** tab → Add:
+   - Location: `/api/cdn/download/images/` → Forward to `http://your-cdn:8080`
+   - Location: `/api/cdn/download/docs/` → Forward to `http://your-cdn:8080`
+4. Click the **gear icon ⚙️** (top-right) → In **Custom Nginx Configuration**, add:
+   ```
+   location / {
+       return 403;
+   }
+   ```
+5. Save. This blocks admin UI access on `cdn.example.com`
