@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
-    "@playwright/test": "^1.40.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.37",
@@ -49,7 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.0",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -60,7 +60,7 @@
     "tw-animate-css": "^1.3.4",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.35.1",
-    "vite": "^5.0.13",
+    "vite": "^7.3.1",
     "wouter": "^2.12.1"
   }
 }
