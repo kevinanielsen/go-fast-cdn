@@ -2,7 +2,7 @@
 FROM node:18.17.0-bullseye-slim AS nodework
 WORKDIR /app
 COPY ui/ .
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 # Build the Go binary
