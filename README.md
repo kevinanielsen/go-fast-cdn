@@ -57,6 +57,30 @@ or `git clone https://github.com/kevinanielsen/go-fast-cdn`
 docker-compose up -d
 ```
 
+### Docker Hub
+
+The easiest way to get started without cloning the repo is to pull the image directly from Docker Hub:
+
+```
+docker pull kevinanielsen/go-fast-cdn
+```
+
+Or pin to a specific version:
+
+```
+docker pull kevinanielsen/go-fast-cdn:0.1.6
+```
+
+Run it with persistent storage:
+
+```
+docker run -d \
+  -p 8080:8080 \
+  -v go_fast_db:/app/db_data \
+  -v go_fast_uploads:/app/uploads \
+  kevinanielsen/go-fast-cdn
+```
+
 ### Subdomain Separation (Optional)
 
 For production deployments, you can separate admin UI from public CDN serving using subdomains.
