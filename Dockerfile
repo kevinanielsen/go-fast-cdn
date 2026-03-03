@@ -1,12 +1,17 @@
 # Build the UI
-FROM node:18.17.0-bullseye-slim AS nodework
+FROM node:24-slim AS nodework
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=TRUE
+RUN corepack enable
+
 WORKDIR /app
 COPY ui/ .
-RUN npm install --legacy-peer-deps
-RUN npm run build
+RUN pnpm install
+RUN pnpm run build
 
 # Build the Go binary
-FROM golang:1.22 AS gowork
+FROM golang:1.25 AS gowork
 WORKDIR /app
 COPY go.mod .
 COPY go.sum .
