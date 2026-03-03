@@ -14,9 +14,10 @@ func init() {
 	ini.LoadEnvVariables(true)
 	ini.CreateFolders()
 	database.ConnectToDB()
-	database.Migrate() // Run database migrations
+	database.Migrate()
 }
 
 func main() {
-	router.Router()
+	filter := ini.InitCache()
+	router.Router(filter)
 }

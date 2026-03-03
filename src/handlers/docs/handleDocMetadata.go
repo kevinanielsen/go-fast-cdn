@@ -12,11 +12,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleDocMetadata(c *gin.Context) {
+func (h *DocHandler) HandleDocMetadata(c *gin.Context) {
 	fileName := c.Param("filename")
 	if fileName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Doc name is required",
+		})
+		return
+	}
+
+	doc, err := h.repo.GetDocByFileName(fileName)
+	if err == nil && doc.FileSize > 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"filename":     doc.FileName,
+			"download_url": c.Request.Host + "/api/cdn/download/docs/" + doc.FileName,
+			"file_size":    doc.FileSize,
 		})
 		return
 	}

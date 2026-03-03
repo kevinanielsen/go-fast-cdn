@@ -29,6 +29,12 @@ func (repo *imageRepo) GetImageByCheckSum(checksum []byte) models.Image {
 	return entries
 }
 
+func (repo *imageRepo) GetImageByFileName(fileName string) (models.Image, error) {
+	var image models.Image
+	result := repo.DB.Where("file_name = ?", fileName).First(&image)
+	return image, result.Error
+}
+
 func (repo *imageRepo) AddImage(image models.Image) (string, error) {
 	result := repo.DB.Create(&image)
 	if result.Error != nil {

@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"crypto/md5"
+	"image"
 	"net/http"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
+	_ "golang.org/x/image/webp"
 )
 
 func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
@@ -67,24 +69,41 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 		return
 	}
 
-	image := models.Image{
+	file.Seek(0, 0)
+	img, _, err := image.Decode(file)
+	var width, height int
+	if err == nil {
+		width = img.Bounds().Dx()
+		height = img.Bounds().Dy()
+	}
+
+	imageModel := models.Image{
 		FileName: filteredFilename,
 		Checksum: fileHashBuffer[:],
+		FileSize: fileHeader.Size,
+		Width:    width,
+		Height:   height,
+		MimeType: fileType,
 	}
 
-	imageInDatabase := h.repo.GetImageByCheckSum(fileHashBuffer[:])
-	if len(imageInDatabase.Checksum) > 0 {
-		c.JSON(http.StatusConflict, gin.H{
-			"error": "File already exists",
-		})
-		return
+	possiblyExists, _ := h.filter.PossiblyExists(fileHashBuffer[:])
+	if possiblyExists {
+		imageInDatabase := h.repo.GetImageByCheckSum(fileHashBuffer[:])
+		if len(imageInDatabase.Checksum) > 0 {
+			c.JSON(http.StatusConflict, gin.H{
+				"error": "File already exists",
+			})
+			return
+		}
 	}
 
-	savedFilename, err := h.repo.AddImage(image)
+	savedFilename, err := h.repo.AddImage(imageModel)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	h.filter.Add(fileHashBuffer[:])
 
 	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+savedFilename)
 	if err != nil {
