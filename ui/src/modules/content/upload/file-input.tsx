@@ -3,7 +3,7 @@ import React from "react";
 
 interface FileInputProps {
   type: "documents" | "images";
-  fileRef: React.RefObject<HTMLInputElement>;
+  fileRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const FileInput = ({ type, fileRef, onFileChange }: FileInputProps) => {
