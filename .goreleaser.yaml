@@ -107,47 +107,63 @@ builds:
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
 
-universal_binaries:
-  - id: darwin
-    ids:
-      - darwin-amd64
-      - darwin-arm64
-    name_template: '{{ .ProjectName }}'
-    replace: true
-
 archives:
-  - id: default
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
-    wrap_in_directory: true
+  - id: linux-amd64
+    builds:
+      - linux-amd64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_linux_amd64"
+    format: zip
     files:
       - LICENSE*
-      - CHANGELOG*
       - README*
 
-nfpms:
-  - id: packages
-    package_name: go-fast-cdn
-    vendor: Kevin Nielsen
-    homepage: https://github.com/kevinanielsen/go-fast-cdn
-    maintainer: Kevin Nielsen <kevin@email.com>
-    description: Fast and simple Open Source CDN
-    license: MIT
-    formats:
-      - deb
-      - rpm
-      - apk
+  - id: linux-arm64
+    builds:
+      - linux-arm64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_linux_arm64"
+    format: zip
+    files:
+      - LICENSE*
+      - README*
+
+  - id: linux-armv7
+    builds:
+      - linux-armv7
+    name_template: "{{ .ProjectName }}_{{ .Version }}_linux_armv7"
+    format: zip
+    files:
+      - LICENSE*
+      - README*
+
+  - id: darwin-amd64
+    builds:
+      - darwin-amd64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_darwin_amd64"
+    format: zip
+    files:
+      - LICENSE*
+      - README*
+
+  - id: darwin-arm64
+    builds:
+      - darwin-arm64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_darwin_arm64"
+    format: zip
+    files:
+      - LICENSE*
+      - README*
+
+  - id: windows-amd64
+    builds:
+      - windows-amd64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_windows_amd64"
+    format: zip
+    files:
+      - LICENSE*
+      - README*
 
 checksum:
-  name_template: 'checksums.txt'
-
-snapshot:
-  version_template: "{{ incpatch .Version }}-next"
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
 
 release:
   target_commitish: '{{ .Commit }}'
@@ -155,11 +171,6 @@ release:
   github:
     owner: kevinanielsen
     name: go-fast-cdn
-  name_template: "{{.ProjectName}}-v{{.Version}}"
-  header: |
-    ## Changes
-
-    Welcome to this new release!
 
 changelog:
   sort: asc
@@ -174,27 +185,6 @@ changelog:
       - Merge remote-tracking branch
       - Merge branch
       - go mod tidy
-  groups:
-    - title: Dependency updates
-      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
-      order: 300
-    - title: "New Features"
-      regexp: '^.*?feat(\(.+\))??!?:.+$'
-      order: 100
-    - title: "Security updates"
-      regexp: '^.*?sec(\(.+\))??!?:.+$'
-      order: 150
-    - title: "Bug fixes"
-      regexp: '^.*?fix(\(.+\))??!?:.+$'
-      order: 200
-    - title: "Documentation updates"
-      regexp: ^.*?doc(\(.+\))??!?:.+$
-      order: 400
-    - title: "Build process updates"
-      regexp: ^.*?build(\(.+\))??!?:.+$
-      order: 400
-    - title: Other work
-      order: 9999
 
 metadata:
   mod_timestamp: '{{ .CommitTimestamp }}'
