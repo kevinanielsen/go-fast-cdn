@@ -100,3 +100,52 @@ For production deployments, you can separate admin UI from public CDN serving us
    }
    ```
 5. Save. This blocks admin UI access on `cdn.example.com`
+
+## Releasing
+
+This project uses [goreleaser-cross](https://github.com/goreleaser/goreleaser-cross) v1.27.0 to support CGO cross-compilation, which is required for WEBP image processing across all platforms.
+
+**Note**: We use v1.27.0 which provides stable cross-compilation support with updated repositories. Earlier versions (v1.21.5) had outdated Ubuntu repositories that caused package installation failures.
+
+### Prerequisites for Releases
+
+- Docker installed and running
+- GitHub token with appropriate permissions
+- Push access to the repository
+
+### Release Commands
+
+```bash
+# Test the release configuration
+make test-release
+
+# Dry run (test without publishing)
+make release-dry-run
+
+# Create and publish a release (requires GITHUB_TOKEN)
+export GITHUB_TOKEN=your_github_token
+make release
+```
+
+### Why goreleaser-cross?
+
+This project requires CGO for WEBP support via:
+- `github.com/chai2010/webp` (WEBP encoding)
+- `golang.org/x/image/webp` (WEBP decoding)
+
+Standard Go cross-compilation with `CGO_ENABLED=0` would disable WEBP functionality. goreleaser-cross provides the necessary cross-compilation toolchains to build CGO-enabled binaries for all supported platforms while maintaining WEBP support.
+
+### Supported Release Platforms
+
+- **Linux**: amd64, arm64, armv7
+- **macOS**: amd64 (Intel), arm64 (M1/M2) - Universal binary
+- **Windows**: amd64
+
+All platforms include full WEBP support through CGO compilation using goreleaser-cross v1.27.0.
+
+### Package Formats
+
+In addition to binary archives, Linux platforms also provide:
+- **Debian**: .deb packages
+- **RedHat**: .rpm packages  
+- **Alpine**: .apk packages
