@@ -46,25 +46,6 @@ jobs:
         with:
           go-version: ">=1.21.3"
 
-      - name: Install libwebp for CGO builds
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebp-dev
-
-          # Add ARM64 architecture for cross-compilation
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-
-          # Install cross-compilation toolchain
-          sudo apt-get install -y gcc-aarch64-linux-gnu
-
-          # Install libwebp for ARM64
-          sudo apt-get install -y libwebp-dev:arm64
-
-          # Set up cross-compilation environment variables
-          echo "CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
-          echo "CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++" >> $GITHUB_ENV
-
       - name: Build UI Dashboard
         run: pnpm --dir=./ui install && pnpm --dir=./ui build
 

@@ -7,34 +7,24 @@ before:
     - go mod tidy
 
 builds:
-  - id: "linux"
-    env:
-      - CGO_ENABLED=1
-    binary: go-fast-cdn
-    goos:
-      - linux
-    goarch:
-      - amd64
-      - arm64
-    ldflags:
-      - -s -w
-    tags:
-      - webp
-
-  - id: "other"
-    env:
+  - env:
       - CGO_ENABLED=0
     binary: go-fast-cdn
     goos:
+      - linux
       - windows
       - darwin
     goarch:
       - amd64
       - arm64
-    ldflags:
-      - -s -w
-    tags:
-      - nowebp
+      - arm
+    goarm:
+      - 7
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: darwin
+        goarch: arm
 
 release:
   target_commitish: '{{ .Commit }}'
