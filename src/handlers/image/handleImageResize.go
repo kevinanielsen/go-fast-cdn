@@ -10,7 +10,8 @@ import (
 
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/anthonynsimon/bild/transform"
-	"github.com/chai2010/webp"
+
+
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 	_ "golang.org/x/image/webp"
@@ -72,7 +73,7 @@ func HandleImageResize(c *gin.Context) {
 			return
 		}
 	case "jpg", "jpeg":
-		if err := imgio.Save(filePath, img, imgio.JPEGEncoder(75)); err != nil {
+		if err := imgio.Save(filePath, img, imgio.JPEGEncoder(80)); err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
@@ -86,15 +87,13 @@ func HandleImageResize(c *gin.Context) {
 			return
 		}
 	case "webp":
-		outFile, err := os.Create(filePath)
-		if err != nil {
+		if !isWebPEncodingSupported() {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
+				"error": "WebP encoding not supported in this build. Use Linux build for full WebP support.",
 			})
 			return
 		}
-		defer outFile.Close()
-		if err := webp.Encode(outFile, img, &webp.Options{Quality: 75}); err != nil {
+		if err := encodeWebP(filePath, img); err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
