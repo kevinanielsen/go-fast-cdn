@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/md5"
 	"image"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -69,7 +70,10 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 		return
 	}
 
-	file.Seek(0, 0)
+	if _, err := file.Seek(0, 0); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to read file: %s", err.Error())
+		return
+	}
 	img, _, err := image.Decode(file)
 	var width, height int
 	if err == nil {
@@ -86,7 +90,11 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 		MimeType: fileType,
 	}
 
-	possiblyExists, _ := h.filter.PossiblyExists(fileHashBuffer[:])
+	possiblyExists, err := h.filter.PossiblyExists(fileHashBuffer[:])
+	if err != nil {
+		log.Printf("cache pre-check failed for %s: %v; falling back to DB check", filteredFilename, err)
+		possiblyExists = true
+	}
 	if possiblyExists {
 		imageInDatabase := h.repo.GetImageByCheckSum(fileHashBuffer[:])
 		if len(imageInDatabase.Checksum) > 0 {
@@ -99,11 +107,17 @@ func (h *ImageHandler) HandleImageUpload(c *gin.Context) {
 
 	savedFilename, err := h.repo.AddImage(imageModel)
 	if err != nil {
+		if util.IsDuplicateError(err) {
+			c.JSON(http.StatusConflict, gin.H{"error": "File already exists"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	h.filter.Add(fileHashBuffer[:])
+	if err := h.filter.Add(fileHashBuffer[:]); err != nil {
+		log.Printf("cache add failed for %s: %v", filteredFilename, err)
+	}
 
 	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/images/"+savedFilename)
 	if err != nil {

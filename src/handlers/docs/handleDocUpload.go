@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"crypto/md5"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -73,7 +74,11 @@ func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 		MimeType: fileType,
 	}
 
-	possiblyExists, _ := h.filter.PossiblyExists(fileHashBuffer[:])
+	possiblyExists, err := h.filter.PossiblyExists(fileHashBuffer[:])
+	if err != nil {
+		log.Printf("cache pre-check failed for %s: %v; falling back to DB check", filteredFilename, err)
+		possiblyExists = true
+	}
 	if possiblyExists {
 		docInDatabase := h.repo.GetDocByCheckSum(fileHashBuffer[:])
 		if len(docInDatabase.Checksum) > 0 {
@@ -84,14 +89,16 @@ func (h *DocHandler) HandleDocUpload(c *gin.Context) {
 
 	savedFileName, err := h.repo.AddDoc(doc)
 	if err != nil {
+		if util.IsDuplicateError(err) {
+			c.JSON(http.StatusConflict, gin.H{"error": "File already exists"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	h.filter.Add(fileHashBuffer[:])
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
-		return
+	if err := h.filter.Add(fileHashBuffer[:]); err != nil {
+		log.Printf("cache add failed for %s: %v", filteredFilename, err)
 	}
 
 	err = c.SaveUploadedFile(fileHeader, util.ExPath+"/uploads/docs/"+savedFileName)
