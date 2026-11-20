@@ -11,6 +11,7 @@ import (
 	dHandlers "github.com/kevinanielsen/go-fast-cdn/src/handlers/docs"
 	iHandlers "github.com/kevinanielsen/go-fast-cdn/src/handlers/image"
 	"github.com/kevinanielsen/go-fast-cdn/src/middleware"
+	"github.com/kevinanielsen/go-fast-cdn/src/models"
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 )
 
@@ -32,6 +33,8 @@ func (s *Server) AddApiRoutes() {
 
 	// Initialize auth middleware
 	authMiddleware := middleware.NewAuthMiddleware()
+	apiTokenRepo := database.NewAPITokenRepo(database.DB)
+	apiTokenHandler := authHandlers.NewAPITokenHandler(apiTokenRepo)
 
 	// Protected auth routes
 	authProtected := api.Group("/auth")
@@ -42,6 +45,9 @@ func (s *Server) AddApiRoutes() {
 		authProtected.PUT("/change-email", authHandler.ChangeEmail)
 		authProtected.POST("/2fa", authHandler.Setup2FA)
 		authProtected.POST("/2fa/verify", authHandler.Verify2FA)
+		authProtected.GET("/profile/api-tokens", apiTokenHandler.List)
+		authProtected.POST("/profile/api-tokens", apiTokenHandler.Create)
+		authProtected.DELETE("/profile/api-tokens/:id", apiTokenHandler.Revoke)
 	}
 
 	cdn := api.Group("/cdn")
@@ -65,29 +71,26 @@ func (s *Server) AddApiRoutes() {
 		).GetDashboard)
 	}
 
-	// Protected CDN routes (require authentication)
-	cdnProtected := cdn.Group("/")
-	cdnProtected.Use(authMiddleware.RequireAuth())
-
-	upload := cdnProtected.Group("upload")
+	// Protected CDN routes accept a session JWT or an API token for the operation.
+	upload := cdn.Group("/upload", authMiddleware.RequireCDNAuth(apiTokenRepo, models.ScopeUpload))
 	{
 		upload.POST("/image", imageHandler.HandleImageUpload)
 		upload.POST("/doc", docHandler.HandleDocUpload)
 	}
 
-	delete := cdnProtected.Group("delete")
+	delete := cdn.Group("/delete", authMiddleware.RequireCDNAuth(apiTokenRepo, models.ScopeDelete))
 	{
 		delete.DELETE("/image/:filename", imageHandler.HandleImageDelete)
 		delete.DELETE("/doc/:filename", docHandler.HandleDocDelete)
 	}
 
-	rename := cdnProtected.Group("rename")
+	rename := cdn.Group("/rename", authMiddleware.RequireCDNAuth(apiTokenRepo, models.ScopeRename))
 	{
 		rename.PUT("/image", imageHandler.HandleImageRename)
 		rename.PUT("/doc", docHandler.HandleDocsRename)
 	}
 
-	resize := cdnProtected.Group("resize")
+	resize := cdn.Group("/resize", authMiddleware.RequireCDNAuth(apiTokenRepo, models.ScopeResize))
 	{
 		resize.PUT("/image", iHandlers.HandleImageResize)
 	}

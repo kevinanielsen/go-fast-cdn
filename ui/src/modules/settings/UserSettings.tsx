@@ -26,6 +26,7 @@ import {
 } from "./schema";
 import TwoFactorSection from "./two-factor-section";
 import TwoFactorDialogs from "./two-factor-modal";
+import APITokenSection from "./api-token-section";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService, cdnApiClient } from "@/services/authService";
 
@@ -89,7 +90,7 @@ const UserSettings: React.FC = () => {
       current_password: string;
       new_password: string;
     }) => {
-      return cdnApiClient.put("/auth/change-password", payload);
+      return authService.changePassword(payload);
     },
     onSuccess: () => {
       toast.success("Password updated successfully!");
@@ -184,7 +185,7 @@ const UserSettings: React.FC = () => {
   );
 
   return (
-    <MainContentWrapper title="User Settings" className="flex flex-row gap-28">
+    <MainContentWrapper title="User Settings" className="flex flex-col gap-10 md:flex-row md:gap-28">
       <section className="space-y-8 flex-1 max-w-sm">
         <Form {...emailForm}>
           <form
@@ -308,6 +309,9 @@ const UserSettings: React.FC = () => {
           onSubmit={handleSubmitTwoFA}
           isDirty={twoFaForm.formState.isDirty}
         />
+        {user && (
+          <APITokenSection key={user.id} userId={user.id} twoFactorEnabled={!!user.is_2fa_enabled} />
+        )}
       </section>
       <TwoFactorDialogs
         setupModalOpen={twoFaSetupModalOpen}

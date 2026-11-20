@@ -3,8 +3,8 @@ package auth
 import (
 	"log"
 	"net/http"
-	"time"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -103,7 +103,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	configRepo := database.NewConfigRepo(database.DB)
 	userCount, err := h.userRepo.CountUsers()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check user count"})  
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check user count"})
 		return
 	}
 	if userCount > 0 {
@@ -250,7 +250,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	// Update last login
 	now := time.Now()
 	user.LastLogin = &now
-	h.userRepo.UpdateUser(user)
+	if err := h.userRepo.UpdateLastLogin(user.ID, now); err != nil {
+		log.Printf("Could not record last login for user %d", user.ID)
+	}
 
 	// Generate tokens
 	accessTokenTTL := defaultAccessTokenTTL
@@ -317,7 +319,7 @@ func (h *AuthHandler) RefreshToken(c *gin.Context) {
 		}
 	}
 	tokenPair, err := h.jwtService.GenerateTokenPair(&session.User, accessTokenTTL)
-	
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate tokens"})
 		return
@@ -416,20 +418,17 @@ func (h *AuthHandler) ChangePassword(c *gin.Context) {
 		return
 	}
 
+	previousHash := userModel.PasswordHash
 	// Hash new password
 	if err := userModel.HashPassword(req.NewPassword); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process new password"})
 		return
 	}
 
-	// Update user
-	if err := h.userRepo.UpdateUser(userModel); err != nil {
+	if err := h.userRepo.ChangePassword(userModel.ID, previousHash, userModel.PasswordHash); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update password"})
 		return
 	}
-
-	// Revoke all sessions to force re-login
-	h.userRepo.RevokeAllUserSessions(userModel.ID)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
 }

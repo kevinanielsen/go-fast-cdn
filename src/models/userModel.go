@@ -45,6 +45,8 @@ type UserRepository interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id uint) (*User, error)
 	UpdateUser(user *User) error
+	UpdateLastLogin(userID uint, lastLogin time.Time) error
+	ChangePassword(userID uint, previousHash, newHash string) error
 	DeleteUser(id uint) error
 	GetAllUsers() ([]User, error)
 	CountUsers() (int64, error)

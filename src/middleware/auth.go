@@ -1,13 +1,17 @@
 package middleware
 
 import (
+	"errors"
+	"log"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/auth"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	"github.com/kevinanielsen/go-fast-cdn/src/models"
+	"gorm.io/gorm"
 )
 
 type AuthMiddleware struct {
@@ -56,14 +60,57 @@ func (a *AuthMiddleware) RequireAuth() gin.HandlerFunc {
 			return
 		}
 
-		// Set user information in context for use in handlers
-		c.Set("user_id", user.ID)
-		c.Set("user_email", user.Email)
-		c.Set("user_role", user.Role)
-		c.Set("user", user)
+		setUserContext(c, user)
 
 		c.Next()
 	}
+}
+
+// RequireCDNAuth accepts a scoped API token or the existing browser access JWT.
+func (a *AuthMiddleware) RequireCDNAuth(repo *database.APITokenRepo, scope models.APITokenScope) gin.HandlerFunc {
+	requireJWT := a.RequireAuth()
+	return func(c *gin.Context) {
+		scheme, raw, hasScheme := strings.Cut(c.GetHeader("Authorization"), " ")
+		digest, valid := auth.APITokenDigest(raw)
+		if !hasScheme || !strings.EqualFold(scheme, "Bearer") || !valid {
+			requireJWT(c)
+			return
+		}
+
+		ctx := c.Request.Context()
+		token, err := repo.FindActive(ctx, digest)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			return
+		}
+		if err != nil {
+			apiTokenAuthUnavailable(c)
+			return
+		}
+		if !slices.Contains(token.Scopes, scope) {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Insufficient API token scope"})
+			return
+		}
+		if err := repo.RecordUse(ctx, token); err != nil {
+			apiTokenAuthUnavailable(c)
+			return
+		}
+
+		c.Set("user_id", token.UserID)
+		c.Next()
+	}
+}
+
+func apiTokenAuthUnavailable(c *gin.Context) {
+	log.Print("API token authentication storage operation failed")
+	c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"error": "Token authentication unavailable"})
+}
+
+func setUserContext(c *gin.Context, user *models.User) {
+	c.Set("user_id", user.ID)
+	c.Set("user_email", user.Email)
+	c.Set("user_role", user.Role)
+	c.Set("user", user)
 }
 
 // RequireRole middleware that checks if user has required role
@@ -122,11 +169,7 @@ func (a *AuthMiddleware) OptionalAuth() gin.HandlerFunc {
 			return
 		}
 
-		// Set user information in context if authentication succeeds
-		c.Set("user_id", user.ID)
-		c.Set("user_email", user.Email)
-		c.Set("user_role", user.Role)
-		c.Set("user", user)
+		setUserContext(c, user)
 
 		c.Next()
 	}
