@@ -84,7 +84,9 @@ Login a user.
 
 Open the profile menu and go to **Settings → API tokens**. Give the token a name,
 select one or more permissions and an expiration (7, 30, or 90 days), then confirm your
-password and, if enabled, your authenticator code. The token is shown only once.
+password and, if enabled, your authenticator code. Setting up 2FA again requires
+first disabling it with a valid code from your current authenticator.
+The token is shown only once.
 Store it in a secrets manager or your CI platform's secret store, not in source
 control, URLs, or logs. The database stores a SHA-256 digest, not the token.
 

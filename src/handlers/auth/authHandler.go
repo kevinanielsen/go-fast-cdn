@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -487,7 +488,12 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 
 	log.Printf("[DEBUG] Setup2FA - Request - Enable: %t, TokenProvided: %t", req.Enable, req.Token != "")
 
+	is2FAEnabled := user.Is2FAEnabled != nil && *user.Is2FAEnabled
 	if req.Enable {
+		if is2FAEnabled {
+			c.JSON(http.StatusConflict, gin.H{"error": "2FA is already enabled. Verify your current code to disable it before setting it up again."})
+			return
+		}
 		log.Printf("[DEBUG] Setup2FA - Enabling 2FA for user: %d", userID)
 		// Generate secret and QR code URL
 		secret, otpauthURL, err := auth.GenerateTOTPSecret(user.Email)
@@ -499,9 +505,7 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 		log.Printf("[DEBUG] Setup2FA - Generated secret for user: %d", userID)
 
 		// Save secret to user (but not enabled yet)
-		if err := h.userRepo.Set2FA(userID, secret, false); err != nil {
-			log.Printf("[ERROR] Setup2FA - Failed to save secret: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save secret"})
+		if !h.update2FA(c, user, secret, false) {
 			return
 		}
 		log.Printf("[DEBUG] Setup2FA - Secret saved for user: %d", userID)
@@ -514,7 +518,6 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 	if !req.Enable {
 		log.Printf("[DEBUG] Setup2FA - Disabling 2FA for user: %d", userID)
 		// Check if user has 2FA enabled
-		is2FAEnabled := user.Is2FAEnabled != nil && *user.Is2FAEnabled
 		if !is2FAEnabled {
 			log.Printf("[DEBUG] Setup2FA - 2FA not enabled for user: %d", userID)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "2FA is not enabled"})
@@ -544,9 +547,7 @@ func (h *AuthHandler) Setup2FA(c *gin.Context) {
 		log.Printf("[DEBUG] Setup2FA - Token validated, proceeding to disable 2FA for user: %d", userID)
 
 		// Disable 2FA
-		if err := h.userRepo.Set2FA(userID, "", false); err != nil {
-			log.Printf("[ERROR] Setup2FA - Failed to disable 2FA: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to disable 2FA"})
+		if !h.update2FA(c, user, "", false) {
 			return
 		}
 
@@ -606,14 +607,25 @@ func (h *AuthHandler) Verify2FA(c *gin.Context) {
 	log.Printf("[DEBUG] Verify2FA - Token validated, enabling 2FA for user: %d", userID)
 
 	// Enable 2FA
-	if err := h.userRepo.Set2FA(userID, *user.TwoFASecret, true); err != nil {
-		log.Printf("[ERROR] Verify2FA - Failed to enable 2FA: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to enable 2FA"})
+	if !h.update2FA(c, user, *user.TwoFASecret, true) {
 		return
 	}
 
 	log.Printf("[DEBUG] Verify2FA - 2FA successfully enabled for user: %d", userID)
 	c.JSON(http.StatusOK, gin.H{"message": "2FA enabled"})
+}
+
+func (h *AuthHandler) update2FA(c *gin.Context, expected *models.User, secret string, enabled bool) bool {
+	if err := h.userRepo.Set2FA(expected, secret, enabled); err != nil {
+		if errors.Is(err, database.ErrCredentialsChanged) {
+			c.JSON(http.StatusConflict, gin.H{"error": "2FA settings changed. Reload your profile and try again."})
+		} else {
+			log.Printf("[ERROR] Failed to update 2FA settings for user %d", expected.ID)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update 2FA settings"})
+		}
+		return false
+	}
+	return true
 }
 
 // Helper function to convert user model to response
