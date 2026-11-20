@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +14,24 @@ import (
 )
 
 var testDataFile []byte = []byte(`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`)
+
+func setupIsolatedTestDatabase(t *testing.T) {
+	t.Helper()
+	previousPath, previousDB := util.ExPath, database.DB
+	util.ExPath = t.TempDir()
+	database.ConnectToDB()
+	testDB := database.DB
+	t.Cleanup(func() {
+		sqlDB, err := testDB.DB()
+		if err != nil {
+			t.Error(err)
+		} else if err := sqlDB.Close(); err != nil {
+			t.Error(err)
+		}
+		database.DB = previousDB
+		util.ExPath = previousPath
+	})
+}
 
 func TestHandleDocUpload_NoError(t *testing.T) {
 	// create tmpFile
@@ -35,15 +51,7 @@ func TestHandleDocUpload_NoError(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
@@ -71,15 +79,7 @@ func TestHandleDocUpload_ReadFailed_NoFile(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
@@ -108,15 +108,7 @@ func TestHandleDocUpload_ReadFailed_EOF(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
@@ -145,15 +137,7 @@ func TestHandleDocUpload_InvalidType(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
@@ -182,15 +166,7 @@ func TestHandleDocUpload_InvalidFilename(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	docHandler := NewDocHandler(database.NewDocRepo(database.DB))
@@ -212,15 +188,7 @@ func TestHandleDocUpload_FileExist(t *testing.T) {
 	}()
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// init request
 	w := httptest.NewRecorder()
