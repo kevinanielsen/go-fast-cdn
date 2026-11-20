@@ -1,12 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +12,24 @@ import (
 	"github.com/kevinanielsen/go-fast-cdn/src/util"
 	"github.com/stretchr/testify/require"
 )
+
+func setupIsolatedTestDatabase(t *testing.T) {
+	t.Helper()
+	previousPath, previousDB := util.ExPath, database.DB
+	util.ExPath = t.TempDir()
+	database.ConnectToDB()
+	testDB := database.DB
+	t.Cleanup(func() {
+		sqlDB, err := testDB.DB()
+		if err != nil {
+			t.Error(err)
+		} else if err := sqlDB.Close(); err != nil {
+			t.Error(err)
+		}
+		database.DB = previousDB
+		util.ExPath = previousPath
+	})
+}
 
 func TestHandleImageUpload_NoError(t *testing.T) {
 	// create tmpFile
@@ -34,15 +50,7 @@ func TestHandleImageUpload_NoError(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
@@ -71,15 +79,7 @@ func TestHandleImageUpload_ReadFailed_NoFile(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
@@ -108,15 +108,7 @@ func TestHandleImageUpload_ReadFailed_EOF(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
@@ -145,15 +137,7 @@ func TestHandleImageUpload_InvalidType(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
@@ -183,15 +167,7 @@ func TestHandleImageUpload_InvalidFilename(t *testing.T) {
 	c.Request.Header.Add("Content-Type", writer.FormDataContentType())
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// handling
 	imageHandler := NewImageHandler(database.NewImageRepo(database.DB))
@@ -214,15 +190,7 @@ func TestHandleImageUpload_FileExist(t *testing.T) {
 	}()
 
 	// init database
-	util.ExPath = os.TempDir()
-	database.ConnectToDB()
-	defer func() {
-		filePath := fmt.Sprintf("%s/%s/%s", util.ExPath, database.DbFolder, database.DbName)
-		err := os.Remove(filePath)
-		if err != nil {
-			t.Error(err)
-		}
-	}()
+	setupIsolatedTestDatabase(t)
 
 	// init request
 	w := httptest.NewRecorder()
