@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -68,25 +69,29 @@ func TestAPITokenLifecycle(t *testing.T) {
 		return user, jwt
 	}
 	owner, ownerJWT := newUser("owner@example.test", true)
-	_, otherJWT := newUser("other@example.test", false)
+	other, otherJWT := newUser("other@example.test", false)
 
-	request := func(method, path, bearer, body string, status int) *httptest.ResponseRecorder {
-		t.Helper()
-		req := httptest.NewRequest(method, path, strings.NewReader(body))
-		if bearer != "" {
-			req.Header.Set("Authorization", "Bearer "+bearer)
+	requester := func(t *testing.T) func(string, string, string, string, int) *httptest.ResponseRecorder {
+		return func(method, path, bearer, body string, status int) *httptest.ResponseRecorder {
+			t.Helper()
+			req := httptest.NewRequest(method, path, strings.NewReader(body))
+			if bearer != "" {
+				req.Header.Set("Authorization", "Bearer "+bearer)
+			}
+			req.Header.Set("Content-Type", "application/json")
+			res := httptest.NewRecorder()
+			server.Engine.ServeHTTP(res, req)
+			if res.Code != status {
+				t.Fatalf("%s %s: got status %d, want %d", method, path, res.Code, status)
+			}
+			return res
 		}
-		req.Header.Set("Content-Type", "application/json")
-		res := httptest.NewRecorder()
-		server.Engine.ServeHTTP(res, req)
-		if res.Code != status {
-			t.Fatalf("%s %s: got status %d, want %d", method, path, res.Code, status)
-		}
-		return res
 	}
+	request := requester(t)
 
 	const tokens = "/api/auth/profile/api-tokens"
 	const upload = "/api/cdn/upload/doc"
+	const twoFA = "/api/auth/2fa"
 	currentCode := func() string {
 		t.Helper()
 		code, err := totp.GenerateCode(*owner.TwoFASecret, time.Now())
@@ -119,7 +124,61 @@ func TestAPITokenLifecycle(t *testing.T) {
 		return data
 	}
 
-	request(http.MethodPost, tokens, ownerJWT, tokenBody(password, "", 7), http.StatusForbidden)
+	t.Run("setup preserves active factor and token requirement", func(t *testing.T) {
+		request := requester(t)
+		response := request(http.MethodPost, twoFA, ownerJWT, `{"enable":true}`, http.StatusConflict)
+		var details map[string]json.RawMessage
+		if err := json.Unmarshal(response.Body.Bytes(), &details); err != nil {
+			t.Fatal(err)
+		}
+		if details["secret"] != nil || details["otpauth_url"] != nil {
+			t.Fatal("rejected setup exposed enrollment credentials")
+		}
+		var updated models.User
+		if err := db.First(&updated, owner.ID).Error; err != nil {
+			t.Fatal(err)
+		}
+		if updated.Is2FAEnabled == nil || !*updated.Is2FAEnabled ||
+			updated.TwoFASecret == nil || *updated.TwoFASecret != *owner.TwoFASecret {
+			t.Fatal("rejected setup changed the active factor")
+		}
+		request(http.MethodPost, tokens, ownerJWT, tokenBody(password, "", 7), http.StatusForbidden)
+	})
+
+	t.Run("enrollment and verified disable still work", func(t *testing.T) {
+		request := requester(t)
+		response := request(http.MethodPost, twoFA, otherJWT, `{"enable":true}`, http.StatusOK)
+		var enrollment struct {
+			Secret string `json:"secret"`
+		}
+		if err := json.Unmarshal(response.Body.Bytes(), &enrollment); err != nil {
+			t.Fatal(err)
+		}
+		if enrollment.Secret == "" {
+			t.Fatal("setup did not return a pending secret")
+		}
+		var pending models.User
+		if err := db.First(&pending, other.ID).Error; err != nil {
+			t.Fatal(err)
+		}
+		code, err := totp.GenerateCode(enrollment.Secret, time.Now())
+		if err != nil {
+			t.Fatal(err)
+		}
+		request(http.MethodPost, twoFA+"/verify", otherJWT, fmt.Sprintf(`{"token":%q}`, code), http.StatusOK)
+		if err := database.NewUserRepo(db).Set2FA(&pending, enrollment.Secret, false); !errors.Is(err, database.ErrCredentialsChanged) {
+			t.Fatal("stale enrollment state must not overwrite an active factor")
+		}
+		request(http.MethodPost, twoFA, otherJWT, fmt.Sprintf(`{"enable":false,"token":%q}`, code), http.StatusOK)
+		var disabled models.User
+		if err := db.First(&disabled, other.ID).Error; err != nil {
+			t.Fatal(err)
+		}
+		if disabled.Is2FAEnabled == nil || *disabled.Is2FAEnabled || disabled.TwoFASecret != nil {
+			t.Fatal("verified disable did not clear the factor")
+		}
+	})
+
 	request(http.MethodPost, tokens, ownerJWT, tokenBody("wrong password", currentCode(), 7), http.StatusForbidden)
 	request(http.MethodPost, tokens, ownerJWT, tokenBody(password, currentCode(), 91), http.StatusBadRequest)
 	for _, invalidScopes := range []string{

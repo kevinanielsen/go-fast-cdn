@@ -62,7 +62,7 @@ type UserRepository interface {
 	GetPasswordResetByToken(token string) (*PasswordReset, error)
 	MarkPasswordResetAsUsed(resetID uint) error
 	UpdateUserEmail(userID uint, newEmail string) error
-	Set2FA(userID uint, secret string, enabled bool) error
+	Set2FA(expected *User, secret string, enabled bool) error
 }
 
 // HashPassword hashes a plain text password
