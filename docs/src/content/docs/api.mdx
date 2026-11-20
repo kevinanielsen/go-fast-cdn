@@ -80,6 +80,56 @@ Login a user.
   - `400`: Invalid request body.
   - `401`: Invalid credentials.
 
+### Personal API tokens
+
+Open the profile menu and go to **Settings → API tokens**. Give the token a name,
+select one or more permissions and an expiration (7, 30, or 90 days), then confirm your
+password and, if enabled, your authenticator code. The token is shown only once.
+Store it in a secrets manager or your CI platform's secret store, not in source
+control, URLs, or logs. The database stores a SHA-256 digest, not the token.
+
+Send the token over HTTPS in the `Authorization: Bearer <token>` header:
+
+```sh
+curl --fail-with-body \
+  -H "Authorization: Bearer ${GO_FAST_CDN_TOKEN}" \
+  -F "doc=@report.pdf" \
+  https://cdn.example.com/api/cdn/upload/doc
+```
+
+| Permission | Allowed operations |
+| --- | --- |
+| `cdn:upload` | `POST /api/cdn/upload/doc`, `POST /api/cdn/upload/image` |
+| `cdn:rename` | `PUT /api/cdn/rename/doc`, `PUT /api/cdn/rename/image` |
+| `cdn:resize` | `PUT /api/cdn/resize/image` |
+| `cdn:delete` | `DELETE /api/cdn/delete/doc/{filename}`, `DELETE /api/cdn/delete/image/{filename}` |
+
+These permissions apply to the instance's shared CDN, not just files uploaded
+by the token owner. Tokens cannot access profile, token management, or admin
+routes. Public CDN reads do not need a token. Protected CDN requests return
+`401` for invalid, expired or revoked tokens, and `403` for a valid token with
+the wrong permission.
+
+Settings shows token status, expiry, and last use (recorded at most once every
+five minutes). Each account can have up to 10 active tokens. To rotate a token,
+create a replacement with the needed permissions, update your automation, then
+revoke the old token. Revoke a suspected leaked token immediately. Changing
+your password revokes all your API tokens; deleting your account removes them.
+
+Management endpoints require a browser-session access JWT, not a personal token:
+
+- `GET /api/auth/profile/api-tokens`: list your token metadata.
+- `POST /api/auth/profile/api-tokens`: send `name`, `scopes` (a non-empty array
+  of unique permission strings), `expires_in_days`,
+  `current_password` and, when enabled, `two_fa_token`. On `201`, the response
+  contains `token` and `metadata`.
+- `DELETE /api/auth/profile/api-tokens/{id}`: revoke your token (`204`).
+
+For production, configure a strong random `JWT_SECRET` rather than the
+development default. Terminate HTTPS at your reverse proxy, rate-limit token
+creation requests, and keep authorization headers and request/response bodies
+out of logs.
+
 ### Admin
 
 These endpoints typically require authentication.

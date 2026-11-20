@@ -67,11 +67,41 @@ func (r *UserRepo) GetUserByID(id uint) (*models.User, error) {
 }
 
 func (r *UserRepo) UpdateUser(user *models.User) error {
-	return r.db.Save(user).Error
+	return r.db.Model(user).Select("email", "role", "is_verified").Updates(user).Error
+}
+
+func (r *UserRepo) UpdateLastLogin(userID uint, lastLogin time.Time) error {
+	return r.db.Model(&models.User{}).Where("id = ?", userID).
+		UpdateColumn("last_login", lastLogin).Error
 }
 
 func (r *UserRepo) DeleteUser(id uint) error {
-	return r.db.Delete(&models.User{}, id).Error
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_id = ?", id).Delete(&models.APIToken{}).Error; err != nil {
+			return err
+		}
+		return tx.Delete(&models.User{}, id).Error
+	})
+}
+
+func (r *UserRepo) ChangePassword(userID uint, previousHash, newHash string) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		updated := tx.Model(&models.User{}).
+			Where("id = ? AND password_hash = ? AND deleted_at IS NULL", userID, previousHash).
+			Update("password_hash", newHash)
+		if updated.Error != nil {
+			return updated.Error
+		}
+		if updated.RowsAffected == 0 {
+			return ErrCredentialsChanged
+		}
+		if err := tx.Model(&models.UserSession{}).Where("user_id = ?", userID).
+			Update("is_revoked", true).Error; err != nil {
+			return err
+		}
+		return tx.Model(&models.APIToken{}).Where("user_id = ? AND revoked_at IS NULL", userID).
+			Update("revoked_at", time.Now().UTC()).Error
+	})
 }
 
 func (r *UserRepo) GetAllUsers() ([]models.User, error) {
