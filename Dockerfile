@@ -3,7 +3,7 @@ FROM node:24-slim AS nodework
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV CI=TRUE
-RUN corepack enable
+RUN corepack enable && corepack prepare pnpm@10 --activate
 
 WORKDIR /app
 COPY ui/ .

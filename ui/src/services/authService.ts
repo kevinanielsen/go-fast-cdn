@@ -10,6 +10,18 @@ import axios, { AxiosResponse } from "axios";
 
 const API_BASE_URL = "/api/auth";
 
+export type APITokenScope = "cdn:upload" | "cdn:rename" | "cdn:resize" | "cdn:delete";
+
+export interface APITokenMetadata {
+  id: number;
+  name: string;
+  scopes: APITokenScope[];
+  created_at: string;
+  expires_at: string;
+  last_used_at: string | null;
+  revoked_at: string | null;
+}
+
 // Create axios instance with interceptors
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -107,6 +119,29 @@ export const authService = {
 
   async changePassword(data: IChangePasswordRequest): Promise<void> {
     await apiClient.put("/change-password", data);
+  },
+
+  async listAPITokens(): Promise<APITokenMetadata[]> {
+    const response = await apiClient.get<APITokenMetadata[]>("/profile/api-tokens");
+    return response.data;
+  },
+
+  async createAPIToken(data: {
+    name: string;
+    scopes: APITokenScope[];
+    expires_in_days: number;
+    current_password: string;
+    two_fa_token?: string;
+  }): Promise<{ token: string; metadata: APITokenMetadata }> {
+    const response = await apiClient.post<{ token: string; metadata: APITokenMetadata }>(
+      "/profile/api-tokens",
+      data
+    );
+    return response.data;
+  },
+
+  async revokeAPIToken(id: number): Promise<void> {
+    await apiClient.delete(`/profile/api-tokens/${id}`);
   },
 
   // 2FA methods

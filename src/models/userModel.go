@@ -45,6 +45,8 @@ type UserRepository interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id uint) (*User, error)
 	UpdateUser(user *User) error
+	UpdateLastLogin(userID uint, lastLogin time.Time) error
+	ChangePassword(userID uint, previousHash, newHash string) error
 	DeleteUser(id uint) error
 	GetAllUsers() ([]User, error)
 	CountUsers() (int64, error)
@@ -60,7 +62,7 @@ type UserRepository interface {
 	GetPasswordResetByToken(token string) (*PasswordReset, error)
 	MarkPasswordResetAsUsed(resetID uint) error
 	UpdateUserEmail(userID uint, newEmail string) error
-	Set2FA(userID uint, secret string, enabled bool) error
+	Set2FA(expected *User, secret string, enabled bool) error
 }
 
 // HashPassword hashes a plain text password

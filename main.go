@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
 	ini "github.com/kevinanielsen/go-fast-cdn/src/initializers"
@@ -14,7 +16,9 @@ func init() {
 	ini.LoadEnvVariables(true)
 	ini.CreateFolders()
 	database.ConnectToDB()
-	database.Migrate() // Run database migrations
+	if err := database.Migrate(); err != nil {
+		log.Fatalf("Database migration failed: %v", err)
+	}
 }
 
 func main() {

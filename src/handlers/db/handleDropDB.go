@@ -23,8 +23,14 @@ func HandleDropDB(c *gin.Context) {
 	}
 	database.DB.Migrator().DropTable(models.Doc{})
 	database.DB.Migrator().DropTable(models.Image{})
+	if err := database.DB.Migrator().DropTable(models.APIToken{}); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to drop API token table")
+		return
+	}
 	database.DB.Migrator().DropTable(models.User{})
 	database.DB.Migrator().DropTable(models.UserSession{})
 	database.DB.Migrator().DropTable(models.PasswordReset{})
-	database.Migrate()
+	if err := database.Migrate(); err != nil {
+		c.String(http.StatusInternalServerError, "Failed to restore database schema")
+	}
 }
