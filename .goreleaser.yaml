@@ -109,7 +109,7 @@ builds:
 
 archives:
   - id: linux-amd64
-    builds:
+    ids:
       - linux-amd64
     name_template: "{{ .ProjectName }}_{{ .Version }}_linux_amd64"
     formats: zip
@@ -118,7 +118,7 @@ archives:
       - README*
 
   - id: linux-arm64
-    builds:
+    ids:
       - linux-arm64
     name_template: "{{ .ProjectName }}_{{ .Version }}_linux_arm64"
     formats: zip
@@ -127,7 +127,7 @@ archives:
       - README*
 
   - id: linux-armv7
-    builds:
+    ids:
       - linux-armv7
     name_template: "{{ .ProjectName }}_{{ .Version }}_linux_armv7"
     formats: zip
@@ -136,7 +136,7 @@ archives:
       - README*
 
   - id: darwin-amd64
-    builds:
+    ids:
       - darwin-amd64
     name_template: "{{ .ProjectName }}_{{ .Version }}_darwin_amd64"
     formats: zip
@@ -145,7 +145,7 @@ archives:
       - README*
 
   - id: darwin-arm64
-    builds:
+    ids:
       - darwin-arm64
     name_template: "{{ .ProjectName }}_{{ .Version }}_darwin_arm64"
     formats: zip
@@ -154,7 +154,7 @@ archives:
       - README*
 
   - id: windows-amd64
-    builds:
+    ids:
       - windows-amd64
     name_template: "{{ .ProjectName }}_{{ .Version }}_windows_amd64"
     formats: zip
